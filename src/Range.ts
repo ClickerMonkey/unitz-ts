@@ -1,5 +1,5 @@
 
-import { Value } from './Value';
+import { Value, ValueMap } from './Value';
 import { Transform } from './Transform';
 
 
@@ -172,6 +172,32 @@ export class Range
     let max: Value = this.max.mul(scale);
 
     return new Range(min, max);
+  }
+
+  public getTransforms(transform: Transform, callback: (transformed: Range, index: number) => void): void
+  {
+    let minMap: ValueMap = {};
+    let maxMap: ValueMap = {};
+    let matched: number = 0;
+
+    this.min.getTransforms(transform, true, (transformed) => {
+      minMap[ transformed.group.unit ] = transformed;
+    });
+
+    this.max.getTransforms(transform, true, (transformed) => {
+      maxMap[ transformed.group.unit ] = transformed;
+    });
+
+    for (var unit in minMap)
+    {
+      if (unit in maxMap)
+      {
+        let min: Value = minMap[ unit ];
+        let max: Value = maxMap[ unit ];
+
+        callback( new Range( min, max ), matched++ );
+      }
+    }
   }
 
   public static fromFixed(fixed: Value): Range

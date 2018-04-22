@@ -1,8 +1,11 @@
 
 import { gcd, abs, EPSILON } from './Functions';
 import { Transform } from './Transform';
-import { Group, GroupList, matchesGroup } from './Group';
+import { Group } from './Group';
 import { Class } from './Class';
+import { Converter } from './Types';
+
+export type ValueMap = { [unit: string]: Value };
 
 export class Value
 {
@@ -103,56 +106,78 @@ export class Value
     return new Value(0, 0, 1, this.unit, this.group);
   }
 
-  public normalize(transform: Transform): Value
+  public floored(): Value
   {
-    if (!this.group)
+    return new Value(this.floor, this.floor, 1, this.unit, this.group);
+  }
+
+  public convertTo(group: Group): Value
+  {
+    if (this.group)
     {
-      return this;
+      let groupValue: number = this.scaled / group.baseScale;
+
+      if (this.group.baseUnit === group.baseUnit)
+      {
+        return Value.fromNumberForGroup(groupValue, group);
+      }
+
+      let parent: Class = this.group.parent;
+      let converter: Converter = parent.mapping[ this.group.baseUnit ][ group.baseUnit ];
+      let converted: number = converter( groupValue );
+
+      return Value.fromNumberForGroup( converted, group);
     }
 
-    let parent: Class = this.group.parent;
-    let groups: GroupList = parent.groups;
-    let scaled: number = this.scaled;
+    return this;
+  }
+
+  public conversions(transform: Transform, reverse: boolean, callback: (transformed: Value, index: number) => void): void
+  {
+    if (this.group)
+    {
+      this.group.matches(transform, reverse, (group, index) =>
+      {
+        callback( this.convertTo( group ), index );
+      });
+    }
+  }
+
+  public normalize(transform: Transform): Value
+  {
     let closest: Value = this;
     let closestString: string = this.asString;
 
-    for (let i = 0; i < groups.length; i++)
+    this.conversions(transform, false, (convert) =>
     {
-      let group: Group = groups[ i ];
+      let convertString: string = convert.asString;
 
-      if (matchesGroup( transform.system, group, this.group ) && (group.common || !transform.common))
+      if (convertString.length <= closestString.length)
       {
-        let groupScaled: number = scaled / group.baseScale;
-        let convert: Value = Value.fromNumberForGroup(groupScaled, group);
-        let convertString: string = convert.asString;
-
-        if (convertString.length <= closestString.length)
-        {
-          closest = convert;
-          closestString = convertString;
-        }
+        closest = convert;
+        closestString = convertString;
       }
-    }
+    });
 
     return closest;
   }
 
   public add(addend: Value, scale: number = 1): Value
   {
-    let num = this.num * addend.den + addend.num * this.den;
+    let num = this.num * addend.den + addend.num * this.den * scale;
     let den = this.den * addend.den;
-    let result = this.value + addend.value;
+    let result = this.value + addend.value * scale;
 
-    return new Value(result * scale, num * scale, den, this.unit, this.group);
+    return new Value(result, num, den, this.unit, this.group);
   }
 
   public sub(subtrahend: Value, scale: number = 1): Value
   {
-    let num = this.num * subtrahend.den - subtrahend.num * this.den;
+    let num = this.num * subtrahend.den - subtrahend.num * this.den * scale;
     let den = this.den * subtrahend.den;
-    let result = this.value - subtrahend.value;
+    let result = this.value - subtrahend.value * scale;
 
-    return new Value(result * scale, num * scale, den, this.unit, this.group);
+    return new Value(result, num, den, this.unit, this.group);
   }
 
   public mul(scale: number): Value

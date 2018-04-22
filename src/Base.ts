@@ -144,11 +144,44 @@ export class Base
     let transform: Transform = transformOverride || globalTransform;
     let compacted: Base = this.compact( transform );
     let { ranges } = compacted;
+    let expanded: RangeList = [];
 
-    transform.common;
-    ranges.length;
+    for (let i = 0; i < ranges.length; i++)
+    {
+      let range: Range = ranges[ i ];
+      let min: Value = range.min;
+      let minGroup: Group = min.group;
 
-    return this;
+      if (minGroup)
+      {
+        minGroup.matches(transform, true, (group) =>
+        {
+          if (min.value > 0)
+          {
+            let transformed = min.convertTo(group);
+
+            if (group.isBase)
+            {
+              expanded.push( Range.fromFixed( transformed ) )
+            }
+            else if (transformed.value > 1)
+            {
+              let floored: Value = transformed.floored();
+              let scaled: number = group.baseScale / minGroup.baseScale;
+
+              min = min.sub( floored, scaled );
+              expanded.push( Range.fromFixed( floored ) );
+            }
+          }
+        });
+      }
+      else
+      {
+        expanded.push( range );
+      }
+    }
+
+    return new Base( this.input, expanded );
   }
 
   private groupByClass()
@@ -179,7 +212,29 @@ export class Base
 
   // TODO filter (out certain classes or groups)
   // TODO preferred () converts units to preferredUnits if available
-  // TODO system (change to all imperial or metric)
+
+  public transform(transform: Transform): Base
+  {
+    return this.mutate((r) =>
+    {
+      let min: Value = null;
+      let max: Value = null;
+
+      r.min.conversions(transform, false, (transformed) => {
+        if (!min || transformed.asString.length < min.asString.length) {
+          min = transformed;
+        }
+      });
+
+      r.max.conversions(transform, false, (transformed) => {
+        if (!max || transformed.asString.length < max.asString.length) {
+          max = transformed;
+        }
+      });
+
+      return new Range( min, max );
+    });
+  }
 
   public getScaleTo(unitValue: string): number
   {

@@ -29,6 +29,7 @@ export class Output
   public fractionSpacer: string = '/';
   public mixedSpacer: string = ' ';
   public delimiter: string = ', ';
+  public significant: number = 2;
 
   public constructor(options?: object)
   {
@@ -98,7 +99,14 @@ export class Output
     }
     else
     {
-      out += value.value;
+      let valueString: string = value.value + '';
+
+      let valueSignificant: string = value.value
+        .toFixed(this.significant)
+        .replace(/0*$/, '')
+        .replace(/\.$/, '');
+
+      out += valueSignificant.length < valueString.length ? valueSignificant : valueString;
     }
 
     if (this.unit !== OutputUnit.NONE && showUnit)

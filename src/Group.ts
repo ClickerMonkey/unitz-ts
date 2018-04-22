@@ -4,6 +4,7 @@ import { System } from './System';
 import { Class } from './Class';
 import { GroupDefinition, UnitDefinitionMap, Numbers } from './Types';
 import { appendTo } from './Functions';
+import { Transform } from './Transform';
 
 
 export type GroupList = Group[];
@@ -49,6 +50,11 @@ export class Group
     this.parent = parent;
 
     this.updateUnits();
+  }
+
+  public get isBase(): boolean
+  {
+    return this.unit === this.baseUnit;
   }
 
   public setDynamic(dynamic: boolean = true): this
@@ -143,6 +149,29 @@ export class Group
   public getSingularShort(): string
   {
     return this.singularShort;
+  }
+
+  public matches(transform: Transform, reverse: boolean, callback: (group: Group, index: number) => any): void
+  {
+    if (this.parent)
+    {
+      let groups: GroupList = this.parent.groups;
+      let matched: number = 0;
+
+      let start = reverse ? groups.length - 1 : 0;
+      let stop = reverse ? -1 : groups.length;
+      let increment = reverse ? -1 : 1;
+
+      for (let i = start; i !== stop; i += increment)
+      {
+        let group: Group = groups[ i ];
+
+        if (matchesGroup( transform.system, group, this ) && (group.common || !transform.common))
+        {
+          callback( group, matched++ );
+        }
+      }
+    }
   }
 
 }
