@@ -1,0 +1,30 @@
+{
+  "name": "unitz-ts",
+  "version": "1.0.0",
+  "homepage": "https://github.com/ClickerMonkey/unitz-ts",
+  "authors": [
+    "Philip Diffenderfer <pdiffenderfer@gmail.com>"
+  ],
+  "description": "A unit parser, converter, & combiner in JS",
+  "main": "umd/unitz.js",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "unit",
+    "conversion"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "src",
+    "node_modules",
+    "bower_components",
+    "test",
+    "docs",
+    "coverage",
+    "*.tgz",
+    "package"
+  ],
+  "dependencies": {
+  }
+}
