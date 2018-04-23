@@ -1,7 +1,7 @@
 
 import { Value } from './Value';
 import { Range, RangeList } from './Range';
-import { isDefined, isSingular } from './Functions';
+import { isDefined, isSingular, coalesce } from './Functions';
 
 
 export enum OutputUnit {
@@ -18,7 +18,19 @@ export enum OutputFormat {
   FRACTION
 }
 
-export class Output
+export interface OutputInput {
+  unit?: OutputUnit;
+  format?: OutputFormat;
+  repeatUnit?: boolean;
+  unitSpacer?: string;
+  rangeSpacer?: string;
+  fractionSpacer?: string;
+  mixedSpacer?: string;
+  delimiter?: string;
+  significant?: number;
+}
+
+export class Output implements OutputInput
 {
 
   public unit: OutputUnit = OutputUnit.GIVEN;
@@ -31,12 +43,47 @@ export class Output
   public delimiter: string = ', ';
   public significant: number = 2;
 
-  public constructor(options?: object)
+  public constructor(input?: OutputInput)
   {
-    if (isDefined(options))
+    if (isDefined(input))
     {
-
+      this.set( input );
     }
+  }
+
+  public set(input: OutputInput): this
+  {
+    this.unit = coalesce( input.unit, this.unit );
+    this.format = coalesce( input.format, this.format );
+    this.repeatUnit = coalesce( input.repeatUnit, this.repeatUnit );
+    this.unitSpacer = coalesce( input.unitSpacer, this.unitSpacer );
+    this.rangeSpacer = coalesce( input.rangeSpacer, this.rangeSpacer );
+    this.fractionSpacer = coalesce( input.fractionSpacer, this.fractionSpacer );
+    this.mixedSpacer = coalesce( input.mixedSpacer, this.mixedSpacer );
+    this.delimiter = coalesce( input.delimiter, this.delimiter );
+    this.significant = coalesce( input.significant, this.significant );
+
+    return this;
+  }
+
+  public extend(input?: OutputInput): Output
+  {
+    let extended: Output = this;
+
+    if (isDefined(input))
+    {
+      if (input instanceof Output)
+      {
+        extended = input;
+      }
+      else
+      {
+        extended = new Output( this );
+        extended.set( input );
+      }
+    }
+
+    return extended;
   }
 
   public ranges(ranges: RangeList): string

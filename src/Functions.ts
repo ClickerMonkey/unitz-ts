@@ -59,6 +59,11 @@ export function abs(x: number): number
   return x < 0 ? -x : x;
 }
 
+export function sign(x: number): number
+{
+  return x < 0 ? -1 : (x === 0 ? 0 : 1);
+}
+
 export function appendTo<T>(array: T[], input: T | T[]): T[]
 {
   if (input instanceof Array)
@@ -101,4 +106,9 @@ export function isString(input: any): boolean
 export function isDefined(input: any): boolean
 {
   return typeof(input) !== 'undefined';
+}
+
+export function coalesce(a: any, b: any): any
+{
+  return isDefined( a ) ? a : b;
 }

@@ -20,13 +20,14 @@ export class Group
   public common: boolean;
   public unit: string;
   public baseUnit: string;
-  public baseScale: number;
+  public baseScale: number = 1;
+  public classScale: number = 0;
   public preferredUnit: string;
   public relativeUnit: string;
   public relativeScale: number;
   public units: UnitDefinitionMap;
   public denominators: number[];
-  public dynamic: boolean;
+  public dynamic: boolean = false;
   public parent: Class;
 
   private singularShort: string;
@@ -40,13 +41,11 @@ export class Group
     this.common = !!definition.common;
     this.unit = definition.unit;
     this.baseUnit = definition.baseUnit;
-    this.baseScale = 1;
     this.preferredUnit = definition.preferredUnit || definition.unit;
     this.relativeUnit = definition.relativeUnit;
     this.relativeScale = definition.relativeScale || 1;
     this.units = definition.units;
     this.denominators = definition.denominators;
-    this.dynamic = false;
     this.parent = parent;
 
     this.updateUnits();

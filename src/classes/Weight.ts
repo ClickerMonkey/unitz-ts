@@ -86,3 +86,4 @@ export let Weight = new Class('Weight')
       }
     }
   ])
+  .setClassScales();

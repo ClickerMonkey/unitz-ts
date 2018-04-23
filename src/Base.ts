@@ -1,19 +1,41 @@
 
-import { getGroupForUnit, globalTransform, globalOutput } from './Global';
 import { parseRanges, parseValue } from './Parse';
+import { getGroupForUnit, globalTransform, globalOutput, globalSort } from './Global';
 import { RangesInput } from './Types';
 import { Range, RangeList, RangeMutator } from './Range';
 import { Group } from './Group';
-import { Output } from './Output';
-import { Transform } from './Transform';
+
+import { Transform, TransformInput } from './Transform';
+import { Output, OutputInput } from './Output';
+import { Sort, SortInput } from './Sort';
 import { Value } from './Value';
 import { Class } from './Class';
 
+
+// TODO filter (out certain classes or groups)
+// TODO preferred () converts units to preferredUnits if available
 
 export function uz(input: RangesInput)
 {
   return new Base(input);
 }
+
+export type BaseInput = Base | RangesInput;
+
+export function parseBase(input: BaseInput): Base
+{
+  if (input instanceof Base)
+  {
+    return <Base>input;
+  }
+
+  return new Base( <RangesInput>input );
+}
+
+export type ClassGrouping = {
+  groupless: RangeList,
+  classes: { [className: string]: { ranges: RangeList, parent: Class } }
+};
 
 export class Base
 {
@@ -70,23 +92,25 @@ export class Base
   }
 
   // 1.5pt = 3c
-  public normalize(transformOverride?: Transform): Base
+  public normalize(options?: TransformInput): Base
   {
-    let transform: Transform = transformOverride || globalTransform;
+    let transform: Transform = globalTransform.extend( options );
 
     return this.mutate(r => r.normalize( transform ));
   }
 
   // 1c, 1pt = 1.5pt
-  public compact(transformOverride?: Transform): Base
+  public compact(options?: TransformInput): Base
   {
     let compacted: RangeList = [];
-    let transform: Transform = transformOverride || globalTransform;
+    let transform: Transform = globalTransform.extend( options );
     let { classes, groupless } = this.groupByClass();
 
     for (let className in classes)
     {
-      let ranges: RangeList = classes[ className ];
+      let entry = classes[ className ];
+      let ranges: RangeList = entry.ranges;
+      let parent: Class = entry.parent;
       let minGroupChosen: Group = <Group>null;
       let maxGroupChosen: Group = <Group>null;
       let minSum: number = 0;
@@ -95,28 +119,27 @@ export class Base
       for (let i = 0; i < ranges.length; i++)
       {
         let range: Range = ranges[ i ];
-        let minGroup = range.min.group;
-        let maxGroup = range.max.group;
+        let minGroup: Group = range.min.group;
+        let maxGroup: Group = range.max.group;
 
         if (!minGroupChosen || ((minGroup.common || !transform.common) && minGroup.baseScale > minGroupChosen.baseScale))
         {
+          minSum = parent.convert( minSum, minGroupChosen, minGroup );
           minGroupChosen = minGroup;
         }
 
         if (!maxGroupChosen || ((maxGroup.common || !transform.common) && maxGroup.baseScale > maxGroupChosen.baseScale))
         {
+          maxSum = parent.convert( maxSum, maxGroupChosen, maxGroup );
           maxGroupChosen = maxGroup;
         }
 
-        minSum += range.min.scaled;
-        maxSum += range.max.scaled;
+        minSum += range.min.convertTo( minGroupChosen );
+        maxSum += range.max.convertTo( maxGroupChosen );
       }
 
-      let minScaled: number = minSum / minGroupChosen.baseScale;
-      let maxScaled: number = maxSum / maxGroupChosen.baseScale;
-
-      let min: Value = Value.fromNumberForGroup( minScaled, minGroupChosen );
-      let max: Value = Value.fromNumberForGroup( maxScaled, maxGroupChosen );
+      let min: Value = Value.fromNumberForGroup( minSum, minGroupChosen );
+      let max: Value = Value.fromNumberForGroup( maxSum, maxGroupChosen );
 
       compacted.push( new Range( min, max ) );
     }
@@ -139,9 +162,9 @@ export class Base
   }
 
   // 1.5pt = 1c, 1pt
-  public expand(transformOverride?: Transform): Base
+  public expand(options?: TransformInput): Base
   {
-    let transform: Transform = transformOverride || globalTransform;
+    let transform: Transform = globalTransform.extend( options );
     let compacted: Base = this.compact( transform );
     let { ranges } = compacted;
     let expanded: RangeList = [];
@@ -158,7 +181,7 @@ export class Base
         {
           if (min.value > 0)
           {
-            let transformed = min.convertTo(group);
+            let transformed = min.convertToValue(group);
 
             if (group.isBase)
             {
@@ -184,7 +207,7 @@ export class Base
     return new Base( this.input, expanded );
   }
 
-  private groupByClass()
+  private groupByClass(): ClassGrouping
   {
     let ranges: RangeList = this.ranges;
     let classes = {};
@@ -197,9 +220,17 @@ export class Base
       if (range.min.group)
       {
         let parent: Class = range.min.group.parent;
+        let entry = classes[ parent.name ];
 
-        classes[ parent.name ] = classes[ parent.name ] || [];
-        classes[ parent.name ].push( range );
+        if (!entry)
+        {
+          entry = classes[ parent.name ] = {
+            parent: parent,
+            ranges: []
+          };
+        }
+
+        entry.ranges.push( range );
       }
       else
       {
@@ -210,11 +241,67 @@ export class Base
     return { classes, groupless };
   }
 
-  // TODO filter (out certain classes or groups)
-  // TODO preferred () converts units to preferredUnits if available
-
-  public transform(transform: Transform): Base
+  public add(input: BaseInput, scale: number = 1): Base
   {
+    return this.operateMatches(input, (a, b) =>
+    {
+      return a.add(b, scale);
+    });
+  }
+
+  public sub(input: BaseInput, scale: number = 1): Base
+  {
+    return this.operateMatches(input, (a, b) =>
+    {
+      return a.sub(b, scale);
+    });
+  }
+
+  private operateMatches(input: BaseInput, operate: (a: Range, b: Range) => any): Base
+  {
+    let ranges: RangeList = this.ranges;
+    let output: RangeList = [];
+
+    let other: Base = parseBase( input );
+    let otherRanges: RangeList = other.ranges;
+    let otherUsed: boolean[] = [];
+
+    for (let i = 0; i < ranges.length; i++)
+    {
+      let range: Range = ranges[ i ];
+
+      for (let k = 0; k < otherRanges.length; k++)
+      {
+        if (!otherUsed[ k ])
+        {
+          let otherRange: Range = otherRanges[ k ];
+
+          if (range.isMatch( otherRange ))
+          {
+            range = operate( range, otherRange );
+            otherUsed[ k ] = true;
+          }
+        }
+      }
+
+      output.push( range );
+    }
+
+    for (let k = 0; k < otherRanges.length; k++)
+    {
+      if (!otherUsed[ k ])
+      {
+        output.push( otherRanges[ k ] );
+      }
+    }
+
+    return new Base( this.input, output );
+  }
+
+  public transform(options?: TransformInput): Base
+  {
+    let transform: Transform = globalTransform.extend( options );
+
     return this.mutate((r) =>
     {
       let min: Value = null;
@@ -263,9 +350,9 @@ export class Base
     return new Base( this.input, ranges );
   }
 
-  public output(outputOverride?: Output): string
+  public output(options?: OutputInput): string
   {
-    let output = outputOverride || globalOutput;
+    let output: Output = globalOutput.extend( options );
 
     return output.ranges( this.ranges );
   }
@@ -299,6 +386,16 @@ export class Base
     }
 
     return new Range( min, max );
+  }
+
+  public sort(options?: SortInput): Base
+  {
+    let sort: Sort = globalSort.extend( options );
+    let ranges: RangeList = this.ranges.slice();
+
+    ranges.sort( sort.getSorter() );
+
+    return new Base( this.input, ranges );
   }
 
 }

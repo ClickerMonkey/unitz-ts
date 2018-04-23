@@ -63,6 +63,48 @@ export class Class
     return this;
   }
 
+  private getFirstBase(): Group
+  {
+    let groups: GroupList = this.groups;
+
+    for (let i = 0; i < groups.length; i++)
+    {
+      let group: Group = groups[ i ];
+
+      if (group.unit === group.baseUnit)
+      {
+        return group;
+      }
+    }
+
+    return null;
+  }
+
+  public setClassScales(): this
+  {
+    let groups: GroupList = this.groups;
+    let first: Group = this.getFirstBase();
+
+    if (first)
+    {
+      for (let i = 0; i < groups.length; i++)
+      {
+        let group: Group = groups[ i ];
+
+        if (group.baseUnit === first.baseUnit)
+        {
+          group.classScale = group.baseScale;
+        }
+        else if (group.baseUnit in this.mapping)
+        {
+          group.classScale = this.mapping[ group.baseUnit ][ first.baseUnit ]( group.baseScale );
+        }
+      }
+    }
+
+    return this;
+  }
+
   public setBaseConversion(fromUnit: string, toUnit: string, converter: Converter): this
   {
     let mapping = this.mapping;
@@ -70,6 +112,25 @@ export class Class
     mapping[ fromUnit ][ toUnit ] = converter;
 
     return this;
+  }
+
+  public convert(value: number, from: Group, to: Group): number
+  {
+    if (from === to || !from || !to)
+    {
+      return value;
+    }
+
+    let converted: number = value * from.baseScale;
+
+    if (from.baseUnit !== to.baseUnit)
+    {
+      let converter: Converter = this.mapping[ from.baseUnit ][ to.baseUnit ];
+
+      converted = converter( converted );
+    }
+
+    return converted / to.baseScale;
   }
 
 }

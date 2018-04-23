@@ -7,7 +7,6 @@ coverage
 lib
 lib-esm
 lib-fesm
-umd
 typings
 docs
 

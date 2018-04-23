@@ -107,6 +107,12 @@ describe('Base', () => {
     expect(s0.max.unit).toBe('m')
   })
 
+  it('negative', () => {
+
+    expect( uz('-1c, 1-2m').negative().output() ).toBe('-1c');
+    expect( uz('-1c, -1-2m').negative().output() ).toBe('-1c, -1 - 0m');
+  })
+
   it('max', () => {
     let u = uz('-1c, 1-2m')
     let u0 = u.ranges[0]
@@ -134,7 +140,6 @@ describe('Base', () => {
   })
 
   it('compact', () => {
-
     let u = uz('6oz, 1lb')
     let u0 = u.ranges[0]
     let u1 = u.ranges[1]
@@ -157,26 +162,20 @@ describe('Base', () => {
   it('expand', () => {
 
     expect( uz('24oz').expand().output() ).toBe('1lb, 8oz');
-
     expect( uz('2345.4 lbs').expand().output() ).toBe('1ton, 345lb, 6.4oz');
-
   })
 
   it('normalize', () => {
 
     expect(uz('1.5 lb').normalize().output()).toBe('24oz');
-
     expect(uz('32oz').normalize().output()).toBe('2lb');
-
   })
 
   it('convert', () => {
 
     expect(uz('1.5 lb').convert('oz').value).toBe(24);
-
     expect(uz('1 - 2lb').convert('oz').maximum).toBe(32);
     expect(uz('1 - 2lb').convert('oz').minimum).toBe(16);
-
   })
 
   it('transform', () => {
@@ -193,5 +192,44 @@ describe('Base', () => {
     IMPERIAL.system = System.IMPERIAL;
 
     expect(uz('652g').transform(IMPERIAL).output(OUT)).toBe('23oz');
+  })
+
+  it('add match', () => {
+    let a = uz('1oz');
+    let b = uz('1lb, 3oz');
+    let c = a.add(b);
+
+    expect( c.output() ).toBe( '4oz, 1lb' );
+  })
+
+  it('add mismatch', () => {
+    let a = uz('1oz');
+    let b = uz('1lb');
+    let c = a.add(b);
+
+    expect( c.output() ).toBe( '1oz, 1lb' );
+  })
+
+  it('add perfect match', () => {
+    let a = uz('1oz');
+    let b = uz('4oz');
+    let c = a.add(b);
+
+    expect( c.output() ).toBe( '5oz' );
+  })
+
+  it('sort', () => {
+
+    expect( uz('1oz, 1g, 1lb').sort().output() ).toBe('1lb, 1oz, 1g');
+  })
+
+  it('min', () => {
+
+    expect( uz('1-2g, 4oz, 4-5lb').min().output() ).toBe('1g, 4oz, 4lb');
+  })
+
+  it('max', () => {
+
+    expect( uz('1-2g, 4oz, 4-5lb').max().output() ).toBe('2g, 4oz, 5lb');
   })
 })

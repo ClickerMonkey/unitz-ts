@@ -2,8 +2,6 @@
 import { gcd, abs, EPSILON } from './Functions';
 import { Transform } from './Transform';
 import { Group } from './Group';
-import { Class } from './Class';
-import { Converter } from './Types';
 
 export type ValueMap = { [unit: string]: Value };
 
@@ -48,6 +46,11 @@ export class Value
   public get scaled(): number
   {
     return this.group ? this.value * this.group.baseScale : this.value;
+  }
+
+  public get classScaled(): number
+  {
+    return this.group ? this.value * this.group.classScale : this.value;
   }
 
   public get actual(): number
@@ -111,25 +114,16 @@ export class Value
     return new Value(this.floor, this.floor, 1, this.unit, this.group);
   }
 
-  public convertTo(group: Group): Value
+  public convertTo(to: Group): number
   {
-    if (this.group)
-    {
-      let groupValue: number = this.scaled / group.baseScale;
+    let group: Group = this.group;
 
-      if (this.group.baseUnit === group.baseUnit)
-      {
-        return Value.fromNumberForGroup(groupValue, group);
-      }
+    return group ? group.parent.convert( this.value, group, to ) : this.value;
+  }
 
-      let parent: Class = this.group.parent;
-      let converter: Converter = parent.mapping[ this.group.baseUnit ][ group.baseUnit ];
-      let converted: number = converter( groupValue );
-
-      return Value.fromNumberForGroup( converted, group);
-    }
-
-    return this;
+  public convertToValue(group: Group): Value
+  {
+    return Value.fromNumberForGroup( this.convertTo( group ), group );
   }
 
   public conversions(transform: Transform, reverse: boolean, callback: (transformed: Value, index: number) => void): void
@@ -138,7 +132,7 @@ export class Value
     {
       this.group.matches(transform, reverse, (group, index) =>
       {
-        callback( this.convertTo( group ), index );
+        callback( this.convertToValue( group ), index );
       });
     }
   }

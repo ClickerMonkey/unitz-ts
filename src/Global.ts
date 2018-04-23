@@ -3,6 +3,7 @@ import { Class, ClassMap } from './Class';
 import { Output } from './Output';
 import { Group } from './Group';
 import { Transform } from './Transform';
+import { Sort } from './Sort';
 
 
 export let classMap: ClassMap = {};
@@ -10,6 +11,8 @@ export let classes: Class[] = [];
 export let unitToClass: ClassMap = {};
 export let globalOutput: Output = new Output();
 export let globalTransform: Transform = new Transform();
+export let globalSort: Sort = new Sort();
+
 
 export function getGroupForUnit(unit: string): Group | undefined
 {

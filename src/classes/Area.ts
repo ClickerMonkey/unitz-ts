@@ -154,3 +154,4 @@ export let Area = new Class('Area')
       }
     }
   ])
+  .setClassScales()

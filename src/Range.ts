@@ -80,6 +80,12 @@ export class Range
       (this.min.asString + Range.SEPARATOR + this.max.asString);
   }
 
+  public isMatch(range: Range): boolean
+  {
+    return this.min.group === range.min.group &&
+      this.max.group === range.max.group;
+  }
+
   public positive(): Range
   {
     let minNegative: boolean = this.min.value < 0;
