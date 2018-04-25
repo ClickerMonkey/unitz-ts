@@ -65,12 +65,36 @@ export class Group
 
   public addUnits(units: UnitDefinitionMap): this
   {
+    let parent: Class = this.parent;
+
     for (let unit in units)
     {
       this.units[ unit ] = units[ unit ];
+
+      parent.addGroupUnit( unit, this );
     }
 
     this.updateUnits();
+
+    return this;
+  }
+
+  public removeUnits(units: string[]): this
+  {
+    let parent: Class = this.parent;
+    let existing: UnitDefinitionMap = this.units;
+
+    for (let i = 0; i < units.length; i++)
+    {
+      let unit = units[ i ];
+
+      if (unit in existing)
+      {
+        delete existing[ unit ];
+
+        parent.removeGroupUnit( unit, this );
+      }
+    }
 
     return this;
   }
@@ -85,6 +109,13 @@ export class Group
   public setDenominators(denominators: number[]): this
   {
     this.denominators = denominators;
+
+    return this;
+  }
+
+  public setCommon(common: boolean = true): this
+  {
+    this.common = common;
 
     return this;
   }
@@ -154,42 +185,8 @@ export class Group
   {
     if (this.parent)
     {
-      let groups: GroupList = this.parent.groups;
-      let matched: number = 0;
-
-      let start = reverse ? groups.length - 1 : 0;
-      let stop = reverse ? -1 : groups.length;
-      let increment = reverse ? -1 : 1;
-
-      for (let i = start; i !== stop; i += increment)
-      {
-        let group: Group = groups[ i ];
-
-        if (matchesGroup( transform.system, group, this ) && (group.common || !transform.common))
-        {
-          callback( group, matched++ );
-        }
-      }
+      this.parent.getVisibleGroups( transform, reverse, this, callback );
     }
   }
 
-}
-
-export function matchesGroup(desired: System, group: Group, givenGroup?: Group): boolean
-{
-  switch (desired)
-  {
-    case System.METRIC:
-      return group.system === System.METRIC;
-    case System.IMPERIAL:
-      return group.system === System.IMPERIAL;
-    case System.NONE:
-      return false;
-    case System.ANY:
-      return true;
-    case System.GIVEN:
-      return givenGroup && group.baseUnit === givenGroup.baseUnit;
-  }
-
-  return false;
 }

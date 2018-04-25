@@ -1,6 +1,7 @@
 
-import { GroupDefinition, StringMap, NumberMap, Converter, ConverterDoubleMap } from './Types';
+import { GroupDefinition, Converter, ConverterDoubleMap } from './Types';
 import { Group, GroupMap, GroupList } from './Group';
+import { Transform } from './Transform';
 
 
 export type ClassMap = { [unit: string]: Class };
@@ -11,18 +12,14 @@ export class Class
   public name: string;
   public groupMap: GroupMap;
   public groups: GroupList;
-  public bases: StringMap;
-  public converters: NumberMap;
-  public mapping: ConverterDoubleMap;
+  public converters: ConverterDoubleMap;
 
   public constructor(name: string, groups?: GroupDefinition[])
   {
     this.name = name;
     this.groupMap = {};
     this.groups = [];
-    this.bases = {};
     this.converters = {};
-    this.mapping = {};
 
     if (groups)
     {
@@ -40,25 +37,52 @@ export class Class
     return this;
   }
 
-  public addGroup(definition: GroupDefinition): this
+  public addGroup(definition: GroupDefinition): Group
   {
     let group = new Group(definition, this);
-    let { relativeUnit, units } = group;
+    let { relativeUnit, relativeScale, units } = group;
 
     if (relativeUnit)
     {
-      group.baseScale = group.relativeScale * this.converters[ relativeUnit ];
-      group.baseUnit = this.bases[ relativeUnit ];
+      let relative: Group = this.groupMap[ relativeUnit ];
+
+      group.baseScale = relativeScale * relative.baseScale;
+      group.baseUnit = relative.baseUnit;
     }
 
     for (let alias in units)
     {
-      this.converters[ alias ] = group.baseScale;
-      this.bases[ alias ] = group.baseUnit;
-      this.groupMap[ alias ] = group;
+      this.addGroupUnit( alias, group );
     }
 
     this.groups.push( group );
+
+    return group;
+  }
+
+  public addGroupUnit(unit: string, group: Group): this
+  {
+    let lower: string = unit.toLowerCase();
+
+    this.groupMap[ unit ] = group;
+    this.groupMap[ lower ] = group;
+
+    return this;
+  }
+
+  public removeGroupUnit(unit: string, group: Group): this
+  {
+    let lower: string = unit.toLowerCase();
+
+    if (this.groupMap[ unit ] === group)
+    {
+      delete this.groupMap[ unit ];
+    }
+
+    if (this.groupMap[ lower ] === group)
+    {
+      delete this.groupMap[ lower ];
+    }
 
     return this;
   }
@@ -95,9 +119,9 @@ export class Class
         {
           group.classScale = group.baseScale;
         }
-        else if (group.baseUnit in this.mapping)
+        else if (group.baseUnit in this.converters)
         {
-          group.classScale = this.mapping[ group.baseUnit ][ first.baseUnit ]( group.baseScale );
+          group.classScale = this.converters[ group.baseUnit ][ first.baseUnit ]( group.baseScale );
         }
       }
     }
@@ -107,11 +131,36 @@ export class Class
 
   public setBaseConversion(fromUnit: string, toUnit: string, converter: Converter): this
   {
-    let mapping = this.mapping;
-    mapping[ fromUnit ] = mapping[ fromUnit ] || {};
-    mapping[ fromUnit ][ toUnit ] = converter;
+    let converters = this.converters;
+    converters[ fromUnit ] = converters[ fromUnit ] || {};
+    converters[ fromUnit ][ toUnit ] = converter;
 
     return this;
+  }
+
+  public getVisibleGroups(transform: Transform, reverse: boolean, relatedGroup: Group, callback: (group: Group, index: number) => any): void
+  {
+    let groups: GroupList = this.groups;
+    let matched: number = 0;
+
+    let start = reverse ? groups.length - 1 : 0;
+    let stop = reverse ? -1 : groups.length;
+    let increment = reverse ? -1 : 1;
+
+    for (let i = start; i !== stop; i += increment)
+    {
+      let group: Group = groups[ i ];
+
+      if (transform.isVisibleGroup( group, relatedGroup ))
+      {
+        let result: any = callback( group, matched++ );
+
+        if (result === false)
+        {
+          break;
+        }
+      }
+    }
   }
 
   public convert(value: number, from: Group, to: Group): number
@@ -125,7 +174,7 @@ export class Class
 
     if (from.baseUnit !== to.baseUnit)
     {
-      let converter: Converter = this.mapping[ from.baseUnit ][ to.baseUnit ];
+      let converter: Converter = this.converters[ from.baseUnit ][ to.baseUnit ];
 
       converted = converter( converted );
     }

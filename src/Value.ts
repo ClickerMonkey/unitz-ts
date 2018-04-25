@@ -3,6 +3,9 @@ import { gcd, abs, EPSILON } from './Functions';
 import { Transform } from './Transform';
 import { Group } from './Group';
 
+
+// TODO perUnit & perGroup (or: rateUnit & rateGroup)
+
 export type ValueMap = { [unit: string]: Value };
 
 export class Value

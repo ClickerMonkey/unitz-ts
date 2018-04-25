@@ -15,7 +15,8 @@ export enum OutputFormat {
   GIVEN,
   NUMBER,
   MIXED,
-  FRACTION
+  FRACTION,
+  IMPROPER
 }
 
 export interface OutputInput {
@@ -166,7 +167,7 @@ export class Output implements OutputInput
       {
         out += isSingular( value.value ) ? group.getSingularLong() : group.getPluralLong();
       }
-      else if (this.isShortUnit( value ))
+      else if (this.isShortUnit( value ) || group.dynamic)
       {
         out += isSingular( value.value ) ? group.getSingularShort() : group.getPluralShort();
       }
@@ -186,7 +187,7 @@ export class Output implements OutputInput
 
   public isMixed(value: Value): boolean
   {
-    return value.mixedWhole !== 0 && this.format === OutputFormat.MIXED;
+    return value.mixedWhole !== 0 && this.format !== OutputFormat.IMPROPER;
   }
 
   public isShortUnit(value: Value)

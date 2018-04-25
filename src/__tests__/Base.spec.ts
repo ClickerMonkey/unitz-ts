@@ -2,7 +2,7 @@
 import { uz } from '../Base'
 import { Transform } from '../Transform';
 import { System } from '../System';
-import { Output } from '../Output';
+import { Output, OutputFormat } from '../Output';
 import { addDefaults } from '../classes/'
 
 describe('Base', () => {
@@ -232,4 +232,36 @@ describe('Base', () => {
 
     expect( uz('1-2g, 4oz, 4-5lb').max().output() ).toBe('2g, 4oz, 5lb');
   })
+
+  it('dynamic', () => {
+
+    let outputOptions = {
+      unitSpacer: ' '
+    };
+
+    let a = uz('1 loaf').add('2 loaves');
+
+    expect( a.output(outputOptions) ).toBe('3 loaves');
+  });
+
+  it('conversions', () => {
+
+    expect(
+      uz('1oz, 1lb').
+      conversions({min: 0.01, max: 1000}).
+      output({format: OutputFormat.NUMBER})
+    ).toBe( '17oz, 1.06lb' );
+  });
+
+  it('filter', () => {
+
+    expect(
+      uz('1oz, 1lb, 2').
+      filter({
+        groupless: false,
+        onlyUnits: ['oz']
+      }).
+      output()
+    ).toBe( '1oz' );
+  });
 })

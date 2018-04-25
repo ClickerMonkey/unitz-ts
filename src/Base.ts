@@ -1,6 +1,6 @@
 
 import { parseRanges, parseValue } from './Parse';
-import { getGroupForUnit, globalTransform, globalOutput, globalSort } from './Global';
+import { getGroup, globalTransform, globalOutput, globalSort } from './Global';
 import { RangesInput } from './Types';
 import { Range, RangeList, RangeMutator } from './Range';
 import { Group } from './Group';
@@ -11,9 +11,6 @@ import { Sort, SortInput } from './Sort';
 import { Value } from './Value';
 import { Class } from './Class';
 
-
-// TODO filter (out certain classes or groups)
-// TODO preferred () converts units to preferredUnits if available
 
 export function uz(input: RangesInput)
 {
@@ -46,7 +43,7 @@ export class Base
   public constructor(input: RangesInput, ranges?: RangeList )
   {
     this.input = input;
-    this.ranges = ranges || parseRanges( input, getGroupForUnit );
+    this.ranges = ranges || parseRanges( input, getGroup );
   }
 
   // 1c, 2.3m SCALE BY 2 = 2c, 4.6m
@@ -116,19 +113,40 @@ export class Base
       let minSum: number = 0;
       let maxSum: number = 0;
 
+      // If the transformation options ignores this class, skip it.
+      if (!transform.isClassMatch( parent ))
+      {
+        continue;
+      }
+
+      // Determine the smallest visible group we can use.
+      parent.getVisibleGroups( transform, false, null, (group) =>
+      {
+        minGroupChosen = maxGroupChosen = group;
+        return false;
+      });
+
+      // If we can't find one, then no groups are valid. Skip them.
+      if (!minGroupChosen)
+      {
+        continue;
+      }
+
+      // For each range, sum up the minimums and maximums while also determining
+      // the largest min & max that should be used to represent the sums.
       for (let i = 0; i < ranges.length; i++)
       {
         let range: Range = ranges[ i ];
         let minGroup: Group = range.min.group;
         let maxGroup: Group = range.max.group;
 
-        if (!minGroupChosen || ((minGroup.common || !transform.common) && minGroup.baseScale > minGroupChosen.baseScale))
+        if (minGroup.classScale > minGroupChosen.classScale && transform.isVisibleGroup( minGroup ))
         {
           minSum = parent.convert( minSum, minGroupChosen, minGroup );
           minGroupChosen = minGroup;
         }
 
-        if (!maxGroupChosen || ((maxGroup.common || !transform.common) && maxGroup.baseScale > maxGroupChosen.baseScale))
+        if (maxGroup.classScale > maxGroupChosen.classScale && transform.isVisibleGroup( maxGroup ))
         {
           maxSum = parent.convert( maxSum, maxGroupChosen, maxGroup );
           maxGroupChosen = maxGroup;
@@ -144,7 +162,9 @@ export class Base
       compacted.push( new Range( min, max ) );
     }
 
-    if (groupless.length)
+    // If the transform options permit groupless results and there are ranges
+    // without groups - sum them all.
+    if (transform.groupless && groupless.length)
     {
       let minSum: Value = new Value(0, 0, 1, '', <Group>null);
       let maxSum: Value = new Value(0, 0, 1, '', <Group>null);
@@ -207,43 +227,9 @@ export class Base
     return new Base( this.input, expanded );
   }
 
-  private groupByClass(): ClassGrouping
-  {
-    let ranges: RangeList = this.ranges;
-    let classes = {};
-    let groupless = [];
-
-    for (let i = 0; i < ranges.length; i++)
-    {
-      let range: Range = ranges[ i ];
-
-      if (range.min.group)
-      {
-        let parent: Class = range.min.group.parent;
-        let entry = classes[ parent.name ];
-
-        if (!entry)
-        {
-          entry = classes[ parent.name ] = {
-            parent: parent,
-            ranges: []
-          };
-        }
-
-        entry.ranges.push( range );
-      }
-      else
-      {
-        groupless.push( range );
-      }
-    }
-
-    return { classes, groupless };
-  }
-
   public add(input: BaseInput, scale: number = 1): Base
   {
-    return this.operateMatches(input, (a, b) =>
+    return this.operate(input, (a, b) =>
     {
       return a.add(b, scale);
     });
@@ -251,13 +237,13 @@ export class Base
 
   public sub(input: BaseInput, scale: number = 1): Base
   {
-    return this.operateMatches(input, (a, b) =>
+    return this.operate(input, (a, b) =>
     {
       return a.sub(b, scale);
     });
   }
 
-  private operateMatches(input: BaseInput, operate: (a: Range, b: Range) => any): Base
+  public operate(input: BaseInput, operate: (a: Range, b: Range) => any): Base
   {
     let ranges: RangeList = this.ranges;
     let output: RangeList = [];
@@ -307,14 +293,18 @@ export class Base
       let min: Value = null;
       let max: Value = null;
 
-      r.min.conversions(transform, false, (transformed) => {
-        if (!min || transformed.asString.length < min.asString.length) {
+      r.min.conversions(transform, false, (transformed) =>
+      {
+        if (!min || transformed.asString.length < min.asString.length)
+        {
           min = transformed;
         }
       });
 
-      r.max.conversions(transform, false, (transformed) => {
-        if (!max || transformed.asString.length < max.asString.length) {
+      r.max.conversions(transform, false, (transformed) =>
+      {
+        if (!max || transformed.asString.length < max.asString.length)
+        {
           max = transformed;
         }
       });
@@ -323,13 +313,31 @@ export class Base
     });
   }
 
-  public getScaleTo(unitValue: string): number
+  public conversions(options?: TransformInput): Base
   {
-    let to: Value = parseValue( unitValue, getGroupForUnit );
-    let converted: Range = this.convert( to.unit );
-    let scale: number = to.value / converted.average;
+    let transform: Transform = globalTransform.extend( options );
+    let compacted: Base = this.compact( options );
+    let ranges: RangeList = compacted.ranges;
+    let output: RangeList = [];
 
-    return scale;
+    for (let i = 0; i < ranges.length; i++)
+    {
+      let range: Range = ranges[ i ];
+      let convert: Value = transform.convertWithMax ? range.max : range.min;
+
+      convert.conversions(transform, false, (transformed) =>
+      {
+        let min: Value = transform.convertWithMax ? range.min.convertToValue( transformed.group ) : transformed;
+        let max: Value = transform.convertWithMax ? transformed : range.max.convertToValue( transformed.group );
+
+        if (min.value <= transform.max && max.value >= transform.min)
+        {
+          output.push( new Range( min, max ) );
+        }
+      });
+    }
+
+    return new Base( this.input, output );
   }
 
   public mutate(mutator: RangeMutator): Base
@@ -350,42 +358,24 @@ export class Base
     return new Base( this.input, ranges );
   }
 
-  public output(options?: OutputInput): string
+  public filter(options?: TransformInput): Base
   {
-    let output: Output = globalOutput.extend( options );
-
-    return output.ranges( this.ranges );
-  }
-
-  public convert(unit: string): Range
-  {
-    let group: Group = getGroupForUnit( unit );
-
-    if (!group)
-    {
-      return null;
-    }
-
-    let parent: Class = group.parent;
+    let transform: Transform = globalTransform.extend( options );
     let ranges: RangeList = this.ranges;
-    let min: Value = new Value(0, 0, 1, group.unit, group);
-    let max: Value = new Value(0, 0, 1, group.unit, group);
+    let filtered: RangeList = [];
 
     for (let i = 0; i < ranges.length; i++)
     {
       let range: Range = ranges[ i ];
-      let rangeGroup: Group = range.min.group;
+      let group: Group = transform.convertWithMax ? range.max.group : range.min.group;
 
-      if (rangeGroup && rangeGroup.parent === parent)
+      if ((group && transform.isVisibleGroup( group )) || (!group && transform.groupless))
       {
-        let rangeScale: number = rangeGroup.baseScale / group.baseScale;
-
-        min = min.add(range.min, rangeScale);
-        max = max.add(range.max, rangeScale);
+        filtered.push( range );
       }
     }
 
-    return new Range( min, max );
+    return new Base( this.input, filtered );
   }
 
   public sort(options?: SortInput): Base
@@ -396,6 +386,110 @@ export class Base
     ranges.sort( sort.getSorter() );
 
     return new Base( this.input, ranges );
+  }
+
+  public groupByClass(): ClassGrouping
+  {
+    let ranges: RangeList = this.ranges;
+    let classes = {};
+    let groupless = [];
+
+    for (let i = 0; i < ranges.length; i++)
+    {
+      let range: Range = ranges[ i ];
+
+      if (range.min.group)
+      {
+        let parent: Class = range.min.group.parent;
+        let entry = classes[ parent.name ];
+
+        if (!entry)
+        {
+          entry = classes[ parent.name ] = {
+            parent: parent,
+            ranges: []
+          };
+        }
+
+        entry.ranges.push( range );
+      }
+      else
+      {
+        groupless.push( range );
+      }
+    }
+
+    return { classes, groupless };
+  }
+
+  public getScaleTo(unitValue: string): number
+  {
+    let to: Value = parseValue( unitValue, getGroup );
+    let converted: Range = this.convert( to.unit );
+    let scale: number = to.value / converted.average;
+
+    return scale;
+  }
+
+  public output(options?: OutputInput): string
+  {
+    let output: Output = globalOutput.extend( options );
+
+    return output.ranges( this.ranges );
+  }
+
+  public convert(unit: string): Range
+  {
+    let group: Group = getGroup( unit );
+
+    if (!group)
+    {
+      return null;
+    }
+
+    let parent: Class = group.parent;
+    let ranges: RangeList = this.ranges;
+    let min: Value = new Value(0, 0, 1, unit, group);
+    let max: Value = new Value(0, 0, 1, unit, group);
+
+    for (let i = 0; i < ranges.length; i++)
+    {
+      let range: Range = ranges[ i ];
+      let rangeGroup: Group = range.min.group;
+
+      if (rangeGroup && rangeGroup.parent === parent)
+      {
+        min = min.add( range.min.convertToValue( group ) );
+        max = max.add( range.max.convertToValue( group ) );
+      }
+    }
+
+    return new Range( min, max );
+  }
+
+  public classes(): Class[]
+  {
+    let ranges: RangeList = this.ranges;
+    let classMap = {};
+    let classes: Class[] = [];
+
+    for (let i = 0; i < ranges.length; i++)
+    {
+      let range: Range = ranges[ i ];
+      let group: Group = range.min.group;
+
+      if (group)
+      {
+        classMap[ group.parent.name ] = group.parent;
+      }
+    }
+
+    for (let className in classMap)
+    {
+      classes.push( classMap[ className ] );
+    }
+
+    return classes;
   }
 
 }

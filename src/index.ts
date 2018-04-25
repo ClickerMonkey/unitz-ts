@@ -13,6 +13,7 @@ export * from './Types';
 // Secondary
 export * from './Output';
 export * from './Transform';
+export * from './Sort';
 
 // Core
 export * from './Group';
