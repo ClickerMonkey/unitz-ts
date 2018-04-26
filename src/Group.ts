@@ -3,7 +3,7 @@ import { Plurality } from './Plurality';
 import { System } from './System';
 import { Class } from './Class';
 import { GroupDefinition, UnitDefinitionMap, Numbers } from './Types';
-import { appendTo } from './Functions';
+import { Functions as fn } from './Functions';
 import { Transform } from './Transform';
 
 
@@ -101,7 +101,7 @@ export class Group
 
   public addDenominator(denominators: Numbers): this
   {
-    appendTo( this.denominators, denominators );
+    fn.appendTo( this.denominators, denominators );
 
     return this;
   }
@@ -116,6 +116,13 @@ export class Group
   public setCommon(common: boolean = true): this
   {
     this.common = common;
+
+    return this;
+  }
+
+  public setPreferred(unit: string): this
+  {
+    this.preferredUnit = unit;
 
     return this;
   }

@@ -20,18 +20,18 @@ export let Temperature = new Class('Temperature')
       denominators: [],
       units: {
         'F': Plurality.EITHER,
-        '°F': Plurality.EITHER,
+        '\xb0F': Plurality.EITHER,
         'Fahrenheit': Plurality.EITHER
       }
     },
     { // TODO C interferes with cups
       system: System.METRIC,
       common: true,
-      unit: '°C',
-      baseUnit: '°C',
+      unit: '\xb0C',
+      baseUnit: '\xb0C',
       denominators: [],
       units: {
-        '°C': Plurality.EITHER,
+        '\xb0C': Plurality.EITHER,
         'Celsius': Plurality.EITHER
       }
     },

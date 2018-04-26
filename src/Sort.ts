@@ -1,5 +1,5 @@
 
-import { sign, isDefined, coalesce } from './Functions';
+import { Functions as fn } from './Functions';
 import { Range } from './Range';
 
 
@@ -28,7 +28,7 @@ export class Sort implements SortInput
 
   public constructor(input?: SortInput)
   {
-    if (isDefined(input))
+    if (fn.isDefined(input))
     {
       this.set( input );
     }
@@ -36,10 +36,10 @@ export class Sort implements SortInput
 
   public set(input: SortInput): this
   {
-    this.ascending = coalesce( input.ascending, this.ascending );
-    this.type = coalesce( input.type, this.type );
+    this.ascending = fn.coalesce( input.ascending, this.ascending );
+    this.type = fn.coalesce( input.type, this.type );
 
-    if (isDefined( input.classes ))
+    if (fn.isDefined( input.classes ))
     {
       for (let className in input.classes)
       {
@@ -54,7 +54,7 @@ export class Sort implements SortInput
   {
     let extended: Sort = this;
 
-    if (isDefined(input))
+    if (fn.isDefined(input))
     {
       if (input instanceof Sort)
       {
@@ -98,12 +98,12 @@ export class Sort implements SortInput
 
   private getMinComparison(a: Range, b: Range): number
   {
-    return sign( a.min.classScaled - b.min.classScaled );
+    return fn.sign( a.min.classScaled - b.min.classScaled );
   }
 
   private getMaxComparison(a: Range, b: Range): number
   {
-    return sign( a.max.classScaled - b.max.classScaled );
+    return fn.sign( a.max.classScaled - b.max.classScaled );
   }
 
   private getAverageComparison(a: Range, b: Range): number
@@ -111,7 +111,7 @@ export class Sort implements SortInput
     let avg: number = (a.min.classScaled + a.max.classScaled) * 0.5;
     let bvg: number = (b.min.classScaled + b.max.classScaled) * 0.5;
 
-    return sign( avg - bvg );
+    return fn.sign( avg - bvg );
   }
 
   private getClassComparison(a: Range, b: Range): number

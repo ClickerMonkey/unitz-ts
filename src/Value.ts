@@ -1,6 +1,7 @@
 
-import { gcd, abs, EPSILON } from './Functions';
+import { Functions as fn } from './Functions';
 import { Transform } from './Transform';
+import { Output } from './Output';
 import { Group } from './Group';
 
 
@@ -23,7 +24,7 @@ export class Value
 
   public constructor(value: number, num: number, den: number, unit: string, group: Group)
   {
-    let divisor: number = gcd(num, den);
+    let divisor: number = fn.gcd(num, den);
     this.value = value;
     this.num = num / divisor;
     this.den = den / divisor;
@@ -76,6 +77,16 @@ export class Value
     return Math.floor(this.value);
   }
 
+  public get ceil(): number
+  {
+    return Math.ceil(this.value);
+  }
+
+  public get truncate(): number
+  {
+    return this.value < 0 ? this.ceil : this.floor;
+  }
+
   public get remainder(): number
   {
     return this.value - this.floor;
@@ -88,7 +99,7 @@ export class Value
 
   public get distance(): number
   {
-    return abs(this.error);
+    return fn.abs(this.error);
   }
 
   public get asString(): string
@@ -102,6 +113,11 @@ export class Value
     ;
   }
 
+  public preferred(): Value
+  {
+    return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group) : this;
+  }
+
   public copy(): Value
   {
     return new Value(this.value, this.num, this.den, this.unit, this.group);
@@ -112,9 +128,9 @@ export class Value
     return new Value(0, 0, 1, this.unit, this.group);
   }
 
-  public floored(): Value
+  public truncated(): Value
   {
-    return new Value(this.floor, this.floor, 1, this.unit, this.group);
+    return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
   }
 
   public convertTo(to: Group): number
@@ -140,23 +156,35 @@ export class Value
     }
   }
 
-  public normalize(transform: Transform): Value
+  public normalize(transform: Transform, forOutput: Output): Value
   {
-    let closest: Value = this;
-    let closestString: string = this.asString;
+    let closest: Value;
+    let closestString: string;
 
     this.conversions(transform, false, (convert) =>
     {
-      let convertString: string = convert.asString;
+      let acceptable: boolean = !forOutput.isNumber( convert );
 
-      if (convertString.length <= closestString.length)
+      if (!acceptable)
       {
-        closest = convert;
-        closestString = convertString;
+        let number: string = forOutput.number( convert.value );
+
+        acceptable = number !== '0';
+      }
+
+      if (acceptable)
+      {
+        let convertString: string = forOutput.value( convert );
+
+        if (!closest || convertString.length <= closestString.length)
+        {
+          closest = convert;
+          closestString = convertString;
+        }
       }
     });
 
-    return closest;
+    return closest || this;
   }
 
   public add(addend: Value, scale: number = 1): Value
@@ -197,7 +225,7 @@ export class Value
       let den = i;
       let num = Math.floor( den * value );
       let actual = num / den;
-      let distance = abs(value - actual);
+      let distance = fn.abs(value - actual);
 
       if (closestDistance === -1 || distance < closestDistance)
       {
@@ -206,7 +234,7 @@ export class Value
       }
     }
 
-    if (closestDistance > EPSILON)
+    if (closestDistance > fn.EPSILON)
     {
       return new Value(value, value, 1, unit, group);
     }
@@ -229,7 +257,7 @@ export class Value
       let den = denominators[ i ];
       let num = Math.floor( den * value );
       let actual = num / den;
-      let distance = abs(value - actual);
+      let distance = fn.abs(value - actual);
 
       if (closestDistance === -1 || distance < closestDistance)
       {
@@ -238,7 +266,7 @@ export class Value
       }
     }
 
-    if (closestDistance > EPSILON)
+    if (closestDistance > fn.EPSILON)
     {
       return new Value(value, value, 1, unit, group);
     }

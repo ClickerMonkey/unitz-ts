@@ -1,5 +1,5 @@
 
-import { isDefined, coalesce } from './Functions';
+import { Functions as fn } from './Functions';
 import { System } from './System';
 import { Group } from './Group';
 import { Class } from './Class';
@@ -34,7 +34,7 @@ export class Transform implements TransformInput
 
   public constructor(input?: TransformInput)
   {
-    if (isDefined(input))
+    if (fn.isDefined(input))
     {
       this.set( input );
     }
@@ -42,16 +42,16 @@ export class Transform implements TransformInput
 
   public set(input: TransformInput): this
   {
-    this.common = coalesce( input.common, this.common );
-    this.system = coalesce( input.system, this.system );
-    this.min = coalesce( input.min, this.min );
-    this.max = coalesce( input.max, this.max );
-    this.groupless = coalesce( input.groupless, this.groupless );
-    this.convertWithMax = coalesce( input.convertWithMax, this.convertWithMax );
-    this.onlyUnits = coalesce( input.onlyUnits, this.onlyUnits );
-    this.notUnits = coalesce( input.notUnits, this.notUnits );
-    this.onlyClasses = coalesce( input.onlyClasses, this.onlyClasses );
-    this.notClasses = coalesce( input.notClasses, this.notClasses );
+    this.common = fn.coalesce( input.common, this.common );
+    this.system = fn.coalesce( input.system, this.system );
+    this.min = fn.coalesce( input.min, this.min );
+    this.max = fn.coalesce( input.max, this.max );
+    this.groupless = fn.coalesce( input.groupless, this.groupless );
+    this.convertWithMax = fn.coalesce( input.convertWithMax, this.convertWithMax );
+    this.onlyUnits = fn.coalesce( input.onlyUnits, this.onlyUnits );
+    this.notUnits = fn.coalesce( input.notUnits, this.notUnits );
+    this.onlyClasses = fn.coalesce( input.onlyClasses, this.onlyClasses );
+    this.notClasses = fn.coalesce( input.notClasses, this.notClasses );
 
     return this;
   }
@@ -60,7 +60,7 @@ export class Transform implements TransformInput
   {
     let extended: Transform = this;
 
-    if (isDefined(input))
+    if (fn.isDefined(input))
     {
       if (input instanceof Transform)
       {

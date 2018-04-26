@@ -16,11 +16,12 @@ export * from './Transform';
 export * from './Sort';
 
 // Core
+export * from './Core';
 export * from './Group';
 export * from './Class';
 export * from './Value';
 export * from './Range';
 export * from './Base';
 
-// Global
-export * from './Global';
+// Classes
+export * from './classes/';

@@ -152,7 +152,6 @@ describe('Base', () => {
     expect(u1.min.unit).toBe('lb')
 
     let s = u.compact()
-    let s0 = s.ranges[0]
 
     expect(s.ranges.length).toBe(1)
 
@@ -162,7 +161,7 @@ describe('Base', () => {
   it('expand', () => {
 
     expect( uz('24oz').expand().output() ).toBe('1lb, 8oz');
-    expect( uz('2345.4 lbs').expand().output() ).toBe('1ton, 345lb, 6.4oz');
+    expect( uz('2345.4 lbs').expand().output({significant: 2}) ).toBe('1ton, 345lb, 6.4oz');
   })
 
   it('normalize', () => {
@@ -178,20 +177,22 @@ describe('Base', () => {
     expect(uz('1 - 2lb').convert('oz').minimum).toBe(16);
   })
 
-  it('transform', () => {
+  it('normalize / transform', () => {
 
     let OUT = new Output();
     OUT.significant = 1;
 
     let METRIC = new Transform();
     METRIC.system = System.METRIC;
+    METRIC.min = 0.01;
 
-    expect(uz('23oz').transform(METRIC).output(OUT)).toBe('652g');
+    expect(uz('23oz').normalize(METRIC).output(OUT)).toBe('652g');
 
     let IMPERIAL = new Transform();
     IMPERIAL.system = System.IMPERIAL;
+    IMPERIAL.min = 0.01;
 
-    expect(uz('652g').transform(IMPERIAL).output(OUT)).toBe('23oz');
+    expect(uz('652g').normalize(IMPERIAL).output(OUT)).toBe('1.4lb');
   })
 
   it('add match', () => {
@@ -249,7 +250,7 @@ describe('Base', () => {
     expect(
       uz('1oz, 1lb').
       conversions({min: 0.01, max: 1000}).
-      output({format: OutputFormat.NUMBER})
+      output({format: OutputFormat.NUMBER, significant: 2})
     ).toBe( '17oz, 1.06lb' );
   });
 

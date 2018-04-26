@@ -19,7 +19,8 @@
     "outDir": "lib",
     "declaration": true,
     "declarationDir": "typings",
-    "stripInternal": true
+    "stripInternal": true,
+    "noUnusedLocals": true
   },
   "include": [
     "./src"

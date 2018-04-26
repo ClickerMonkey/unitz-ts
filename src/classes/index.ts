@@ -1,5 +1,5 @@
 
-import { addClasses } from '../Global';
+import { Core } from '../Core';
 import { Weight } from './Weight';
 import { Area } from './Area';
 import { Time } from './Time';
@@ -11,7 +11,7 @@ import { Length } from './Length';
 
 export function addDefaults()
 {
-  addClasses(
+  Core.addClasses(
     Weight,
     Area,
     Time,

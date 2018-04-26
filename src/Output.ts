@@ -1,7 +1,7 @@
 
 import { Value } from './Value';
 import { Range, RangeList } from './Range';
-import { isDefined, isSingular, coalesce } from './Functions';
+import { Functions as fn } from './Functions';
 
 
 export enum OutputUnit {
@@ -42,11 +42,11 @@ export class Output implements OutputInput
   public fractionSpacer: string = '/';
   public mixedSpacer: string = ' ';
   public delimiter: string = ', ';
-  public significant: number = 2;
+  public significant: number = -1;
 
   public constructor(input?: OutputInput)
   {
-    if (isDefined(input))
+    if (fn.isDefined(input))
     {
       this.set( input );
     }
@@ -54,15 +54,15 @@ export class Output implements OutputInput
 
   public set(input: OutputInput): this
   {
-    this.unit = coalesce( input.unit, this.unit );
-    this.format = coalesce( input.format, this.format );
-    this.repeatUnit = coalesce( input.repeatUnit, this.repeatUnit );
-    this.unitSpacer = coalesce( input.unitSpacer, this.unitSpacer );
-    this.rangeSpacer = coalesce( input.rangeSpacer, this.rangeSpacer );
-    this.fractionSpacer = coalesce( input.fractionSpacer, this.fractionSpacer );
-    this.mixedSpacer = coalesce( input.mixedSpacer, this.mixedSpacer );
-    this.delimiter = coalesce( input.delimiter, this.delimiter );
-    this.significant = coalesce( input.significant, this.significant );
+    this.unit = fn.coalesce( input.unit, this.unit );
+    this.format = fn.coalesce( input.format, this.format );
+    this.repeatUnit = fn.coalesce( input.repeatUnit, this.repeatUnit );
+    this.unitSpacer = fn.coalesce( input.unitSpacer, this.unitSpacer );
+    this.rangeSpacer = fn.coalesce( input.rangeSpacer, this.rangeSpacer );
+    this.fractionSpacer = fn.coalesce( input.fractionSpacer, this.fractionSpacer );
+    this.mixedSpacer = fn.coalesce( input.mixedSpacer, this.mixedSpacer );
+    this.delimiter = fn.coalesce( input.delimiter, this.delimiter );
+    this.significant = fn.coalesce( input.significant, this.significant );
 
     return this;
   }
@@ -71,7 +71,7 @@ export class Output implements OutputInput
   {
     let extended: Output = this;
 
-    if (isDefined(input))
+    if (fn.isDefined(input))
     {
       if (input instanceof Output)
       {
@@ -108,7 +108,11 @@ export class Output implements OutputInput
   {
     let out = '';
 
-    if (range.isFixed)
+    if (!range.isValid)
+    {
+      // nothing
+    }
+    else if (range.isFixed)
     {
       out += this.value( range.min );
     }
@@ -128,7 +132,11 @@ export class Output implements OutputInput
   {
     let out = '';
 
-    if (this.isFraction( value ))
+    if (!value.isValid)
+    {
+
+    }
+    else if (this.isFraction( value ))
     {
       if (this.isMixed( value ))
       {
@@ -147,17 +155,10 @@ export class Output implements OutputInput
     }
     else
     {
-      let valueString: string = value.value + '';
-
-      let valueSignificant: string = value.value
-        .toFixed(this.significant)
-        .replace(/0*$/, '')
-        .replace(/\.$/, '');
-
-      out += valueSignificant.length < valueString.length ? valueSignificant : valueString;
+      out += this.number( value.value );
     }
 
-    if (this.unit !== OutputUnit.NONE && showUnit)
+    if (value.isValid && this.unit !== OutputUnit.NONE && showUnit)
     {
       let group = value.group;
 
@@ -165,11 +166,11 @@ export class Output implements OutputInput
 
       if (this.isLongUnit( value ))
       {
-        out += isSingular( value.value ) ? group.getSingularLong() : group.getPluralLong();
+        out += fn.isSingular( value.value ) ? group.getSingularLong() : group.getPluralLong();
       }
-      else if (this.isShortUnit( value ) || group.dynamic)
+      else if (this.isShortUnit( value ) || (group && group.dynamic))
       {
-        out += isSingular( value.value ) ? group.getSingularShort() : group.getPluralShort();
+        out += fn.isSingular( value.value ) ? group.getSingularShort() : group.getPluralShort();
       }
       else
       {
@@ -180,9 +181,31 @@ export class Output implements OutputInput
     return out;
   }
 
+  public number(x: number): string
+  {
+    let valueString: string = x + '';
+
+    if (this.significant >= 0)
+    {
+      let valueSignificant: string = x
+        .toFixed(this.significant)
+        .replace(/0*$/, '')
+        .replace(/\.$/, '');
+
+      return valueSignificant.length < valueString.length ? valueSignificant : valueString;
+    }
+
+    return valueString;
+  }
+
   public isFraction(value: Value): boolean
   {
     return value.isFraction && this.format !== OutputFormat.NUMBER;
+  }
+
+  public isNumber(value: Value): boolean
+  {
+    return value.isValid && !this.isFraction( value );
   }
 
   public isMixed(value: Value): boolean

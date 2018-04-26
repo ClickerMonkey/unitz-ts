@@ -1,6 +1,7 @@
 
 import { Value } from './Value';
 import { Transform } from './Transform';
+import { Output } from './Output';
 
 
 export type RangeMap = { [key: string]: Range };
@@ -12,6 +13,7 @@ export type RangeMutator = (range: Range) => Range;
 export class Range
 {
 
+  public static INVALID: Range = new Range( Value.INVALID, Value.INVALID );
   public static SEPARATOR: string = ' - ';
 
   public readonly min: Value;
@@ -86,6 +88,14 @@ export class Range
       this.max.group === range.max.group;
   }
 
+  public preferred(): Range
+  {
+    let min: Value = this.min.preferred();
+    let max: Value = this.max.preferred();
+
+    return new Range( min, max );
+  }
+
   public positive(): Range
   {
     let minNegative: boolean = this.min.value < 0;
@@ -148,10 +158,10 @@ export class Range
     return new Range(fixed, fixed);
   }
 
-  public normalize(transform: Transform): Range
+  public normalize(transform: Transform, forOutput: Output): Range
   {
-    let min: Value = this.min.normalize( transform );
-    let max: Value = this.max.normalize( transform );
+    let min: Value = this.min.normalize( transform, forOutput );
+    let max: Value = this.max.normalize( transform, forOutput );
 
     return new Range(min, max)
   }

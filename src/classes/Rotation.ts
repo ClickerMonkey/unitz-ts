@@ -18,7 +18,7 @@ export let Rotation = new Class('Rotation')
       denominators: [],
       units: {
         'deg': Plurality.EITHER,
-        '°': Plurality.EITHER,
+        '\xb0': Plurality.EITHER,
         'degrees': Plurality.PLURAL,
         'degree': Plurality.SINGULAR
       }

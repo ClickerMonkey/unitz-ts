@@ -2,9 +2,15 @@
 import { GroupDefinition, Converter, ConverterDoubleMap } from './Types';
 import { Group, GroupMap, GroupList } from './Group';
 import { Transform } from './Transform';
+import { RangeList } from './Range';
 
 
 export type ClassMap = { [unit: string]: Class };
+
+export type ClassGrouping = {
+  groupless: RangeList,
+  classes: { [className: string]: { ranges: RangeList, parent: Class } }
+}
 
 export class Class
 {
