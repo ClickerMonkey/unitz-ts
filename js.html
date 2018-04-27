@@ -160,7 +160,15 @@
               2.3 inches, -3 - 2 METER, 0/2 tacos, 1 1/2ft
             </a>
 
-            <pre class="ui tertiary segment"><!--
+            <br><br>
+
+            <div class="ui styled fluid accordion">
+              <div class="title" @click="optionsOpen = !optionsOpen" :class="{active: optionsOpen}">
+                <i class="dropdown icon"></i>
+                Options
+              </div>
+              <div class="content" :class="{active: optionsOpen}">
+                <pre class="ui tertiary segment"><!--
             -->// this variable is used to modify output below
 var outputOptions = {
   unit: <select class="ui selection dropdown" v-model="output.unit">
@@ -188,7 +196,9 @@ var outputOptions = {
   significant: <input type="number" v-model.number="output.significant">
 
 };<!--
-         --></pre>
+            --></pre>
+             </div>
+           </div>
 
             <div class="ui fluid card">
               <div class="content">
@@ -326,7 +336,15 @@ var outputOptions = {
               </div>
             </a>
 
-            <pre class="ui tertiary segment"><!--
+            <br><br>
+
+            <div class="ui styled fluid accordion">
+              <div class="title" @click="optionsOpen = !optionsOpen" :class="{active: optionsOpen}">
+                <i class="dropdown icon"></i>
+                Options
+              </div>
+              <div class="content" :class="{active: optionsOpen}">
+                <pre class="ui tertiary segment"><!--
             -->// this variable is used to modify output below
 var outputOptions = {
   unit: <select class="ui selection dropdown" v-model="output.unit">
@@ -378,7 +396,9 @@ var transformOptions = {
     <option :value="false">false</option>
   </select>
 };<!--
-         --></pre>
+            --></pre>
+             </div>
+           </div>
 
             <div class="ui fluid card">
               <div class="content">
@@ -462,11 +482,123 @@ var transformOptions = {
 
           </div>
           <div v-if="isActive('operations')">
-            Operations
+
+            <div class="ui styled fluid accordion">
+              <div class="title" @click="optionsOpen = !optionsOpen" :class="{active: optionsOpen}">
+                <i class="dropdown icon"></i>
+                Options
+              </div>
+              <div class="content" :class="{active: optionsOpen}">
+                <pre class="ui tertiary segment"><!--
+            -->// this variable is used to modify output below
+var outputOptions = {
+  unit: <select class="ui selection dropdown" v-model="output.unit">
+    <option :value="OutputUnit.NONE">Unitz.OutputUnit.NONE</option>
+    <option :value="OutputUnit.GIVEN">Unitz.OutputUnit.GIVEN</option>
+    <option :value="OutputUnit.SHORT">Unitz.OutputUnit.SHORT</option>
+    <option :value="OutputUnit.LONG">Unitz.OutputUnit.LONG</option>
+  </select>,
+  format: <select class="ui selection dropdown" v-model="output.format">
+    <option :value="OutputFormat.GIVEN">Unitz.OutputFormat.GIVEN</option>
+    <option :value="OutputFormat.NUMBER">Unitz.OutputFormat.NUMBER</option>
+    <option :value="OutputFormat.MIXED">Unitz.OutputFormat.MIXED</option>
+    <option :value="OutputFormat.FRACTION">Unitz.OutputFormat.FRACTION</option>
+    <option :value="OutputFormat.IMPROPER">Unitz.OutputFormat.IMPROPER</option>
+  </select>,
+  repeatUnit: <select class="ui selection dropdown" v-model="output.repeatUnit">
+    <option :value="true">true</option>
+    <option :value="false">false</option>
+  </select>,
+  unitSpacer: <input type="text" v-model="output.unitSpacer">,
+  rangeSpacer: <input type="text" v-model="output.rangeSpacer">,
+  fractionSpacer: <input type="text" v-model="output.fractionSpacer">,
+  mixedSpacer: <input type="text" v-model="output.mixedSpacer">,
+  delimiter: <input type="text" v-model="output.delimiter">,
+  significant: <input type="number" v-model.number="output.significant">
+
+};<!--
+            --></pre>
+              </div>
+            </div>
+
+            <div class="ui fluid card">
+             <div class="content">
+               <div class="ui right floated label">
+                 uz( input ).add( addend, scale )
+               </div>
+               <div class="header">
+                 Add
+               </div>
+               <div class="meta">
+                 This operation adds two values together when their units match.
+               </div>
+               <br>
+               <div class="ui form">
+                <div class="inline fields">
+                  <div class="four wide field">
+                    <input type="text" v-model="input" @keyup="parse">
+                  </div>
+                  <div class="one wide field" style="font-size:18px;">+ (</div>
+                  <div class="four wide field">
+                    <input type="text" v-model="addend">
+                  </div>
+                  <div class="one wide field" style="font-size:18px;">x</div>
+                  <div class="two wide field">
+                    <input type="number" v-model="addendScale">
+                  </div>
+                  <div class="one wide field" style="font-size:18px;">) =</div>
+                  <div class="six wide field">
+                    <input type="text" readonly :value="add">
+                  </div>
+                </div>
+              </div>
+             </div>
+            </div>
+
+             <div class="ui fluid card">
+              <div class="content">
+                <div class="ui right floated label">
+                  uz( input ).sub( addend, scale )
+                </div>
+                <div class="header">
+                  Sub
+                </div>
+                <div class="meta">
+                  This operation subtracts one value from another when their units match.
+                </div>
+                <br>
+                <div class="ui form">
+                 <div class="inline fields">
+                   <div class="four wide field">
+                     <input type="text" v-model="input" @keyup="parse">
+                   </div>
+                   <div class="one wide field" style="font-size:18px;">- (</div>
+                   <div class="four wide field">
+                     <input type="text" v-model="subtrahend">
+                   </div>
+                   <div class="one wide field" style="font-size:18px;">x</div>
+                   <div class="two wide field">
+                     <input type="number" v-model="subtrahendScale">
+                   </div>
+                   <div class="one wide field" style="font-size:18px;">) =</div>
+                   <div class="six wide field">
+                     <input type="text" readonly :value="sub">
+                   </div>
+                 </div>
+               </div>
+              </div>
+             </div>
+
           </div>
           <div v-if="isActive('sort')">
 
-            <pre class="ui tertiary segment"><!--
+            <div class="ui styled fluid accordion">
+              <div class="title" @click="optionsOpen = !optionsOpen" :class="{active: optionsOpen}">
+                <i class="dropdown icon"></i>
+                Options
+              </div>
+              <div class="content" :class="{active: optionsOpen}">
+                <pre class="ui tertiary segment"><!--
             -->uz( '{{ input }}' ).sort({
   ascending: <select class="ui selection dropdown" v-model="sort.ascending">
     <option :value="true">true</option>
@@ -478,7 +610,11 @@ var transformOptions = {
     <option :value="SortType.AVERAGE">Unitz.SortType.AVERAGE</option>
   </select>
 });<!--
-         --></pre>
+             --></pre>
+              </div>
+            </div>
+
+            <br>
 
             <div class="ui fluid labeled input">
               <div class="ui label">Output</div>
@@ -487,7 +623,62 @@ var transformOptions = {
 
           </div>
           <div v-if="isActive('convert')">
-            Convert
+
+            <div class="ui styled fluid accordion">
+              <div class="title" @click="optionsOpen = !optionsOpen" :class="{active: optionsOpen}">
+                <i class="dropdown icon"></i>
+                Options
+              </div>
+              <div class="content" :class="{active: optionsOpen}">
+                <pre class="ui tertiary segment"><!--
+            -->// this variable is used to modify output below
+var outputOptions = {
+  unit: <select class="ui selection dropdown" v-model="output.unit">
+    <option :value="OutputUnit.NONE">Unitz.OutputUnit.NONE</option>
+    <option :value="OutputUnit.GIVEN">Unitz.OutputUnit.GIVEN</option>
+    <option :value="OutputUnit.SHORT">Unitz.OutputUnit.SHORT</option>
+    <option :value="OutputUnit.LONG">Unitz.OutputUnit.LONG</option>
+  </select>,
+  format: <select class="ui selection dropdown" v-model="output.format">
+    <option :value="OutputFormat.GIVEN">Unitz.OutputFormat.GIVEN</option>
+    <option :value="OutputFormat.NUMBER">Unitz.OutputFormat.NUMBER</option>
+    <option :value="OutputFormat.MIXED">Unitz.OutputFormat.MIXED</option>
+    <option :value="OutputFormat.FRACTION">Unitz.OutputFormat.FRACTION</option>
+    <option :value="OutputFormat.IMPROPER">Unitz.OutputFormat.IMPROPER</option>
+  </select>,
+  repeatUnit: <select class="ui selection dropdown" v-model="output.repeatUnit">
+    <option :value="true">true</option>
+    <option :value="false">false</option>
+  </select>,
+  unitSpacer: <input type="text" v-model="output.unitSpacer">,
+  rangeSpacer: <input type="text" v-model="output.rangeSpacer">,
+  fractionSpacer: <input type="text" v-model="output.fractionSpacer">,
+  mixedSpacer: <input type="text" v-model="output.mixedSpacer">,
+  delimiter: <input type="text" v-model="output.delimiter">,
+  significant: <input type="number" v-model.number="output.significant">
+
+};<!--
+            --></pre>
+              </div>
+            </div>
+
+            <br>
+
+            <select class="ui fluid selection dropdown" v-model="convertUnit">
+              <optgroup v-for="parent in classes" :key="parent.name" v-bind:label="parent.name">
+                <option v-for="group in parent.groups" :key="group.unit" :value="group.unit">
+                  {{ group.singularLong }}
+                </option>
+              </optgroup>
+            </select>
+
+            <br>
+
+            <div class="ui fluid labeled input">
+              <div class="ui label">Output</div>
+              <input type="text" readonly :value="converted">
+            </div>
+
           </div>
           <div v-if="isActive('conversions')">
             Conversions
@@ -501,12 +692,19 @@ var transformOptions = {
         el: '#unitz',
         data: {
           input: '',
+          addend: '',
+          addendScale: 1,
+          subtrahend: '',
+          subtrahendScale: 1,
+          optionsOpen: false,
+          convertUnit: '',
           active: 'inspect',
           parsed: Unitz.uz(),
           invalid: false,
           output: new Unitz.Output({unitSpacer: ' '}),
           transform: new Unitz.Transform(),
           sort: new Unitz.Sort(),
+          classes: Unitz.Core.classes,
           SortType: Unitz.SortType,
           OutputUnit: Unitz.OutputUnit,
           OutputFormat: Unitz.OutputFormat,
@@ -545,6 +743,16 @@ var transformOptions = {
           },
           sorted: function() {
             return this.parsed.sort(this.sort).output(this.output);
+          },
+          add: function() {
+            return this.parsed.add(this.addend, this.addendScale).output(this.output);
+          },
+          sub: function() {
+            return this.parsed.sub(this.subtrahend, this.subtrahendScale).output(this.output);
+          },
+          converted: function() {
+            var result = this.parsed.convert(this.convertUnit);
+            return result ? this.output.range(result) : '';
           }
         },
         mounted: function() {

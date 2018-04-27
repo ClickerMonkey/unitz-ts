@@ -3,13 +3,14 @@ import { System } from '../System';
 import { Class } from '../Class';
 import { Plurality } from '../Plurality';
 
+let _C_: string = '\xb0C';
 
 export let Temperature = new Class('Temperature')
-  .setBaseConversion('F', 'C', (x) => (x - 32) * 5 / 9)
-  .setBaseConversion('C', 'F', (x) => (x * 9 / 5) + 32)
-  .setBaseConversion('K', 'C', (x) => x - 273.15)
+  .setBaseConversion('F', _C_, (x) => (x - 32) * 5 / 9)
+  .setBaseConversion(_C_, 'F', (x) => (x * 9 / 5) + 32)
+  .setBaseConversion('K', _C_, (x) => x - 273.15)
   .setBaseConversion('K', 'F', (x) => (x * 9 / 5) - 459.67)
-  .setBaseConversion('C', 'K', (x) => x + 273.15)
+  .setBaseConversion(_C_, 'K', (x) => x + 273.15)
   .setBaseConversion('F', 'K', (x) => (x + 459.67) * 5 / 9)
   .addGroups([
     {
@@ -24,11 +25,11 @@ export let Temperature = new Class('Temperature')
         'Fahrenheit': Plurality.EITHER
       }
     },
-    { // TODO C interferes with cups
+    {
       system: System.METRIC,
       common: true,
-      unit: '\xb0C',
-      baseUnit: '\xb0C',
+      unit: _C_,
+      baseUnit: _C_,
       denominators: [],
       units: {
         '\xb0C': Plurality.EITHER,

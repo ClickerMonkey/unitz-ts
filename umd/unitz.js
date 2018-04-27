@@ -421,6 +421,9 @@ var Value_Value = (function () {
         if (closestDistance > Functions.EPSILON) {
             return new Value(value, value, 1, unit, group);
         }
+        if (closestDenominator === 0) {
+            closestDenominator = 1;
+        }
         return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
     };
     Value.fromFraction = function (num, den, unit, group) {
@@ -821,7 +824,11 @@ var Class_Class = (function () {
         }
         var converted = value * from.baseScale;
         if (from.baseUnit !== to.baseUnit) {
-            var converter = this.converters[from.baseUnit][to.baseUnit];
+            var map = this.converters[from.baseUnit];
+            if (!map || !map[to.baseUnit]) {
+                return 0;
+            }
+            var converter = map[to.baseUnit];
             converted = converter(converted);
         }
         return converted / to.baseScale;
@@ -891,10 +898,13 @@ var Output_Output = (function () {
     Output.prototype.ranges = function (ranges) {
         var out = '';
         for (var i = 0; i < ranges.length; i++) {
-            if (i > 0) {
-                out += this.delimiter;
+            var range = ranges[i];
+            if (range.isValid) {
+                if (out.length) {
+                    out += this.delimiter;
+                }
+                out += this.range(range);
             }
-            out += this.range(ranges[i]);
         }
         return out;
     };
@@ -2285,12 +2295,13 @@ function addDigitalUnits(parent, relativeTo, relativeScales, denominators, suffi
 
 
 
+var _C_ = '\xb0C';
 var Temperature = new Class_Class('Temperature')
-    .setBaseConversion('F', 'C', function (x) { return (x - 32) * 5 / 9; })
-    .setBaseConversion('C', 'F', function (x) { return (x * 9 / 5) + 32; })
-    .setBaseConversion('K', 'C', function (x) { return x - 273.15; })
+    .setBaseConversion('F', _C_, function (x) { return (x - 32) * 5 / 9; })
+    .setBaseConversion(_C_, 'F', function (x) { return (x * 9 / 5) + 32; })
+    .setBaseConversion('K', _C_, function (x) { return x - 273.15; })
     .setBaseConversion('K', 'F', function (x) { return (x * 9 / 5) - 459.67; })
-    .setBaseConversion('C', 'K', function (x) { return x + 273.15; })
+    .setBaseConversion(_C_, 'K', function (x) { return x + 273.15; })
     .setBaseConversion('F', 'K', function (x) { return (x + 459.67) * 5 / 9; })
     .addGroups([
     {
@@ -2308,8 +2319,8 @@ var Temperature = new Class_Class('Temperature')
     {
         system: System.METRIC,
         common: true,
-        unit: '\xb0C',
-        baseUnit: '\xb0C',
+        unit: _C_,
+        baseUnit: _C_,
         denominators: [],
         units: {
             '\xb0C': Plurality.EITHER,

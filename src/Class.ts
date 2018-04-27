@@ -1,5 +1,5 @@
 
-import { GroupDefinition, Converter, ConverterDoubleMap } from './Types';
+import { GroupDefinition, Converter, ConverterMap, ConverterDoubleMap } from './Types';
 import { Group, GroupMap, GroupList } from './Group';
 import { Transform } from './Transform';
 import { RangeList } from './Range';
@@ -180,7 +180,14 @@ export class Class
 
     if (from.baseUnit !== to.baseUnit)
     {
-      let converter: Converter = this.converters[ from.baseUnit ][ to.baseUnit ];
+      let map: ConverterMap = this.converters[ from.baseUnit ];
+
+      if (!map || !map[ to.baseUnit ])
+      {
+        return 0;
+      }
+
+      let converter: Converter = map[ to.baseUnit ];
 
       converted = converter( converted );
     }

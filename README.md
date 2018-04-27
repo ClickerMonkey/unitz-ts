@@ -4,4 +4,6 @@ A unit parser, converter, & calculator for TypeScript and JS
 
 ```
 uz('2 cups').normalize() // 1 pt
-uz('2 cups, 2 - 3oz').
+uz('2 cups, 2 - 3oz').compact() //
+uz('1.35')
+```

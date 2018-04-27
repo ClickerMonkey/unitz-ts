@@ -93,12 +93,17 @@ export class Output implements OutputInput
 
     for (let i = 0; i < ranges.length; i++)
     {
-      if (i > 0)
-      {
-        out += this.delimiter;
-      }
+      let range: Range = ranges[ i ];
 
-      out += this.range( ranges[ i ] );
+      if (range.isValid)
+      {
+        if (out.length)
+        {
+          out += this.delimiter;
+        }
+
+        out += this.range( range );
+      }
     }
 
     return out;

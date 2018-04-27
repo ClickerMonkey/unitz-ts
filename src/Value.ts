@@ -271,6 +271,11 @@ export class Value
       return new Value(value, value, 1, unit, group);
     }
 
+    if (closestDenominator === 0)
+    {
+      closestDenominator = 1;
+    }
+
     return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
   }
 
