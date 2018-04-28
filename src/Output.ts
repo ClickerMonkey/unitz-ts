@@ -190,7 +190,7 @@ export class Output implements OutputInput
   {
     let valueString: string = x + '';
 
-    if (this.significant >= 0)
+    if (this.significant >= 0 && valueString !== '0')
     {
       let valueSignificant: string = x
         .toFixed(this.significant)

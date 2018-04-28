@@ -101,7 +101,9 @@
       }
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "jest-cli": "22.4.3"
+  },
   "devDependencies": {
     "@types/jest": "20.0.2",
     "@types/node": "7.0.31",

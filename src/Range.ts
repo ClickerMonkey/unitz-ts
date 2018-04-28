@@ -190,6 +190,32 @@ export class Range
     return new Range(min, max);
   }
 
+  public fractioned(): Range
+  {
+    if (this.min.isFraction && this.max.isFraction)
+    {
+      return this;
+    }
+
+    let min: Value = this.min.fractioned();
+    let max: Value = this.max.fractioned();
+
+    return new Range(min, max);
+  }
+
+  public numbered(): Range
+  {
+    if (!this.min.isFraction && !this.max.isFraction)
+    {
+      return this;
+    }
+
+    let min: Value = this.min.numbered();
+    let max: Value = this.max.numbered();
+
+    return new Range(min, max);
+  }
+
   public static fromFixed(fixed: Value): Range
   {
     return new Range(fixed, fixed);

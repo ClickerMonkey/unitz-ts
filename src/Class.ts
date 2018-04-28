@@ -71,7 +71,11 @@ export class Class
     let lower: string = unit.toLowerCase();
 
     this.groupMap[ unit ] = group;
-    this.groupMap[ lower ] = group;
+
+    if (!this.groupMap[ lower ])
+    {
+      this.groupMap[ lower ] = group;
+    }
 
     return this;
   }

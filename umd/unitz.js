@@ -322,6 +322,21 @@ var Value_Value = (function () {
     Value.prototype.truncated = function () {
         return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
     };
+    Value.prototype.fractioned = function () {
+        if (this.isFraction) {
+            return this;
+        }
+        if (this.group) {
+            return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group);
+        }
+        return this;
+    };
+    Value.prototype.numbered = function () {
+        if (this.isFraction) {
+            return new Value(this.value, this.value, 1, this.unit, this.group);
+        }
+        return this;
+    };
     Value.prototype.convertTo = function (to) {
         var group = this.group;
         return group ? group.parent.convert(this.value, group, to) : this.value;
@@ -397,6 +412,9 @@ var Value_Value = (function () {
         }
         if (closestDistance > Functions.EPSILON) {
             return new Value(value, value, 1, unit, group);
+        }
+        if (closestDenominator === 0) {
+            closestDenominator = 1;
         }
         return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
     };
@@ -594,6 +612,22 @@ var Range_Range = (function () {
         var max = this.max.mul(scale);
         return new Range(min, max);
     };
+    Range.prototype.fractioned = function () {
+        if (this.min.isFraction && this.max.isFraction) {
+            return this;
+        }
+        var min = this.min.fractioned();
+        var max = this.max.fractioned();
+        return new Range(min, max);
+    };
+    Range.prototype.numbered = function () {
+        if (!this.min.isFraction && !this.max.isFraction) {
+            return this;
+        }
+        var min = this.min.numbered();
+        var max = this.max.numbered();
+        return new Range(min, max);
+    };
     Range.fromFixed = function (fixed) {
         return new Range(fixed, fixed);
     };
@@ -757,7 +791,9 @@ var Class_Class = (function () {
     Class.prototype.addGroupUnit = function (unit, group) {
         var lower = unit.toLowerCase();
         this.groupMap[unit] = group;
-        this.groupMap[lower] = group;
+        if (!this.groupMap[lower]) {
+            this.groupMap[lower] = group;
+        }
         return this;
     };
     Class.prototype.removeGroupUnit = function (unit, group) {
@@ -963,7 +999,7 @@ var Output_Output = (function () {
     };
     Output.prototype.number = function (x) {
         var valueString = x + '';
-        if (this.significant >= 0) {
+        if (this.significant >= 0 && valueString !== '0') {
             var valueSignificant = x
                 .toFixed(this.significant)
                 .replace(/0*$/, '')
@@ -1308,6 +1344,14 @@ var Base_Base = (function () {
     // 0c, 2tbsp = 2tbsp
     Base.prototype.nonzero = function () {
         return this.mutate(function (r) { return r.nonzero(); });
+    };
+    // 1/2, 0.3 = 1/2, 3/10
+    Base.prototype.fractions = function () {
+        return this.mutate(function (r) { return r.fractioned(); });
+    };
+    // 1/2, 0.3 = 0.5, 0.3
+    Base.prototype.numbers = function () {
+        return this.mutate(function (r) { return r.numbered(); });
     };
     // 1 - 3c = 3c
     Base.prototype.max = function () {
@@ -2216,6 +2260,7 @@ var Digital = new Class_Class('Digital')
     },
     {
         system: System.ANY,
+        common: true,
         unit: 'B',
         relativeUnit: 'b',
         relativeScale: 8,
@@ -2280,6 +2325,7 @@ function addDigitalUnits(parent, relativeTo, relativeScales, denominators, suffi
         }
         parent.addGroup({
             system: System.ANY,
+            common: true,
             unit: unit,
             relativeUnit: relativeTo,
             relativeScale: relativeScales,
@@ -2297,12 +2343,12 @@ function addDigitalUnits(parent, relativeTo, relativeScales, denominators, suffi
 
 var _C_ = '\xb0C';
 var Temperature = new Class_Class('Temperature')
-    .setBaseConversion('F', _C_, function (x) { return (x - 32) * 5 / 9; })
-    .setBaseConversion(_C_, 'F', function (x) { return (x * 9 / 5) + 32; })
-    .setBaseConversion('K', _C_, function (x) { return x - 273.15; })
-    .setBaseConversion('K', 'F', function (x) { return (x * 9 / 5) - 459.67; })
-    .setBaseConversion(_C_, 'K', function (x) { return x + 273.15; })
-    .setBaseConversion('F', 'K', function (x) { return (x + 459.67) * 5 / 9; })
+    .setBaseConversion('F', _C_, function (x) { return ((x - 32) * 5 / 9); })
+    .setBaseConversion(_C_, 'F', function (x) { return ((x * 9 / 5) + 32); })
+    .setBaseConversion('K', _C_, function (x) { return (x - 273.15); })
+    .setBaseConversion('K', 'F', function (x) { return ((x * 9 / 5) - 459.67); })
+    .setBaseConversion(_C_, 'K', function (x) { return (x + 273.15); })
+    .setBaseConversion('F', 'K', function (x) { return ((x + 459.67) * 5 / 9); })
     .addGroups([
     {
         system: System.IMPERIAL,
@@ -2346,8 +2392,8 @@ var Temperature = new Class_Class('Temperature')
 
 
 
-var DEG2RAD = 180 / Math.PI;
-var RAD2DEG = Math.PI / 180;
+var RAD2DEG = 180 / Math.PI;
+var DEG2RAD = Math.PI / 180;
 var Rotation = new Class_Class('Rotation')
     .setBaseConversion('deg', 'rad', function (x) { return x * DEG2RAD; })
     .setBaseConversion('rad', 'deg', function (x) { return x * RAD2DEG; })

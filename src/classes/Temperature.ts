@@ -6,12 +6,12 @@ import { Plurality } from '../Plurality';
 let _C_: string = '\xb0C';
 
 export let Temperature = new Class('Temperature')
-  .setBaseConversion('F', _C_, (x) => (x - 32) * 5 / 9)
-  .setBaseConversion(_C_, 'F', (x) => (x * 9 / 5) + 32)
-  .setBaseConversion('K', _C_, (x) => x - 273.15)
-  .setBaseConversion('K', 'F', (x) => (x * 9 / 5) - 459.67)
-  .setBaseConversion(_C_, 'K', (x) => x + 273.15)
-  .setBaseConversion('F', 'K', (x) => (x + 459.67) * 5 / 9)
+  .setBaseConversion('F', _C_, x => ((x - 32) * 5 / 9))
+  .setBaseConversion(_C_, 'F', x => ((x * 9 / 5) + 32))
+  .setBaseConversion('K', _C_, x => (x - 273.15))
+  .setBaseConversion('K', 'F', x => ((x * 9 / 5) - 459.67))
+  .setBaseConversion(_C_, 'K', x => (x + 273.15))
+  .setBaseConversion('F', 'K', x => ((x + 459.67) * 5 / 9))
   .addGroups([
     {
       system: System.IMPERIAL,
@@ -43,8 +43,8 @@ export let Temperature = new Class('Temperature')
       denominators: [],
       units: {
         'K': Plurality.EITHER,
-        'kelvin': Plurality.EITHER,
-        'kelvins': Plurality.EITHER
+        'kelvin': Plurality.SINGULAR,
+        'kelvins': Plurality.PLURAL
       }
     }
   ])

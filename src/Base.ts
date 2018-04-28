@@ -65,6 +65,18 @@ export class Base
     return this.mutate(r => r.nonzero());
   }
 
+  // 1/2, 0.3 = 1/2, 3/10
+  public fractions(): Base
+  {
+    return this.mutate(r => r.fractioned());
+  }
+
+  // 1/2, 0.3 = 0.5, 0.3
+  public numbers(): Base
+  {
+    return this.mutate(r => r.numbered());
+  }
+
   // 1 - 3c = 3c
   public max(): Base
   {

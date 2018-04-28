@@ -133,6 +133,31 @@ export class Value
     return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
   }
 
+  public fractioned(): Value
+  {
+    if (this.isFraction)
+    {
+      return this;
+    }
+
+    if (this.group)
+    {
+      return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group);
+    }
+
+    return this;
+  }
+
+  public numbered(): Value
+  {
+    if (this.isFraction)
+    {
+      return new Value(this.value, this.value, 1, this.unit, this.group);
+    }
+
+    return this;
+  }
+
   public convertTo(to: Group): number
   {
     let group: Group = this.group;
@@ -237,6 +262,11 @@ export class Value
     if (closestDistance > fn.EPSILON)
     {
       return new Value(value, value, 1, unit, group);
+    }
+
+    if (closestDenominator === 0)
+    {
+      closestDenominator = 1;
     }
 
     return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);

@@ -3,8 +3,8 @@ import { System } from '../System';
 import { Class } from '../Class';
 import { Plurality } from '../Plurality';
 
-let DEG2RAD = 180 / Math.PI;
-let RAD2DEG = Math.PI / 180;
+let RAD2DEG = 180 / Math.PI;
+let DEG2RAD = Math.PI / 180;
 
 export let Rotation = new Class('Rotation')
   .setBaseConversion('deg', 'rad', (x) => x * DEG2RAD)

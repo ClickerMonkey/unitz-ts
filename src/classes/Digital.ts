@@ -39,6 +39,7 @@ export let Digital = new Class('Digital')
     },
     {
       system: System.ANY,
+      common: true,
       unit: 'B',
       relativeUnit: 'b',
       relativeScale: 8,
@@ -144,6 +145,7 @@ function addDigitalUnits(parent: Class, relativeTo: string, relativeScales: numb
 
     parent.addGroup({
       system: System.ANY,
+      common: true,
       unit: unit,
       relativeUnit: relativeTo,
       relativeScale: relativeScales,
