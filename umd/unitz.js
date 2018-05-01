@@ -1326,8 +1326,9 @@ var Base_Base = (function () {
         return this.mutate(function (r) { return r.mul(amount); });
     };
     // 1c, 3m SCALE TO 1/2c = 1/2c, 1.5m
-    Base.prototype.scaleTo = function (unitValue) {
-        return this.scale(this.getScaleTo(unitValue));
+    Base.prototype.scaleTo = function (unitValue, rangeDelta) {
+        if (rangeDelta === void 0) { rangeDelta = 0.5; }
+        return this.scale(this.getScaleTo(unitValue, rangeDelta));
     };
     // 5 kilograms = 5kg
     Base.prototype.preferred = function () {
@@ -1400,11 +1401,15 @@ var Base_Base = (function () {
                 var minGroup = range.min.group;
                 var maxGroup = range.max.group;
                 if (minGroup.classScale > minGroupChosen.classScale && transform.isVisibleGroup(minGroup)) {
-                    minSum = parent_1.convert(minSum, minGroupChosen, minGroup);
+                    if (i !== 0) {
+                        minSum = parent_1.convert(minSum, minGroupChosen, minGroup);
+                    }
                     minGroupChosen = minGroup;
                 }
                 if (maxGroup.classScale > maxGroupChosen.classScale && transform.isVisibleGroup(maxGroup)) {
-                    maxSum = parent_1.convert(maxSum, maxGroupChosen, maxGroup);
+                    if (i !== 0) {
+                        maxSum = parent_1.convert(maxSum, maxGroupChosen, maxGroup);
+                    }
                     maxGroupChosen = maxGroup;
                 }
                 minSum += range.min.convertTo(minGroupChosen);
@@ -1440,17 +1445,18 @@ var Base_Base = (function () {
             var range = ranges[i];
             var value = transform.convertWithMax ? range.max : range.min;
             var valueGroup = value.group;
+            var valueSign = Functions.sign(value.value);
             if (valueGroup) {
                 valueGroup.matches(transform, true, function (group) {
                     if (!Functions.isZero(value.value)) {
                         var transformed = value.convertToValue(group);
                         if (group.isBase) {
+                            value = value.zero();
                             expanded.push(Range_Range.fromFixed(transformed));
                         }
-                        else if (Functions.abs(transformed.value) >= 1) {
+                        else if (Functions.abs(transformed.value) >= 1 && Functions.sign(transformed.value) === valueSign) {
                             var truncated = transformed.truncated();
-                            var scaled = group.baseScale / valueGroup.baseScale;
-                            value = value.sub(truncated, scaled);
+                            value = value.sub(truncated.convertToValue(valueGroup));
                             expanded.push(Range_Range.fromFixed(truncated));
                         }
                     }
@@ -1577,10 +1583,18 @@ var Base_Base = (function () {
         }
         return { classes: classes, groupless: groupless };
     };
-    Base.prototype.getScaleTo = function (unitValue) {
+    Base.prototype.getScaleTo = function (unitValue, rangeDelta) {
+        if (rangeDelta === void 0) { rangeDelta = 0.5; }
         var to = Parse_Parse.value(unitValue, Core_Core.getGroup);
+        if (!to.isValid) {
+            return 0;
+        }
         var converted = this.convert(to.unit);
-        var scale = to.value / converted.average;
+        if (!converted || !converted.isValid) {
+            return 0;
+        }
+        var convertedValue = (converted.maximum - converted.minimum) * rangeDelta + converted.minimum;
+        var scale = to.value / convertedValue;
         return scale;
     };
     Base.prototype.output = function (options) {
@@ -1930,7 +1944,7 @@ var Area = new Class_Class('Area')
             'sq in': Plurality.EITHER,
             'in2': Plurality.EITHER,
             'in^2': Plurality.EITHER,
-            'in²': Plurality.EITHER,
+            'in\xb2': Plurality.EITHER,
             'square inch': Plurality.SINGULAR,
             'square inches': Plurality.PLURAL
         }
@@ -1948,7 +1962,7 @@ var Area = new Class_Class('Area')
             'sq ft': Plurality.EITHER,
             'ft2': Plurality.EITHER,
             'ft^2': Plurality.EITHER,
-            'ft²': Plurality.EITHER,
+            'ft\xb2': Plurality.EITHER,
             'square foot': Plurality.SINGULAR,
             'square feet': Plurality.PLURAL
         }
@@ -1965,7 +1979,7 @@ var Area = new Class_Class('Area')
             'sq yd': Plurality.EITHER,
             'yd2': Plurality.EITHER,
             'yd^2': Plurality.EITHER,
-            'yd²': Plurality.EITHER,
+            'yd\xb2': Plurality.EITHER,
             'square yard': Plurality.SINGULAR,
             'square yards': Plurality.PLURAL
         }
@@ -1995,7 +2009,7 @@ var Area = new Class_Class('Area')
             'sq mi': Plurality.EITHER,
             'mi2': Plurality.EITHER,
             'mi^2': Plurality.EITHER,
-            'mi²': Plurality.EITHER,
+            'mi\xb2': Plurality.EITHER,
             'square mile': Plurality.SINGULAR,
             'square miles': Plurality.PLURAL
         }
@@ -2012,7 +2026,7 @@ var Area = new Class_Class('Area')
             'sq mm': Plurality.EITHER,
             'mm2': Plurality.EITHER,
             'mm^2': Plurality.EITHER,
-            'mm²': Plurality.EITHER,
+            'mm\xb2': Plurality.EITHER,
             'square millimeter': Plurality.SINGULAR,
             'square millimeters': Plurality.PLURAL
         }
@@ -2030,7 +2044,7 @@ var Area = new Class_Class('Area')
             'sq cm': Plurality.EITHER,
             'cm2': Plurality.EITHER,
             'cm^2': Plurality.EITHER,
-            'cm²': Plurality.EITHER,
+            'cm\xb2': Plurality.EITHER,
             'square centimeter': Plurality.SINGULAR,
             'square centimeters': Plurality.PLURAL
         }
@@ -2048,7 +2062,7 @@ var Area = new Class_Class('Area')
             'sq m': Plurality.EITHER,
             'm2': Plurality.EITHER,
             'm^2': Plurality.EITHER,
-            'm²': Plurality.EITHER,
+            'm\xb2': Plurality.EITHER,
             'square meter': Plurality.SINGULAR,
             'square meters': Plurality.PLURAL
         }
@@ -2066,7 +2080,7 @@ var Area = new Class_Class('Area')
             'sq km': Plurality.EITHER,
             'km2': Plurality.EITHER,
             'km^2': Plurality.EITHER,
-            'km²': Plurality.EITHER,
+            'km\xb2': Plurality.EITHER,
             'square kilometer': Plurality.SINGULAR,
             'square kilometers': Plurality.PLURAL
         }
@@ -2380,8 +2394,8 @@ var Temperature = new Class_Class('Temperature')
         denominators: [],
         units: {
             'K': Plurality.EITHER,
-            'kelvin': Plurality.EITHER,
-            'kelvins': Plurality.EITHER
+            'kelvin': Plurality.SINGULAR,
+            'kelvins': Plurality.PLURAL
         }
     }
 ])

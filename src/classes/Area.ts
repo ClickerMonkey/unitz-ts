@@ -20,7 +20,7 @@ export let Area = new Class('Area')
         'sq in': Plurality.EITHER,
         'in2': Plurality.EITHER,
         'in^2': Plurality.EITHER,
-        'in²': Plurality.EITHER,
+        'in\xb2': Plurality.EITHER,
         'square inch': Plurality.SINGULAR,
         'square inches': Plurality.PLURAL
       }
@@ -38,7 +38,7 @@ export let Area = new Class('Area')
         'sq ft': Plurality.EITHER,
         'ft2': Plurality.EITHER,
         'ft^2': Plurality.EITHER,
-        'ft²': Plurality.EITHER,
+        'ft\xb2': Plurality.EITHER,
         'square foot': Plurality.SINGULAR,
         'square feet': Plurality.PLURAL
       }
@@ -55,7 +55,7 @@ export let Area = new Class('Area')
         'sq yd': Plurality.EITHER,
         'yd2': Plurality.EITHER,
         'yd^2': Plurality.EITHER,
-        'yd²': Plurality.EITHER,
+        'yd\xb2': Plurality.EITHER,
         'square yard': Plurality.SINGULAR,
         'square yards': Plurality.PLURAL
       }
@@ -85,7 +85,7 @@ export let Area = new Class('Area')
         'sq mi': Plurality.EITHER,
         'mi2': Plurality.EITHER,
         'mi^2': Plurality.EITHER,
-        'mi²': Plurality.EITHER,
+        'mi\xb2': Plurality.EITHER,
         'square mile': Plurality.SINGULAR,
         'square miles': Plurality.PLURAL
       }
@@ -102,7 +102,7 @@ export let Area = new Class('Area')
         'sq mm': Plurality.EITHER,
         'mm2': Plurality.EITHER,
         'mm^2': Plurality.EITHER,
-        'mm²': Plurality.EITHER,
+        'mm\xb2': Plurality.EITHER,
         'square millimeter': Plurality.SINGULAR,
         'square millimeters': Plurality.PLURAL
       }
@@ -120,7 +120,7 @@ export let Area = new Class('Area')
         'sq cm': Plurality.EITHER,
         'cm2': Plurality.EITHER,
         'cm^2': Plurality.EITHER,
-        'cm²': Plurality.EITHER,
+        'cm\xb2': Plurality.EITHER,
         'square centimeter': Plurality.SINGULAR,
         'square centimeters': Plurality.PLURAL
       }
@@ -138,7 +138,7 @@ export let Area = new Class('Area')
         'sq m': Plurality.EITHER,
         'm2': Plurality.EITHER,
         'm^2': Plurality.EITHER,
-        'm²': Plurality.EITHER,
+        'm\xb2': Plurality.EITHER,
         'square meter': Plurality.SINGULAR,
         'square meters': Plurality.PLURAL
       }
@@ -156,7 +156,7 @@ export let Area = new Class('Area')
         'sq km': Plurality.EITHER,
         'km2': Plurality.EITHER,
         'km^2': Plurality.EITHER,
-        'km²': Plurality.EITHER,
+        'km\xb2': Plurality.EITHER,
         'square kilometer': Plurality.SINGULAR,
         'square kilometers': Plurality.PLURAL
       }

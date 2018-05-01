@@ -36,9 +36,9 @@ export class Base
   }
 
   // 1c, 3m SCALE TO 1/2c = 1/2c, 1.5m
-  public scaleTo(unitValue: string): Base
+  public scaleTo(unitValue: string, rangeDelta: number = 0.5): Base
   {
-    return this.scale( this.getScaleTo(unitValue) );
+    return this.scale( this.getScaleTo(unitValue, rangeDelta) );
   }
 
   // 5 kilograms = 5kg
@@ -144,13 +144,19 @@ export class Base
 
         if (minGroup.classScale > minGroupChosen.classScale && transform.isVisibleGroup( minGroup ))
         {
-          minSum = parent.convert( minSum, minGroupChosen, minGroup );
+          if (i !== 0)
+          {
+            minSum = parent.convert( minSum, minGroupChosen, minGroup );
+          }
           minGroupChosen = minGroup;
         }
 
         if (maxGroup.classScale > maxGroupChosen.classScale && transform.isVisibleGroup( maxGroup ))
         {
-          maxSum = parent.convert( maxSum, maxGroupChosen, maxGroup );
+          if (i !== 0)
+          {
+            maxSum = parent.convert( maxSum, maxGroupChosen, maxGroup );
+          }
           maxGroupChosen = maxGroup;
         }
 
@@ -196,6 +202,7 @@ export class Base
       let range: Range = ranges[ i ];
       let value: Value = transform.convertWithMax ? range.max : range.min;
       let valueGroup: Group = value.group;
+      let valueSign: number = fn.sign( value.value );
 
       if (valueGroup)
       {
@@ -207,14 +214,16 @@ export class Base
 
             if (group.isBase)
             {
+              value = value.zero();
+
               expanded.push( Range.fromFixed( transformed ) )
             }
-            else if (fn.abs( transformed.value ) >= 1)
+            else if (fn.abs( transformed.value ) >= 1 && fn.sign( transformed.value) === valueSign)
             {
               let truncated: Value = transformed.truncated();
-              let scaled: number = group.baseScale / valueGroup.baseScale;
 
-              value = value.sub( truncated, scaled );
+              value = value.sub( truncated.convertToValue( valueGroup ) );
+
               expanded.push( Range.fromFixed( truncated ) );
             }
           }
@@ -395,11 +404,24 @@ export class Base
     return { classes, groupless };
   }
 
-  public getScaleTo(unitValue: string): number
+  public getScaleTo(unitValue: string, rangeDelta: number = 0.5): number
   {
     let to: Value = Parse.value( unitValue, Core.getGroup );
+
+    if (!to.isValid)
+    {
+      return 0;
+    }
+
     let converted: Range = this.convert( to.unit );
-    let scale: number = to.value / converted.average;
+
+    if (!converted || !converted.isValid)
+    {
+      return 0;
+    }
+
+    let convertedValue: number = (converted.maximum - converted.minimum) * rangeDelta + converted.minimum;
+    let scale: number = to.value / convertedValue;
 
     return scale;
   }
