@@ -186,7 +186,7 @@ export class Parse
     let den: number = parseInt( matches[5] );
     let decimal: string = matches[6];
     let hasDecimal: boolean = isFinite( parseFloat( decimal ) );
-    let unit: string = fn.trim( matches[7] );
+    let unit: string = fn.trim( matches[7] ).replace( /\.$/, '' );
 
     if ( !hasWhole && hasDecimal )
     {

@@ -4,9 +4,25 @@ import { Class } from '../Class';
 import { Plurality } from '../Plurality';
 
 
+/**
+ * The Length class which contains the following groups.
+ *
+ * - inch
+ * - foot
+ * - yard
+ * - mile
+ * - league
+ * - millimeter
+ * - centimeter
+ * - decimeter
+ * - meter
+ * - kilometer
+ */
 export let Length = new Class('Length')
   .setBaseConversion('in', 'mm', (x) => x * 25.4)
+
   .setBaseConversion('mm', 'in', (x) => x * 0.039370)
+
   .addGroups([
     {
       system: System.IMPERIAL,

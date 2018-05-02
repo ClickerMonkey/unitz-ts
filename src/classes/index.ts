@@ -5,10 +5,13 @@ import { Area } from './Area';
 import { Time } from './Time';
 import { Digital } from './Digital';
 import { Temperature } from './Temperature';
-import { Rotation } from './Rotation';
+import { Angle } from './Angle';
 import { Volume } from './Volume';
 import { Length } from './Length';
 
+/**
+ * Adds all classes that come with Unitz to [Core].
+ */
 export function addDefaults()
 {
   Core.addClasses(
@@ -17,7 +20,7 @@ export function addDefaults()
     Time,
     Digital,
     Temperature,
-    Rotation,
+    Angle,
     Volume,
     Length
   );

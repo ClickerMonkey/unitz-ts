@@ -4,9 +4,21 @@ import { Class } from '../Class';
 import { Plurality } from '../Plurality';
 
 
+/**
+ * The Weight clas which contains the following groups.
+ *
+ * - milligram
+ * - gram
+ * - kilogram
+ * - ounce
+ * - pound
+ * - ton
+ */
 export let Weight = new Class('Weight')
   .setBaseConversion('mg', 'oz', (x) => x * 0.000035274)
+
   .setBaseConversion('oz', 'mg', (x) => x * 28349.5)
+
   .addGroups([
     {
       system: System.METRIC,

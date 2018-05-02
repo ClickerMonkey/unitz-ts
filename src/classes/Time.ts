@@ -4,6 +4,22 @@ import { Class } from '../Class';
 import { Plurality } from '../Plurality';
 
 
+/**
+ * The Time class which contains the following groups.
+ *
+ * - nanosecond
+ * - microsecond
+ * - millisecond
+ * - second
+ * - hour
+ * - day
+ * - week
+ * - year
+ * - score
+ * - decade
+ * - centry
+ * - millennium
+ */
 export let Time = new Class('Time')
   .addGroups([
     {
@@ -140,6 +156,101 @@ export let Time = new Class('Time')
       denominators: [20],
       units: {
         'score': Plurality.EITHER
+      }
+    },
+    {
+      system: System.ANY,
+      common: true,
+      unit: 'decade',
+      relativeUnit: 'yr',
+      relativeScale: 10,
+      denominators: [10],
+      units: {
+        'decade': Plurality.EITHER,
+        'decades': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.ANY,
+      unit: 'biennium',
+      relativeUnit: 'yr',
+      relativeScale: 2,
+      denominators: [],
+      units: {
+        'biennium': Plurality.EITHER,
+        'bienniums': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.ANY,
+      unit: 'triennium',
+      relativeUnit: 'yr',
+      relativeScale: 3,
+      denominators: [],
+      units: {
+        'triennium': Plurality.EITHER,
+        'trienniums': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.ANY,
+      unit: 'quadrennium',
+      relativeUnit: 'yr',
+      relativeScale: 4,
+      denominators: [],
+      units: {
+        'quadrennium': Plurality.EITHER,
+        'quadrenniums': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.ANY,
+      unit: 'lustrum',
+      relativeUnit: 'yr',
+      relativeScale: 5,
+      denominators: [],
+      units: {
+        'lustrum': Plurality.EITHER,
+        'lustrums': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.ANY,
+      common: true,
+      unit: 'decade',
+      relativeUnit: 'yr',
+      relativeScale: 10,
+      denominators: [2, 10],
+      units: {
+        'decade': Plurality.EITHER,
+        'decades': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.ANY,
+      common: true,
+      unit: 'century',
+      relativeUnit: 'yr',
+      relativeScale: 100,
+      denominators: [2, 10],
+      units: {
+        'century': Plurality.EITHER,
+        'centurys': Plurality.PLURAL,
+        'centuries': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.ANY,
+      common: true,
+      unit: 'millennium',
+      relativeUnit: 'yr',
+      relativeScale: 1000,
+      denominators: [2, 3, 4],
+      units: {
+        'millennium': Plurality.EITHER,
+        'millenniums': Plurality.PLURAL,
+        'millennia': Plurality.PLURAL,
+        'millennias': Plurality.PLURAL
       }
     }
   ])

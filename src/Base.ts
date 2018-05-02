@@ -12,11 +12,17 @@ import { Value } from './Value';
 import { Class, ClassGrouping } from './Class';
 
 
+/**
+ * Takes user input and returns a new instance of [Base].
+ */
 export function uz(input: RangesInput)
 {
   return new Base(input);
 }
 
+/**
+ * The main class which contains a list of ranges and the user input.
+ */
 export class Base
 {
 
@@ -240,21 +246,17 @@ export class Base
 
   public add(input: BaseInput, scale: number = 1): Base
   {
-    return this.operate(input, (a, b) =>
-    {
-      return a.add(b, scale);
-    });
+    return this.operate(input, (a, b) => a.add(b, scale), (a) => a.mul( scale ));
   }
 
   public sub(input: BaseInput, scale: number = 1): Base
   {
-    return this.operate(input, (a, b) =>
-    {
-      return a.sub(b, scale);
-    });
+    return this.operate(input, (a, b) => a.sub(b, scale), (a) => a.mul( -scale ));
   }
 
-  public operate(input: BaseInput, operate: (a: Range, b: Range) => any): Base
+  public operate(input: BaseInput,
+    operate: (a: Range, b: Range) => Range,
+    remainder: (a: Range) => Range): Base
   {
     let ranges: RangeList = this.ranges;
     let output: RangeList = [];
@@ -288,7 +290,7 @@ export class Base
     {
       if (!otherUsed[ k ])
       {
-        output.push( otherRanges[ k ] );
+        output.push( remainder( otherRanges[ k ] ) );
       }
     }
 
@@ -460,6 +462,24 @@ export class Base
     }
 
     return new Range( min, max );
+  }
+
+  public each(iterate: (range: Range) => any, reverse: boolean = false): this
+  {
+    let ranges: RangeList = this.ranges;
+    let start = reverse ? ranges.length - 1 : 0;
+    let end = reverse ? -1 : ranges.length;
+    let move = reverse ? -1 : 1;
+
+    for (let i = start; i !== end; i += move)
+    {
+      if (iterate( ranges[ i ] ) === false)
+      {
+        break;
+      }
+    }
+
+    return this;
   }
 
   public classes(): Class[]

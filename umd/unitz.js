@@ -1212,7 +1212,8 @@ var Sort_Sort = (function () {
 var Core_Core = (function () {
     function Core() {
     }
-    Core.getGroup = function (unit) {
+    Core.getGroup = function (unit, createDynamic) {
+        if (createDynamic === void 0) { createDynamic = true; }
         if (!unit) {
             return null;
         }
@@ -1225,12 +1226,34 @@ var Core_Core = (function () {
         if (normalizedGroup) {
             return normalizedGroup;
         }
+        if (!createDynamic) {
+            return null;
+        }
         var dynamicUnit = Core.getDynamicMatch(unit);
         var dynamicGroup = Core.dynamicMatches[dynamicUnit];
         if (dynamicGroup) {
             return Core.addDynamicUnit(unit, dynamicGroup);
         }
         return Core.newDynamicGroup(unit);
+    };
+    Core.setPreferred = function (unit) {
+        var group = this.getGroup(unit, false);
+        if (group) {
+            group.setPreferred(unit);
+        }
+    };
+    Core.setCommon = function (unit, common) {
+        if (common === void 0) { common = true; }
+        var group = this.getGroup(unit, false);
+        if (group) {
+            group.setCommon(common);
+        }
+    };
+    Core.setDenominators = function (unit, denominators) {
+        var group = this.getGroup(unit, false);
+        if (group) {
+            group.setDenominators(denominators);
+        }
     };
     Core.addClass = function (parent) {
         this.classMap[parent.name] = parent;
@@ -1473,17 +1496,13 @@ var Base_Base = (function () {
     };
     Base.prototype.add = function (input, scale) {
         if (scale === void 0) { scale = 1; }
-        return this.operate(input, function (a, b) {
-            return a.add(b, scale);
-        });
+        return this.operate(input, function (a, b) { return a.add(b, scale); }, function (a) { return a.mul(scale); });
     };
     Base.prototype.sub = function (input, scale) {
         if (scale === void 0) { scale = 1; }
-        return this.operate(input, function (a, b) {
-            return a.sub(b, scale);
-        });
+        return this.operate(input, function (a, b) { return a.sub(b, scale); }, function (a) { return a.mul(-scale); });
     };
-    Base.prototype.operate = function (input, operate) {
+    Base.prototype.operate = function (input, operate, remainder) {
         var ranges = this.ranges;
         var output = [];
         var other = Parse_Parse.base(input);
@@ -1504,7 +1523,7 @@ var Base_Base = (function () {
         }
         for (var k = 0; k < otherRanges.length; k++) {
             if (!otherUsed[k]) {
-                output.push(otherRanges[k]);
+                output.push(remainder(otherRanges[k]));
             }
         }
         return new Base(this.input, output);
@@ -1619,6 +1638,19 @@ var Base_Base = (function () {
             }
         }
         return new Range_Range(min, max);
+    };
+    Base.prototype.each = function (iterate, reverse) {
+        if (reverse === void 0) { reverse = false; }
+        var ranges = this.ranges;
+        var start = reverse ? ranges.length - 1 : 0;
+        var end = reverse ? -1 : ranges.length;
+        var move = reverse ? -1 : 1;
+        for (var i = start; i !== end; i += move) {
+            if (iterate(ranges[i]) === false) {
+                break;
+            }
+        }
+        return this;
     };
     Base.prototype.classes = function () {
         var ranges = this.ranges;
@@ -1790,7 +1822,7 @@ var Parse_Parse = (function () {
         var den = parseInt(matches[5]);
         var decimal = matches[6];
         var hasDecimal = isFinite(parseFloat(decimal));
-        var unit = Functions.trim(matches[7]);
+        var unit = Functions.trim(matches[7]).replace(/\.$/, '');
         if (!hasWhole && hasDecimal) {
             whole = 0;
             hasWhole = true;
@@ -1940,11 +1972,18 @@ var Area = new Class_Class('Area')
         denominators: [2, 4, 8, 16],
         units: {
             'sqin': Plurality.EITHER,
-            'sq. in.': Plurality.EITHER,
+            'sq. in': Plurality.EITHER,
             'sq in': Plurality.EITHER,
             'in2': Plurality.EITHER,
             'in^2': Plurality.EITHER,
             'in\xb2': Plurality.EITHER,
+            'inch2': Plurality.SINGULAR,
+            'inch^2': Plurality.SINGULAR,
+            'inch\xb2': Plurality.SINGULAR,
+            'inches2': Plurality.PLURAL,
+            'inches^2': Plurality.PLURAL,
+            'inches\xb2': Plurality.PLURAL,
+            'square in': Plurality.EITHER,
             'square inch': Plurality.SINGULAR,
             'square inches': Plurality.PLURAL
         }
@@ -1958,11 +1997,18 @@ var Area = new Class_Class('Area')
         denominators: [2, 4, 8, 16],
         units: {
             'sqft': Plurality.EITHER,
-            'sq. ft.': Plurality.EITHER,
+            'sq. ft': Plurality.EITHER,
             'sq ft': Plurality.EITHER,
             'ft2': Plurality.EITHER,
             'ft^2': Plurality.EITHER,
             'ft\xb2': Plurality.EITHER,
+            'foot2': Plurality.SINGULAR,
+            'foot^2': Plurality.SINGULAR,
+            'foot\xb2': Plurality.SINGULAR,
+            'feet2': Plurality.PLURAL,
+            'feet^2': Plurality.PLURAL,
+            'feet\xb2': Plurality.PLURAL,
+            'square ft': Plurality.EITHER,
             'square foot': Plurality.SINGULAR,
             'square feet': Plurality.PLURAL
         }
@@ -1975,11 +2021,17 @@ var Area = new Class_Class('Area')
         denominators: [2, 3, 4, 8, 9, 16],
         units: {
             'sqyd': Plurality.EITHER,
-            'sq. yd.': Plurality.EITHER,
+            'sq. yd': Plurality.EITHER,
             'sq yd': Plurality.EITHER,
             'yd2': Plurality.EITHER,
             'yd^2': Plurality.EITHER,
             'yd\xb2': Plurality.EITHER,
+            'yard2': Plurality.SINGULAR,
+            'yard^2': Plurality.SINGULAR,
+            'yard\xb2': Plurality.SINGULAR,
+            'yards2': Plurality.PLURAL,
+            'yards^2': Plurality.PLURAL,
+            'yards\xb2': Plurality.PLURAL,
             'square yard': Plurality.SINGULAR,
             'square yards': Plurality.PLURAL
         }
@@ -2005,11 +2057,18 @@ var Area = new Class_Class('Area')
         denominators: [2, 3, 4, 8, 10],
         units: {
             'sqmi': Plurality.EITHER,
-            'sq. mi.': Plurality.EITHER,
+            'sq. mi': Plurality.EITHER,
             'sq mi': Plurality.EITHER,
             'mi2': Plurality.EITHER,
             'mi^2': Plurality.EITHER,
             'mi\xb2': Plurality.EITHER,
+            'mile2': Plurality.SINGULAR,
+            'mile^2': Plurality.SINGULAR,
+            'mile\xb2': Plurality.SINGULAR,
+            'miles2': Plurality.PLURAL,
+            'miles^2': Plurality.PLURAL,
+            'miles\xb2': Plurality.PLURAL,
+            'square mi': Plurality.EITHER,
             'square mile': Plurality.SINGULAR,
             'square miles': Plurality.PLURAL
         }
@@ -2022,11 +2081,18 @@ var Area = new Class_Class('Area')
         denominators: [2, 4, 8, 16],
         units: {
             'sqmm': Plurality.EITHER,
-            'sq. mm.': Plurality.EITHER,
+            'sq. mm': Plurality.EITHER,
             'sq mm': Plurality.EITHER,
             'mm2': Plurality.EITHER,
             'mm^2': Plurality.EITHER,
             'mm\xb2': Plurality.EITHER,
+            'millimeter2': Plurality.SINGULAR,
+            'millimeter^2': Plurality.SINGULAR,
+            'millimeter\xb2': Plurality.SINGULAR,
+            'millimeters2': Plurality.PLURAL,
+            'millimeters^2': Plurality.PLURAL,
+            'millimeters\xb2': Plurality.PLURAL,
+            'square mm': Plurality.EITHER,
             'square millimeter': Plurality.SINGULAR,
             'square millimeters': Plurality.PLURAL
         }
@@ -2040,11 +2106,18 @@ var Area = new Class_Class('Area')
         denominators: [2, 4, 8, 16],
         units: {
             'sqcm': Plurality.EITHER,
-            'sq. cm.': Plurality.EITHER,
+            'sq. cm': Plurality.EITHER,
             'sq cm': Plurality.EITHER,
             'cm2': Plurality.EITHER,
             'cm^2': Plurality.EITHER,
             'cm\xb2': Plurality.EITHER,
+            'centimeter2': Plurality.SINGULAR,
+            'centimeter^2': Plurality.SINGULAR,
+            'centimeter\xb2': Plurality.SINGULAR,
+            'centimeters2': Plurality.PLURAL,
+            'centimeters^2': Plurality.PLURAL,
+            'centimeters\xb2': Plurality.PLURAL,
+            'square cm': Plurality.EITHER,
             'square centimeter': Plurality.SINGULAR,
             'square centimeters': Plurality.PLURAL
         }
@@ -2058,11 +2131,18 @@ var Area = new Class_Class('Area')
         denominators: [2, 4, 8, 16],
         units: {
             'sqm': Plurality.EITHER,
-            'sq. m.': Plurality.EITHER,
+            'sq. m': Plurality.EITHER,
             'sq m': Plurality.EITHER,
             'm2': Plurality.EITHER,
             'm^2': Plurality.EITHER,
             'm\xb2': Plurality.EITHER,
+            'meter2': Plurality.SINGULAR,
+            'meter^2': Plurality.SINGULAR,
+            'meter\xb2': Plurality.SINGULAR,
+            'meters2': Plurality.PLURAL,
+            'meters^2': Plurality.PLURAL,
+            'meters\xb2': Plurality.PLURAL,
+            'square m': Plurality.EITHER,
             'square meter': Plurality.SINGULAR,
             'square meters': Plurality.PLURAL
         }
@@ -2076,11 +2156,18 @@ var Area = new Class_Class('Area')
         denominators: [2, 4, 8, 16],
         units: {
             'sqkm': Plurality.EITHER,
-            'sq. km.': Plurality.EITHER,
+            'sq. km': Plurality.EITHER,
             'sq km': Plurality.EITHER,
             'km2': Plurality.EITHER,
             'km^2': Plurality.EITHER,
             'km\xb2': Plurality.EITHER,
+            'kilometer2': Plurality.SINGULAR,
+            'kilometer^2': Plurality.SINGULAR,
+            'kilometer\xb2': Plurality.SINGULAR,
+            'kilometers2': Plurality.PLURAL,
+            'kilometers^2': Plurality.PLURAL,
+            'kilometers\xb2': Plurality.PLURAL,
+            'square km': Plurality.EITHER,
             'square kilometer': Plurality.SINGULAR,
             'square kilometers': Plurality.PLURAL
         }
@@ -2230,6 +2317,101 @@ var Time = new Class_Class('Time')
         units: {
             'score': Plurality.EITHER
         }
+    },
+    {
+        system: System.ANY,
+        common: true,
+        unit: 'decade',
+        relativeUnit: 'yr',
+        relativeScale: 10,
+        denominators: [10],
+        units: {
+            'decade': Plurality.EITHER,
+            'decades': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        unit: 'biennium',
+        relativeUnit: 'yr',
+        relativeScale: 2,
+        denominators: [],
+        units: {
+            'biennium': Plurality.EITHER,
+            'bienniums': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        unit: 'triennium',
+        relativeUnit: 'yr',
+        relativeScale: 3,
+        denominators: [],
+        units: {
+            'triennium': Plurality.EITHER,
+            'trienniums': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        unit: 'quadrennium',
+        relativeUnit: 'yr',
+        relativeScale: 4,
+        denominators: [],
+        units: {
+            'quadrennium': Plurality.EITHER,
+            'quadrenniums': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        unit: 'lustrum',
+        relativeUnit: 'yr',
+        relativeScale: 5,
+        denominators: [],
+        units: {
+            'lustrum': Plurality.EITHER,
+            'lustrums': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        common: true,
+        unit: 'decade',
+        relativeUnit: 'yr',
+        relativeScale: 10,
+        denominators: [2, 10],
+        units: {
+            'decade': Plurality.EITHER,
+            'decades': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        common: true,
+        unit: 'century',
+        relativeUnit: 'yr',
+        relativeScale: 100,
+        denominators: [2, 10],
+        units: {
+            'century': Plurality.EITHER,
+            'centurys': Plurality.PLURAL,
+            'centuries': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        common: true,
+        unit: 'millennium',
+        relativeUnit: 'yr',
+        relativeScale: 1000,
+        denominators: [2, 3, 4],
+        units: {
+            'millennium': Plurality.EITHER,
+            'millenniums': Plurality.PLURAL,
+            'millennia': Plurality.PLURAL,
+            'millennias': Plurality.PLURAL
+        }
     }
 ])
     .setClassScales();
@@ -2358,11 +2540,11 @@ function addDigitalUnits(parent, relativeTo, relativeScales, denominators, suffi
 var _C_ = '\xb0C';
 var Temperature = new Class_Class('Temperature')
     .setBaseConversion('F', _C_, function (x) { return ((x - 32) * 5 / 9); })
+    .setBaseConversion('F', 'K', function (x) { return ((x + 459.67) * 5 / 9); })
     .setBaseConversion(_C_, 'F', function (x) { return ((x * 9 / 5) + 32); })
+    .setBaseConversion(_C_, 'K', function (x) { return (x + 273.15); })
     .setBaseConversion('K', _C_, function (x) { return (x - 273.15); })
     .setBaseConversion('K', 'F', function (x) { return ((x * 9 / 5) - 459.67); })
-    .setBaseConversion(_C_, 'K', function (x) { return (x + 273.15); })
-    .setBaseConversion('F', 'K', function (x) { return ((x + 459.67) * 5 / 9); })
     .addGroups([
     {
         system: System.IMPERIAL,
@@ -2445,12 +2627,340 @@ var Rotation = new Class_Class('Rotation')
 
 
 
-System.METRIC;
-Plurality.SINGULAR;
 var Volume = new Class_Class('Volume')
-    .setBaseConversion('deg', 'rad', function (x) { return x * 1; })
-    .setBaseConversion('rad', 'deg', function (x) { return x * 2; })
-    .addGroups([])
+    .setBaseConversion('tsp', 'ml', function (x) { return x * 4.92892; })
+    .setBaseConversion('tsp', 'mm3', function (x) { return x * 4928.92; })
+    .setBaseConversion('tsp', 'in3', function (x) { return x * 0.300781; })
+    .setBaseConversion('ml', 'tsp', function (x) { return x * 0.202884; })
+    .setBaseConversion('ml', 'mm3', function (x) { return x * 1000; })
+    .setBaseConversion('ml', 'in3', function (x) { return x * 0.0610237; })
+    .setBaseConversion('mm3', 'tsp', function (x) { return x * 0.000202884; })
+    .setBaseConversion('mm3', 'ml', function (x) { return x * 0.001; })
+    .setBaseConversion('mm3', 'in3', function (x) { return x * 0.0000610237; })
+    .setBaseConversion('in3', 'tsp', function (x) { return x * 3.32468; })
+    .setBaseConversion('in3', 'ml', function (x) { return x * 16.3871; })
+    .setBaseConversion('in3', 'mm3', function (x) { return x * 16387.1; })
+    .addGroups([
+    {
+        system: System.IMPERIAL,
+        common: true,
+        unit: 'tsp',
+        baseUnit: 'tsp',
+        denominators: [2, 3, 4],
+        units: {
+            'tsp': Plurality.EITHER,
+            'ts': Plurality.EITHER,
+            'tsps': Plurality.PLURAL,
+            'teaspoon': Plurality.SINGULAR,
+            'teaspoons': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.IMPERIAL,
+        common: true,
+        unit: 'tbsp',
+        relativeUnit: 'tsp',
+        relativeScale: 3,
+        denominators: [2, 3, 4],
+        units: {
+            'tbsp': Plurality.EITHER,
+            'tbsps': Plurality.PLURAL,
+            'tablespoon': Plurality.SINGULAR,
+            'tablespoons': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.IMPERIAL,
+        common: true,
+        unit: 'floz',
+        relativeUnit: 'tsp',
+        relativeScale: 6,
+        denominators: [2, 3, 6],
+        units: {
+            // 'oz': Plurality.EITHER,
+            // 'ounce': Plurality.SINGULAR,
+            // 'ounces': Plurality.PLURAL,
+            'floz': Plurality.EITHER,
+            'fl-oz': Plurality.EITHER,
+            'fl oz': Plurality.EITHER,
+            'fluid ounce': Plurality.SINGULAR,
+            'fluid ounces': Plurality.PLURAL,
+            'fl. oz': Plurality.EITHER,
+            'oz. fl': Plurality.EITHER,
+            'oz fl': Plurality.EITHER
+        }
+    },
+    {
+        system: System.IMPERIAL,
+        common: true,
+        unit: 'c',
+        relativeUnit: 'floz',
+        relativeScale: 8,
+        denominators: [2, 3, 4],
+        units: {
+            'c': Plurality.EITHER,
+            'cup': Plurality.SINGULAR,
+            'cups': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.IMPERIAL,
+        common: true,
+        unit: 'pt',
+        relativeUnit: 'c',
+        relativeScale: 2,
+        denominators: [2, 4, 8],
+        units: {
+            'pt': Plurality.EITHER,
+            'pint': Plurality.SINGULAR,
+            'pints': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.IMPERIAL,
+        common: true,
+        unit: 'qt',
+        relativeUnit: 'c',
+        relativeScale: 4,
+        denominators: [2, 4, 8],
+        units: {
+            'qt': Plurality.EITHER,
+            'quart': Plurality.SINGULAR,
+            'quarts': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.IMPERIAL,
+        common: true,
+        unit: 'gal',
+        relativeUnit: 'qt',
+        relativeScale: 4,
+        denominators: [2, 4, 8, 16],
+        units: {
+            'gal': Plurality.EITHER,
+            'gallon': Plurality.SINGULAR,
+            'gallons': Plurality.PLURAL,
+            'gals': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'ml',
+        baseUnit: 'ml',
+        denominators: [2, 10],
+        units: {
+            'ml': Plurality.EITHER,
+            'millilitre': Plurality.SINGULAR,
+            'millilitres': Plurality.PLURAL,
+            'milliliter': Plurality.SINGULAR,
+            'milliliters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'cl',
+        relativeUnit: 'ml',
+        relativeScale: 10,
+        denominators: [10],
+        units: {
+            'cl': Plurality.EITHER,
+            'centilitre': Plurality.SINGULAR,
+            'centilitres': Plurality.PLURAL,
+            'centiliter': Plurality.SINGULAR,
+            'centiliters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'l',
+        relativeUnit: 'ml',
+        relativeScale: 1000,
+        denominators: [2, 3, 4, 10],
+        units: {
+            'l': Plurality.EITHER,
+            'litre': Plurality.SINGULAR,
+            'litres': Plurality.PLURAL,
+            'liter': Plurality.SINGULAR,
+            'liters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'dl',
+        relativeUnit: 'l',
+        relativeScale: 10,
+        denominators: [10, 100],
+        units: {
+            'dl': Plurality.EITHER,
+            'decalitre': Plurality.SINGULAR,
+            'decalitres': Plurality.PLURAL,
+            'decaliter': Plurality.SINGULAR,
+            'decaliters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'kl',
+        relativeUnit: 'l',
+        relativeScale: 1000,
+        denominators: [10, 100],
+        units: {
+            'kl': Plurality.EITHER,
+            'kilolitre': Plurality.SINGULAR,
+            'kilolitres': Plurality.PLURAL,
+            'kiloliter': Plurality.SINGULAR,
+            'kiloliters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'mm3',
+        baseUnit: 'mm3',
+        denominators: [2, 4, 8],
+        units: {
+            'mm3': Plurality.EITHER,
+            'mm^3': Plurality.EITHER,
+            'mm\xb3': Plurality.EITHER,
+            'millimeter3': Plurality.SINGULAR,
+            'millimeter^3': Plurality.SINGULAR,
+            'millimeter\xb3': Plurality.SINGULAR,
+            'millimeters3': Plurality.PLURAL,
+            'millimeters^3': Plurality.PLURAL,
+            'millimeters\xb3': Plurality.PLURAL,
+            'cubic mm': Plurality.EITHER,
+            'cubic millimeter': Plurality.SINGULAR,
+            'cubic millimeters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'cm3',
+        relativeUnit: 'mm3',
+        relativeScale: 1000,
+        denominators: [2, 4, 8],
+        units: {
+            'cm3': Plurality.EITHER,
+            'cm^3': Plurality.EITHER,
+            'cm\xb3': Plurality.EITHER,
+            'centimeter3': Plurality.SINGULAR,
+            'centimeter^3': Plurality.SINGULAR,
+            'centimeter\xb3': Plurality.SINGULAR,
+            'centimeters3': Plurality.PLURAL,
+            'centimeters^3': Plurality.PLURAL,
+            'centimeters\xb3': Plurality.PLURAL,
+            'cubic cm': Plurality.EITHER,
+            'cubic centimeter': Plurality.SINGULAR,
+            'cubic centimeters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'm3',
+        relativeUnit: 'cm3',
+        relativeScale: 1000000,
+        denominators: [2, 4, 8],
+        units: {
+            'm3': Plurality.EITHER,
+            'm^3': Plurality.EITHER,
+            'm\xb3': Plurality.EITHER,
+            'meter3': Plurality.SINGULAR,
+            'meter^3': Plurality.SINGULAR,
+            'meter\xb3': Plurality.SINGULAR,
+            'meters3': Plurality.PLURAL,
+            'meters^3': Plurality.PLURAL,
+            'meters\xb3': Plurality.PLURAL,
+            'cubic m': Plurality.EITHER,
+            'cubic meter': Plurality.SINGULAR,
+            'cubic meters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'km3',
+        relativeUnit: 'm3',
+        relativeScale: 1000000000,
+        denominators: [2, 4, 8],
+        units: {
+            'km3': Plurality.EITHER,
+            'km^3': Plurality.EITHER,
+            'km\xb3': Plurality.EITHER,
+            'kilometer3': Plurality.SINGULAR,
+            'kilometer^3': Plurality.SINGULAR,
+            'kilometer\xb3': Plurality.SINGULAR,
+            'kilometers3': Plurality.PLURAL,
+            'kilometers^3': Plurality.PLURAL,
+            'kilometers\xb3': Plurality.PLURAL,
+            'cubic km': Plurality.EITHER,
+            'cubic kilometer': Plurality.SINGULAR,
+            'cubic kilometers': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.IMPERIAL,
+        unit: 'in3',
+        baseUnit: 'in3',
+        denominators: [2, 4, 8],
+        units: {
+            'in3': Plurality.EITHER,
+            'in^3': Plurality.EITHER,
+            'in\xb3': Plurality.EITHER,
+            'inch3': Plurality.SINGULAR,
+            'inch^3': Plurality.SINGULAR,
+            'inch\xb3': Plurality.SINGULAR,
+            'inches3': Plurality.PLURAL,
+            'inches^3': Plurality.PLURAL,
+            'inches\xb3': Plurality.PLURAL,
+            'cubic in': Plurality.EITHER,
+            'cubic inch': Plurality.SINGULAR,
+            'cubic inches': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'ft3',
+        relativeUnit: 'in3',
+        relativeScale: 1728,
+        denominators: [2, 4, 8],
+        units: {
+            'ft3': Plurality.EITHER,
+            'ft^3': Plurality.EITHER,
+            'ft\xb3': Plurality.EITHER,
+            'foot3': Plurality.SINGULAR,
+            'foot^3': Plurality.SINGULAR,
+            'foot\xb3': Plurality.SINGULAR,
+            'feet3': Plurality.PLURAL,
+            'feet^3': Plurality.PLURAL,
+            'feet\xb3': Plurality.PLURAL,
+            'cubic ft': Plurality.EITHER,
+            'cubic foot': Plurality.SINGULAR,
+            'cubic feet': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'yd3',
+        relativeUnit: 'ft3',
+        relativeScale: 27,
+        denominators: [2, 4, 8],
+        units: {
+            'yd3': Plurality.EITHER,
+            'yd^3': Plurality.EITHER,
+            'yd\xb3': Plurality.EITHER,
+            'yard3': Plurality.SINGULAR,
+            'yard^3': Plurality.SINGULAR,
+            'yard\xb3': Plurality.SINGULAR,
+            'yards3': Plurality.PLURAL,
+            'yards^3': Plurality.PLURAL,
+            'yards\xb3': Plurality.PLURAL,
+            'cubic yd': Plurality.EITHER,
+            'cubic yard': Plurality.SINGULAR,
+            'cubic yards': Plurality.PLURAL
+        }
+    }
+])
     .setClassScales();
 
 // CONCATENATED MODULE: ./src/classes/Length.ts

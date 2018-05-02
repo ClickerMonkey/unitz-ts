@@ -6,9 +6,17 @@ import { Plurality } from '../Plurality';
 let RAD2DEG = 180 / Math.PI;
 let DEG2RAD = Math.PI / 180;
 
-export let Rotation = new Class('Rotation')
+/**
+ * The Angle class which contains the following groups.
+ *
+ * - degree
+ * - radian
+ */
+export let Angle = new Class('Angle')
   .setBaseConversion('deg', 'rad', (x) => x * DEG2RAD)
+
   .setBaseConversion('rad', 'deg', (x) => x * RAD2DEG)
+
   .addGroups([
     {
       system: System.ANY,

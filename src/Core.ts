@@ -23,7 +23,7 @@ export class Core
   public static globalSort: Sort = new Sort();
 
 
-  public static getGroup(unit: string): Group
+  public static getGroup(unit: string, createDynamic: boolean = true): Group
   {
     if (!unit)
     {
@@ -45,6 +45,11 @@ export class Core
       return normalizedGroup;
     }
 
+    if (!createDynamic)
+    {
+      return null;
+    }
+
     let dynamicUnit: string = Core.getDynamicMatch( unit );
     let dynamicGroup: Group = Core.dynamicMatches[ dynamicUnit ];
 
@@ -54,6 +59,36 @@ export class Core
     }
 
     return Core.newDynamicGroup( unit );
+  }
+
+  public static setPreferred(unit: string): void
+  {
+    let group: Group = this.getGroup( unit, false );
+
+    if (group)
+    {
+      group.setPreferred( unit );
+    }
+  }
+
+  public static setCommon(unit: string, common: boolean = true): void
+  {
+    let group: Group = this.getGroup( unit, false );
+
+    if (group)
+    {
+      group.setCommon( common );
+    }
+  }
+
+  public static setDenominators(unit: string, denominators: number[]): void
+  {
+    let group: Group = this.getGroup( unit, false );
+
+    if (group)
+    {
+      group.setDenominators( denominators );
+    }
   }
 
   public static addClass(parent: Class): void

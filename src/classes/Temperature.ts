@@ -3,15 +3,26 @@ import { System } from '../System';
 import { Class } from '../Class';
 import { Plurality } from '../Plurality';
 
+
 let _C_: string = '\xb0C';
 
+/**
+ * The Temperature class which contains the following groups.
+ *
+ * - celsius
+ * - kelvin
+ * - fahrenheit
+ */
 export let Temperature = new Class('Temperature')
   .setBaseConversion('F', _C_, x => ((x - 32) * 5 / 9))
+  .setBaseConversion('F', 'K', x => ((x + 459.67) * 5 / 9))
+
   .setBaseConversion(_C_, 'F', x => ((x * 9 / 5) + 32))
+  .setBaseConversion(_C_, 'K', x => (x + 273.15))
+
   .setBaseConversion('K', _C_, x => (x - 273.15))
   .setBaseConversion('K', 'F', x => ((x * 9 / 5) - 459.67))
-  .setBaseConversion(_C_, 'K', x => (x + 273.15))
-  .setBaseConversion('F', 'K', x => ((x + 459.67) * 5 / 9))
+
   .addGroups([
     {
       system: System.IMPERIAL,
