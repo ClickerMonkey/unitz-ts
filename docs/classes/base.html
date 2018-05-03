@@ -1096,7 +1096,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L38">Base.ts:38</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L38">Base.ts:38</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1137,7 +1137,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">:</span> <a href="../globals.html#rangesinput" class="tsd-signature-type">RangesInput</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L33">Base.ts:33</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L33">Base.ts:33</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1153,7 +1153,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">ranges<span class="tsd-signature-symbol">:</span> <a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L38">Base.ts:38</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L38">Base.ts:38</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1171,7 +1171,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">has<wbr>Ranges<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L636">Base.ts:636</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L761">Base.ts:761</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1181,7 +1181,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L651">Base.ts:651</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L776">Base.ts:776</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1198,19 +1198,48 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L373">Base.ts:373</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L457">Base.ts:457</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Adds the ranges of this instance and the given input together. When the
+									ranges use the same units they are added together, otherwise they are
+								added to the end of the range list.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'1pt'</span>).add(<span class="hljs-string">'2pt, 1c'</span>); <span class="hljs-comment">// '3pt, 1c'</span>
+uz(<span class="hljs-string">'1pt'</span>).add(<span class="hljs-string">'2pt, 1c'</span>, <span class="hljs-number">2</span>); <span class="hljs-comment">// '5pt, 2c'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="base.html#operate">Base.operate</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="range.html#add">Range.add</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="range.html#mul">Range.mul</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <a href="../globals.html#baseinput" class="tsd-signature-type">BaseInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>An instance or input which can be parsed into an instance.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> scale: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>A number to multiple the input by when adding it to this instance.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance.</p>
 					</li>
 				</ul>
 			</section>
@@ -1224,7 +1253,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L611">Base.ts:611</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L736">Base.ts:736</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -1241,16 +1270,34 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L234">Base.ts:234</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L285">Base.ts:285</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Joins all ranges of the same classes together and uses the largest unit
+								to represent the sum for the class.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'1c, 1pt'</span>).compact(); <span class="hljs-comment">// '1.5pt'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#globaltransform">Core.globalTransform</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/transforminput.html" class="tsd-signature-type">TransformInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Options to control which units and values are acceptable.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance.</p>
 					</li>
 				</ul>
 			</section>
@@ -1264,7 +1311,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L426">Base.ts:426</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L551">Base.ts:551</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1287,7 +1334,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L564">Base.ts:564</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L689">Base.ts:689</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1310,7 +1357,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L593">Base.ts:593</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L718">Base.ts:718</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1354,16 +1401,37 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L325">Base.ts:325</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L391">Base.ts:391</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Joins all ranges of the same classes together and then separates them
+								into whole number ranges for better readability.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'1.5pt'</span>).expand(); <span class="hljs-comment">// '1pt, 1c'</span>
+uz(<span class="hljs-string">'53in'</span>).expand(); <span class="hljs-comment">// '4ft, 5in'</span>
+uz(<span class="hljs-string">'2ft, 29in'</span>).expand(); <span class="hljs-comment">// '4ft, 5in'</span>
+uz(<span class="hljs-string">'6543mm'</span>).expand(); <span class="hljs-comment">// '6 m, 54 cm, 3 mm'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#globaltransform">Core.globalTransform</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/transforminput.html" class="tsd-signature-type">TransformInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Options to control which units and values are acceptable.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance.</p>
 					</li>
 				</ul>
 			</section>
@@ -1377,7 +1445,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L471">Base.ts:471</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L596">Base.ts:596</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1400,7 +1468,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L189">Base.ts:189</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L189">Base.ts:189</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1437,7 +1505,7 @@ uz(<span class="hljs-string">'0.33 decades'</span>).fractions(); <span class="hl
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L535">Base.ts:535</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L660">Base.ts:660</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1463,7 +1531,7 @@ uz(<span class="hljs-string">'0.33 decades'</span>).fractions(); <span class="hl
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L501">Base.ts:501</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L626">Base.ts:626</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="../globals.html#classgrouping" class="tsd-signature-type">ClassGrouping</a></h4>
@@ -1480,10 +1548,27 @@ uz(<span class="hljs-string">'0.33 decades'</span>).fractions(); <span class="hl
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L213">Base.ts:213</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L224">Base.ts:224</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Flattens any ranges to their maximum values.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'1 - 3c, 5m'</span>).max(); <span class="hljs-comment">// '3c, 5m'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="range.html#maxd">Range.maxd</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="base.html#mutate">Base.mutate</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance or this if this instance has no ranges.</p>
 					</li>
 				</ul>
 			</section>
@@ -1497,10 +1582,27 @@ uz(<span class="hljs-string">'0.33 decades'</span>).fractions(); <span class="hl
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L219">Base.ts:219</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L241">Base.ts:241</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Flattens any ranges to their minimum values.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'1 - 3c, 5m'</span>).max(); <span class="hljs-comment">// '1c, 5m'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="range.html#mind">Range.mind</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="base.html#mutate">Base.mutate</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance or this if this instance has no ranges.</p>
 					</li>
 				</ul>
 			</section>
@@ -1514,7 +1616,7 @@ uz(<span class="hljs-string">'0.33 decades'</span>).fractions(); <span class="hl
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L453">Base.ts:453</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L578">Base.ts:578</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1537,7 +1639,7 @@ uz(<span class="hljs-string">'0.33 decades'</span>).fractions(); <span class="hl
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L152">Base.ts:152</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L152">Base.ts:152</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1573,7 +1675,7 @@ uz(<span class="hljs-string">'-2 - 3 in'</span>).negative(); <span class="hljs-c
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L169">Base.ts:169</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L169">Base.ts:169</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1607,19 +1709,52 @@ uz(<span class="hljs-string">'-2 - 3 in'</span>).negative(); <span class="hljs-c
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L225">Base.ts:225</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L264">Base.ts:264</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Converts each range to units that best represent the value.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'1.5pt, 12in, 3.14159rad'</span>).normalize(); <span class="hljs-comment">// '3c, 1ft, 180deg'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#ismorenormal">Core.isMoreNormal</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="core.html#globaltransform">Core.globalTransform</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="core.html#globaloutput">Core.globalOutput</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="range.html#normalize">Range.normalize</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="base.html#mutate">Base.mutate</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/transforminput.html" class="tsd-signature-type">TransformInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Options to control which units and values are acceptable.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> forOutput: <a href="../interfaces/outputinput.html" class="tsd-signature-type">OutputInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The output options that should be used to determine which
+									value &amp; unit is best.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance.</p>
 					</li>
 				</ul>
 			</section>
@@ -1633,7 +1768,7 @@ uz(<span class="hljs-string">'-2 - 3 in'</span>).negative(); <span class="hljs-c
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L207">Base.ts:207</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L207">Base.ts:207</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1668,16 +1803,40 @@ uz(<span class="hljs-string">'0.3cm'</span>).fractions(); <span class="hljs-comm
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L383">Base.ts:383</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L508">Base.ts:508</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Subtracts the given input from the ranges of this instance. When the ranges
+									use the same units they are subtracted, otherwise they are added to the
+								end of the range list and negated.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'3pt'</span>).sub(<span class="hljs-string">'2pt, 1c'</span>); <span class="hljs-comment">// '1pt, -1c'</span>
+uz(<span class="hljs-string">'1pt'</span>).add(<span class="hljs-string">'2pt, 1c'</span>, <span class="hljs-number">2</span>); <span class="hljs-comment">// '-3pt, -2c'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="range.html#ismatch">Range.isMatch</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <a href="../globals.html#baseinput" class="tsd-signature-type">BaseInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>An instance or input which can be parsed into an instance.</p>
+								</div>
 							</li>
 							<li>
 								<h5>operate: <span class="tsd-signature-type">function</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>A function to call when matching ranges are found and an
+										operation should be performed between them. The range returned by this
+									function ends up in the result.</p>
+								</div>
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-siganture">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
@@ -1689,9 +1848,15 @@ uz(<span class="hljs-string">'0.3cm'</span>).fractions(); <span class="hljs-comm
 												<ul class="tsd-parameters">
 													<li>
 														<h5>a: <a href="range.html" class="tsd-signature-type">Range</a></h5>
+														<div class="tsd-comment tsd-typography">
+															<p>The first range to operate on.</p>
+														</div>
 													</li>
 													<li>
 														<h5>b: <a href="range.html" class="tsd-signature-type">Range</a></h5>
+														<div class="tsd-comment tsd-typography">
+															<p>The second range to operate on.</p>
+														</div>
 													</li>
 												</ul>
 												<h4 class="tsd-returns-title">Returns <a href="range.html" class="tsd-signature-type">Range</a></h4>
@@ -1702,6 +1867,10 @@ uz(<span class="hljs-string">'0.3cm'</span>).fractions(); <span class="hljs-comm
 							</li>
 							<li>
 								<h5>remainder: <span class="tsd-signature-type">function</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>A function to call on a range that did not have a match
+									in this instance where the range returned is added to the result.</p>
+								</div>
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-siganture">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
@@ -1713,6 +1882,9 @@ uz(<span class="hljs-string">'0.3cm'</span>).fractions(); <span class="hljs-comm
 												<ul class="tsd-parameters">
 													<li>
 														<h5>a: <a href="range.html" class="tsd-signature-type">Range</a></h5>
+														<div class="tsd-comment tsd-typography">
+															<p>The remaining range to operate on.</p>
+														</div>
 													</li>
 												</ul>
 												<h4 class="tsd-returns-title">Returns <a href="range.html" class="tsd-signature-type">Range</a></h4>
@@ -1723,6 +1895,7 @@ uz(<span class="hljs-string">'0.3cm'</span>).fractions(); <span class="hljs-comm
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance.</p>
 					</li>
 				</ul>
 			</section>
@@ -1736,7 +1909,7 @@ uz(<span class="hljs-string">'0.3cm'</span>).fractions(); <span class="hljs-comm
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L557">Base.ts:557</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L682">Base.ts:682</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1759,7 +1932,7 @@ uz(<span class="hljs-string">'0.3cm'</span>).fractions(); <span class="hljs-comm
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L133">Base.ts:133</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L133">Base.ts:133</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1795,7 +1968,7 @@ uz(<span class="hljs-string">'-2 - 3 in'</span>).positive(); <span class="hljs-c
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L114">Base.ts:114</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L114">Base.ts:114</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1833,7 +2006,7 @@ uz(<span class="hljs-string">'-2 - 3 in'</span>).positive(); <span class="hljs-c
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L67">Base.ts:67</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L67">Base.ts:67</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1877,7 +2050,7 @@ uz(<span class="hljs-string">'-2 - 3 in'</span>).positive(); <span class="hljs-c
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L95">Base.ts:95</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L95">Base.ts:95</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1933,7 +2106,7 @@ uz(<span class="hljs-string">'1m, 2 - 3c'</span>).scaleTo(<span class="hljs-stri
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L491">Base.ts:491</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L616">Base.ts:616</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1956,19 +2129,48 @@ uz(<span class="hljs-string">'1m, 2 - 3c'</span>).scaleTo(<span class="hljs-stri
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/2b9b07f/src/Base.ts#L378">Base.ts:378</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Base.ts#L480">Base.ts:480</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Subtracts the given input from the ranges of this instance. When the ranges
+									use the same units they are subtracted, otherwise they are added to the
+								end of the range list and negated.</p>
+							</div>
+							<p><em>For example:</em></p>
+							<pre><code class="lang-javascript">uz(<span class="hljs-string">'3pt'</span>).sub(<span class="hljs-string">'2pt, 1c'</span>); <span class="hljs-comment">// '1pt, -1c'</span>
+uz(<span class="hljs-string">'1pt'</span>).add(<span class="hljs-string">'2pt, 1c'</span>, <span class="hljs-number">2</span>); <span class="hljs-comment">// '-3pt, -2c'</span>
+</code></pre>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="base.html#operate">Base.operate</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="range.html#sub">Range.sub</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="range.html#mul">Range.mul</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <a href="../globals.html#baseinput" class="tsd-signature-type">BaseInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>An instance or input which can be parsed into an instance.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> scale: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>A number to multiple the input by when subtracting it from this instance.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="base.html" class="tsd-signature-type">Base</a></h4>
+						<p>A new instance.</p>
 					</li>
 				</ul>
 			</section>
