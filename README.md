@@ -5,7 +5,7 @@ A unit parser, converter, & calculator for TypeScript and JS.
 - [Documentation](https://clickermonkey.github.io/unitz-ts/docs/)
 - [Online Tool](https://clickermonkey.github.io/unitz-ts/tester.html)
 
-```
+```javascript
 // TypeScript
 import { uz } from 'unitz';
 
@@ -60,7 +60,7 @@ uz('1 cup').output( options ); // the above functions return objects, to get a s
 
 You can customize exactly how Unitz behaves.
 
-```
+```javascript
 // The "distance" used to determine if a value is close enough to 0, 1, or if a calculated fraction is close enough to the real value.
 Unitz.Functions.EPSILON = 0.001;
 
