@@ -209,19 +209,58 @@ export class Base
     return this.mutate(r => r.numbered());
   }
 
-  // 1 - 3c = 3c
+  /**
+   * Flattens any ranges to their maximum values.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1 - 3c, 5m').max(); // '3c, 5m'
+   * ```
+   *
+   * @return A new instance or this if this instance has no ranges.
+   * @see [[Range.maxd]]
+   * @see [[Base.mutate]]
+   */
   public max(): Base
   {
     return this.hasRanges ? this.mutate(r => r.maxd()) : this;
   }
 
-  // 1 - 3c = 1c
+  /**
+   * Flattens any ranges to their minimum values.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1 - 3c, 5m').max(); // '1c, 5m'
+   * ```
+   *
+   * @return A new instance or this if this instance has no ranges.
+   * @see [[Range.mind]]
+   * @see [[Base.mutate]]
+   */
   public min(): Base
   {
     return this.hasRanges ? this.mutate(r => r.mind()) : this;
   }
 
-  // 1.5pt = 3c
+  /**
+   * Converts each range to units that best represent the value.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1.5pt, 12in, 3.14159rad').normalize(); // '3c, 1ft, 180deg'
+   * ```
+   *
+   * @param options Options to control which units and values are acceptable.
+   * @param forOutput The output options that should be used to determine which
+   *  value & unit is best.
+   * @return A new instance.
+   * @see [[Core.isMoreNormal]]
+   * @see [[Core.globalTransform]]
+   * @see [[Core.globalOutput]]
+   * @see [[Range.normalize]]
+   * @see [[Base.mutate]]
+   */
   public normalize(options?: TransformInput, forOutput?: OutputInput): Base
   {
     let output: Output = Core.globalOutput.extend( forOutput );
@@ -230,7 +269,19 @@ export class Base
     return this.mutate(r => r.normalize( transform, output ));
   }
 
-  // 1c, 1pt = 1.5pt
+  /**
+   * Joins all ranges of the same classes together and uses the largest unit
+   * to represent the sum for the class.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1c, 1pt').compact(); // '1.5pt'
+   * ```
+   *
+   * @param options Options to control which units and values are acceptable.
+   * @return A new instance.
+   * @see [[Core.globalTransform]]
+   */
   public compact(options?: TransformInput): Base
   {
     let compacted: RangeList = [];
@@ -321,7 +372,22 @@ export class Base
     return new Base( this.input, compacted );
   }
 
-  // 1.5pt = 1c, 1pt
+  /**
+   * Joins all ranges of the same classes together and then separates them
+   * into whole number ranges for better readability.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1.5pt').expand(); // '1pt, 1c'
+   * uz('53in').expand(); // '4ft, 5in'
+   * uz('2ft, 29in').expand(); // '4ft, 5in'
+   * uz('6543mm').expand(); // '6 m, 54 cm, 3 mm'
+   * ```
+   *
+   * @param options Options to control which units and values are acceptable.
+   * @return A new instance.
+   * @see [[Core.globalTransform]]
+   */
   public expand(options?: TransformInput): Base
   {
     let transform: Transform = Core.globalTransform.extend( options );
@@ -370,16 +436,75 @@ export class Base
     return new Base( this.input, expanded );
   }
 
+  /**
+   * Adds the ranges of this instance and the given input together. When the
+   * ranges use the same units they are added together, otherwise they are
+   * added to the end of the range list.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1pt').add('2pt, 1c'); // '3pt, 1c'
+   * uz('1pt').add('2pt, 1c', 2); // '5pt, 2c'
+   * ```
+   *
+   * @param input An instance or input which can be parsed into an instance.
+   * @param scale A number to multiple the input by when adding it to this instance.
+   * @return A new instance.
+   * @see [[Base.operate]]
+   * @see [[Range.add]]
+   * @see [[Range.mul]]
+   */
   public add(input: BaseInput, scale: number = 1): Base
   {
     return this.operate(input, (a, b) => a.add(b, scale), (a) => a.mul( scale ));
   }
 
+  /**
+   * Subtracts the given input from the ranges of this instance. When the ranges
+   * use the same units they are subtracted, otherwise they are added to the
+   * end of the range list and negated.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('3pt').sub('2pt, 1c'); // '1pt, -1c'
+   * uz('1pt').add('2pt, 1c', 2); // '-3pt, -2c'
+   * ```
+   *
+   * @param input An instance or input which can be parsed into an instance.
+   * @param scale A number to multiple the input by when subtracting it from this instance.
+   * @return A new instance.
+   * @see [[Base.operate]]
+   * @see [[Range.sub]]
+   * @see [[Range.mul]]
+   */
   public sub(input: BaseInput, scale: number = 1): Base
   {
     return this.operate(input, (a, b) => a.sub(b, scale), (a) => a.mul( -scale ));
   }
 
+  /**
+   * Subtracts the given input from the ranges of this instance. When the ranges
+   * use the same units they are subtracted, otherwise they are added to the
+   * end of the range list and negated.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('3pt').sub('2pt, 1c'); // '1pt, -1c'
+   * uz('1pt').add('2pt, 1c', 2); // '-3pt, -2c'
+   * ```
+   *
+   * @param input An instance or input which can be parsed into an instance.
+   * @param operate A function to call when matching ranges are found and an
+   *  operation should be performed between them. The range returned by this
+   *  function ends up in the result.
+   * @param operate.a The first range to operate on.
+   * @param operate.b The second range to operate on.
+   * @param remainder A function to call on a range that did not have a match
+   *  in this instance where the range returned is added to the result.
+   * @param remainder.a The remaining range to operate on.
+   * @return A new instance.
+   * @see [[Range.isMatch]]
+   */
   public operate(input: BaseInput,
     operate: (a: Range, b: Range) => Range,
     remainder: (a: Range) => Range): Base

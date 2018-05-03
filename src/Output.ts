@@ -163,7 +163,7 @@ export class Output implements OutputInput
       out += this.number( value.value );
     }
 
-    if (value.isValid && this.unit !== OutputUnit.NONE && showUnit)
+    if (showUnit && this.unit !== OutputUnit.NONE && value.isValid)
     {
       let group = value.group;
 
