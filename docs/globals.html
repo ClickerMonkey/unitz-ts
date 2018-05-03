@@ -1079,57 +1079,58 @@ img { max-width: 100%; }
 				<li><a href="https://clickermonkey.github.io/unitz-ts/docs/">Documentation</a></li>
 				<li><a href="https://clickermonkey.github.io/unitz-ts/tester.html">Online Tool</a></li>
 			</ul>
-			<pre><code><span class="hljs-comment">// TypeScript</span>
-import { uz } from 'unitz';
+			<pre><code class="lang-javascript"><span class="hljs-comment">// TypeScript</span>
+<span class="hljs-keyword">import</span> { uz } <span class="hljs-keyword">from</span> <span class="hljs-string">'unitz'</span>;
 
 <span class="hljs-comment">// Javascript</span>
-var uz = Unitz.uz;
+<span class="hljs-keyword">var</span> uz = Unitz.uz;
 
 <span class="hljs-comment">// Parsing</span>
-uz('<span class="hljs-number">2.5</span> cups'); <span class="hljs-comment">// parses numbers</span>
-uz('<span class="hljs-number">1</span>/<span class="hljs-number">2</span> in'); <span class="hljs-comment">// parses fractions</span>
-uz('<span class="hljs-number">3</span> <span class="hljs-number">1</span>/<span class="hljs-number">4</span>'); <span class="hljs-comment">// mixed fractions and unitless values</span>
-uz('mile'); <span class="hljs-comment">// implicit values (1)</span>
-uz('<span class="hljs-number">4</span><span class="hljs-number">-5</span> seconds'); <span class="hljs-comment">// parses ranges</span>
-uz('<span class="hljs-number">4</span>s - <span class="hljs-number">3</span>min'); <span class="hljs-comment">// parses ranges with mixed units</span>
-uz('<span class="hljs-number">2</span>c, <span class="hljs-number">4</span>s, <span class="hljs-number">23</span>mi'); <span class="hljs-comment">// mixed unit classes</span>
+uz(<span class="hljs-string">'2.5 cups'</span>); <span class="hljs-comment">// parses numbers</span>
+uz(<span class="hljs-string">'1/2 in'</span>); <span class="hljs-comment">// parses fractions</span>
+uz(<span class="hljs-string">'3 1/4'</span>); <span class="hljs-comment">// mixed fractions and unitless values</span>
+uz(<span class="hljs-string">'mile'</span>); <span class="hljs-comment">// implicit values (1)</span>
+uz(<span class="hljs-string">'4-5 seconds'</span>); <span class="hljs-comment">// parses ranges</span>
+uz(<span class="hljs-string">'4s - 3min'</span>); <span class="hljs-comment">// parses ranges with mixed units</span>
+uz(<span class="hljs-string">'2c, 4s, 23mi'</span>); <span class="hljs-comment">// mixed unit classes</span>
 
 <span class="hljs-comment">// Transformations</span>
-uz('<span class="hljs-number">1.5</span> pints').normalize(); <span class="hljs-comment">// = 3 cups: convert to unit in same class which is more human friendly</span>
-uz('<span class="hljs-number">1</span>c, <span class="hljs-number">1</span>pt').compact(); <span class="hljs-comment">// = 1.5 pt: join values in the same unit class together</span>
-uz('<span class="hljs-number">43</span>in').expand(); <span class="hljs-comment">// = 3 ft, 7 in: pull unit values of the same class apart to be more human friendly</span>
+uz(<span class="hljs-string">'1.5 pints'</span>).normalize(); <span class="hljs-comment">// = 3 cups: convert to unit in same class which is more human friendly</span>
+uz(<span class="hljs-string">'1c, 1pt'</span>).compact(); <span class="hljs-comment">// = 1.5 pt: join values in the same unit class together</span>
+uz(<span class="hljs-string">'43in'</span>).expand(); <span class="hljs-comment">// = 3 ft, 7 in: pull unit values of the same class apart to be more human friendly</span>
 
 <span class="hljs-comment">// Operations</span>
-uz('<span class="hljs-number">1</span> pt').add('<span class="hljs-number">1</span> cup').normalize(); <span class="hljs-comment">// = 3 cups</span>
-uz('<span class="hljs-number">1</span> pt').sub('<span class="hljs-number">1</span> cup').normalize(); <span class="hljs-comment">// = 1 cup</span>
-uz('<span class="hljs-number">1</span> pt, <span class="hljs-number">3</span> in').scale(<span class="hljs-number">2</span>); <span class="hljs-comment">// = 2 pt, 6 in</span>
-uz('<span class="hljs-number">1</span> pt, <span class="hljs-number">3</span> in').scaleTo('<span class="hljs-number">6</span> c'); <span class="hljs-comment">// = 3 pt, 9 in</span>
+uz(<span class="hljs-string">'1 pt'</span>).add(<span class="hljs-string">'1 cup'</span>).normalize(); <span class="hljs-comment">// = 3 cups</span>
+uz(<span class="hljs-string">'1 pt'</span>).sub(<span class="hljs-string">'1 cup'</span>).normalize(); <span class="hljs-comment">// = 1 cup</span>
+uz(<span class="hljs-string">'1 pt, 3 in'</span>).scale(<span class="hljs-number">2</span>); <span class="hljs-comment">// = 2 pt, 6 in</span>
+uz(<span class="hljs-string">'1 pt, 3 in'</span>).scaleTo(<span class="hljs-string">'6 c'</span>); <span class="hljs-comment">// = 3 pt, 9 in</span>
 
 <span class="hljs-comment">// Convert</span>
-uz('<span class="hljs-number">1</span> - <span class="hljs-number">2</span> gal').convert('c'); <span class="hljs-comment">// = 16 - 32 c</span>
-uz('<span class="hljs-number">3</span> cup').conversions(); <span class="hljs-comment">// = 3/16 gal, 3/4 qt, 1 1/2 pt, 3 c, 24 floz, 48 tbsp, 144 tsp</span>
+uz(<span class="hljs-string">'1 - 2 gal'</span>).convert(<span class="hljs-string">'c'</span>); <span class="hljs-comment">// = 16 - 32 c</span>
+uz(<span class="hljs-string">'3 cup'</span>).conversions(); <span class="hljs-comment">// = 3/16 gal, 3/4 qt, 1 1/2 pt, 3 c, 24 floz, 48 tbsp, 144 tsp</span>
 
 <span class="hljs-comment">// Mutations</span>
-uz('<span class="hljs-number">3</span> cups').preferred(); <span class="hljs-comment">// = 3 c: convert units to preferred</span>
-uz('<span class="hljs-number">-2</span> in, <span class="hljs-number">4</span> mi, <span class="hljs-number">-2</span> - <span class="hljs-number">2</span>').positive(); <span class="hljs-comment">// = 4 mi, 0 - 2: we only want positive</span>
-uz('<span class="hljs-number">-2</span> in, <span class="hljs-number">4</span> mi, <span class="hljs-number">-2</span> - <span class="hljs-number">2</span>').negative(); <span class="hljs-comment">// = -2 in, -2 - 0: we only want negative</span>
-uz('<span class="hljs-number">-2</span> in, <span class="hljs-number">4</span> mi, <span class="hljs-number">0</span> tacos').nonzero(); <span class="hljs-comment">// = -2 in, 4 mi: we only want non-zero</span>
-uz('<span class="hljs-number">-2</span> in, <span class="hljs-number">4</span> mi, <span class="hljs-number">-2</span> - <span class="hljs-number">2</span>').min(); <span class="hljs-comment">// = -2 in, -2: we only the minimum values of a range</span>
-uz('<span class="hljs-number">-2</span> in, <span class="hljs-number">4</span> mi, <span class="hljs-number">-2</span> - <span class="hljs-number">2</span>').max(); <span class="hljs-comment">// = -2 in, 2: we only the maximum values of a range</span>
-uz('<span class="hljs-number">0.5</span> tsp').fractions(); <span class="hljs-comment">// = 1/2 tsp: convert to fractions</span>
-uz('<span class="hljs-number">1</span>/<span class="hljs-number">2</span> tsp').numbers(); <span class="hljs-comment">// = 0.5 tsp: convert to numbers</span>
+uz(<span class="hljs-string">'3 cups'</span>).preferred(); <span class="hljs-comment">// = 3 c: convert units to preferred</span>
+uz(<span class="hljs-string">'-2 in, 4 mi, -2 - 2'</span>).positive(); <span class="hljs-comment">// = 4 mi, 0 - 2: we only want positive</span>
+uz(<span class="hljs-string">'-2 in, 4 mi, -2 - 2'</span>).negative(); <span class="hljs-comment">// = -2 in, -2 - 0: we only want negative</span>
+uz(<span class="hljs-string">'-2 in, 4 mi, 0 tacos'</span>).nonzero(); <span class="hljs-comment">// = -2 in, 4 mi: we only want non-zero</span>
+uz(<span class="hljs-string">'-2 in, 4 mi, -2 - 2'</span>).min(); <span class="hljs-comment">// = -2 in, -2: we only the minimum values of a range</span>
+uz(<span class="hljs-string">'-2 in, 4 mi, -2 - 2'</span>).max(); <span class="hljs-comment">// = -2 in, 2: we only the maximum values of a range</span>
+uz(<span class="hljs-string">'0.5 tsp'</span>).fractions(); <span class="hljs-comment">// = 1/2 tsp: convert to fractions</span>
+uz(<span class="hljs-string">'1/2 tsp'</span>).numbers(); <span class="hljs-comment">// = 0.5 tsp: convert to numbers</span>
 
 <span class="hljs-comment">// Sorting</span>
-uz('<span class="hljs-number">1</span> tsp, <span class="hljs-number">1</span> pt, <span class="hljs-number">4</span> gal').sort(); <span class="hljs-comment">// = 4 gal, 1 pt, 1 tsp: sort values</span>
+uz(<span class="hljs-string">'1 tsp, 1 pt, 4 gal'</span>).sort(); <span class="hljs-comment">// = 4 gal, 1 pt, 1 tsp: sort values</span>
 
 <span class="hljs-comment">// Dynamic</span>
-uz('<span class="hljs-number">1</span> loaf').add('<span class="hljs-number">4</span> loaves').normalize(); <span class="hljs-comment">// = 5 loaves</span>
+uz(<span class="hljs-string">'1 loaf'</span>).add(<span class="hljs-string">'4 loaves'</span>).normalize(); <span class="hljs-comment">// = 5 loaves</span>
 
 <span class="hljs-comment">// Output</span>
-uz('<span class="hljs-number">1</span> cup').output( options ); <span class="hljs-comment">// the above functions return objects, to get a string you must call output which can take options to override the global output options.</span>
-</code></pre><h3 id="customization">Customization</h3>
+uz(<span class="hljs-string">'1 cup'</span>).output( options ); <span class="hljs-comment">// the above functions return objects, to get a string you must call output which can take options to override the global output options.</span>
+</code></pre>
+			<h3 id="customization">Customization</h3>
 			<p>You can customize exactly how Unitz behaves.</p>
-			<pre><code><span class="hljs-comment">// The "distance" used to determine if a value is close enough to 0, 1, or if a calculated fraction is close enough to the real value.</span>
+			<pre><code class="lang-javascript"><span class="hljs-comment">// The "distance" used to determine if a value is close enough to 0, 1, or if a calculated fraction is close enough to the real value.</span>
 Unitz.Functions.EPSILON = <span class="hljs-number">0.001</span>;
 
 <span class="hljs-comment">// The default settings for outputting values</span>
@@ -1161,12 +1162,12 @@ Unitz.Core.getGroup(<span class="hljs-string">'c'</span>).removeUnits([<span cla
 <span class="hljs-comment">// Add my own class</span>
 Unitz.Core.addClass(<span class="hljs-keyword">new</span> Class(<span class="hljs-string">'Loaf'</span>, [
   {
-    system: Unitz.System.ANY,
-    common: <span class="hljs-literal">true</span>,
-    unit: <span class="hljs-string">'loaf'</span>,
-    baseUnit: <span class="hljs-string">'loaf'</span>,
-    denominators: [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>],
-    units: {
+    <span class="hljs-attr">system</span>: Unitz.System.ANY,
+    <span class="hljs-attr">common</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">unit</span>: <span class="hljs-string">'loaf'</span>,
+    <span class="hljs-attr">baseUnit</span>: <span class="hljs-string">'loaf'</span>,
+    <span class="hljs-attr">denominators</span>: [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>],
+    <span class="hljs-attr">units</span>: {
       <span class="hljs-string">'loaf'</span>: Unitz.Plurality.SINGULAR,
       <span class="hljs-string">'loaf of bread'</span>: Unitz.Plurality.SINGULAR,
       <span class="hljs-string">'loafs'</span>: Unitz.Plurality.PLURAL,
@@ -1177,13 +1178,13 @@ Unitz.Core.addClass(<span class="hljs-keyword">new</span> Class(<span class="hlj
 ]));
 
 <span class="hljs-comment">// To create dynamic groups Unitz looks at the first 3 characters to determine if two units are matches. You can override this by figuring out a value which can be used as a key.</span>
-Unitz.Core.getDynamicMatch = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(unit)</span> </span>{
+Unitz.Core.getDynamicMatch = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">unit</span>) </span>{
   <span class="hljs-comment">// use soundex instead of the first three characters. cup and kup are equal now!</span>
   <span class="hljs-keyword">return</span> soundex( unit );
 };
 
 <span class="hljs-comment">// To override the logic for determining what value is "normal" (most user friendly)</span>
-Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fromValue, toValue, transform, forOutput)</span> </span>{
+Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">fromValue, toValue, transform, forOutput</span>) </span>{
   <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 };
 </code></pre>
@@ -1286,7 +1287,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Base<wbr>Input<span class="tsd-signature-symbol">:</span> <a href="classes/base.html" class="tsd-signature-type">Base</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#rangesinput" class="tsd-signature-type">RangesInput</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L94">Types.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L94">Types.ts:94</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1296,7 +1297,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Class<wbr>Grouping<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Class.ts#L10">Class.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Class.ts#L10">Class.ts:10</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1311,7 +1312,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Class<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Class.ts#L8">Class.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Class.ts#L8">Class.ts:8</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1329,7 +1330,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Converter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L14">Types.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L14">Types.ts:14</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1365,7 +1366,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Converter<wbr>Double<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L25">Types.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L25">Types.ts:25</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1389,7 +1390,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Converter<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L19">Types.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L19">Types.ts:19</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1412,7 +1413,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Group<wbr>Factory<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Group.ts#L14">Group.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Group.ts#L14">Group.ts:14</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1443,7 +1444,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Group<wbr>List<span class="tsd-signature-symbol">:</span> <a href="classes/group.html" class="tsd-signature-type">Group</a><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Group.ts#L10">Group.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Group.ts#L10">Group.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1453,7 +1454,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Group<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Group.ts#L12">Group.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Group.ts#L12">Group.ts:12</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1471,7 +1472,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Numbers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L9">Types.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L9">Types.ts:9</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1486,7 +1487,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Range<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/rangedefinition.html" class="tsd-signature-type">RangeDefinition</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/valuedefinition.html" class="tsd-signature-type">ValueDefinition</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L90">Types.ts:90</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L90">Types.ts:90</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1496,7 +1497,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Range<wbr>List<span class="tsd-signature-symbol">:</span> <a href="classes/range.html" class="tsd-signature-type">Range</a><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Range.ts#L9">Range.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Range.ts#L9">Range.ts:9</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1506,7 +1507,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Range<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Range.ts#L7">Range.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Range.ts#L7">Range.ts:7</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1524,7 +1525,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Range<wbr>Mutator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Range.ts#L11">Range.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Range.ts#L11">Range.ts:11</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1555,7 +1556,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Ranges<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#rangeinput" class="tsd-signature-type">RangeInput</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#rangeinput" class="tsd-signature-type">RangeInput</a><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L92">Types.ts:92</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L92">Types.ts:92</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1565,7 +1566,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Sort<wbr>Class<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Sort.ts#L18">Sort.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Sort.ts#L18">Sort.ts:18</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1583,7 +1584,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Sorter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Sort.ts#L20">Sort.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Sort.ts#L20">Sort.ts:20</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1617,7 +1618,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Unit<wbr>Definition<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L31">Types.ts:31</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L31">Types.ts:31</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1641,7 +1642,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Value<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/valuedefinition.html" class="tsd-signature-type">ValueDefinition</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Types.ts#L83">Types.ts:83</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Types.ts#L83">Types.ts:83</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1651,7 +1652,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Value<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Value.ts#L11">Value.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Value.ts#L11">Value.ts:11</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1672,7 +1673,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Angle<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Angle&#x27;).setBaseConversion(&#x27;deg&#x27;, &#x27;rad&#x27;, (x) &#x3D;&gt; x * DEG2RAD).setBaseConversion(&#x27;rad&#x27;, &#x27;deg&#x27;, (x) &#x3D;&gt; x * RAD2DEG).addGroups([{system: System.ANY,common: true,unit: &#x27;deg&#x27;,baseUnit: &#x27;deg&#x27;,denominators: [],units: {&#x27;deg&#x27;: Plurality.EITHER,&#x27;\xb0&#x27;: Plurality.EITHER,&#x27;degrees&#x27;: Plurality.PLURAL,&#x27;degree&#x27;: Plurality.SINGULAR}},{system: System.ANY,common: true,unit: &#x27;rad&#x27;,baseUnit: &#x27;rad&#x27;,denominators: [],units: {&#x27;rad&#x27;: Plurality.EITHER,&#x27;radians&#x27;: Plurality.PLURAL,&#x27;radian&#x27;: Plurality.SINGULAR}}]).setClassScales()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Angle.ts#L15">classes/Angle.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Angle.ts#L15">classes/Angle.ts:15</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1691,7 +1692,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Area<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Area&#x27;).setBaseConversion(&#x27;sqin&#x27;, &#x27;sqmm&#x27;, (x) &#x3D;&gt; x * 645.16).setBaseConversion(&#x27;sqmm&#x27;, &#x27;sqin&#x27;, (x) &#x3D;&gt; x * 0.00155).addGroups([{system: System.IMPERIAL,common: true,unit: &#x27;sqin&#x27;,baseUnit: &#x27;sqin&#x27;,denominators: [2, 4, 8, 16],units: {&#x27;sqin&#x27;: Plurality.EITHER,&#x27;sq. in&#x27;: Plurality.EITHER,&#x27;sq in&#x27;: Plurality.EITHER,&#x27;in2&#x27;: Plurality.EITHER,&#x27;in^2&#x27;: Plurality.EITHER,&#x27;in\xb2&#x27;: Plurality.EITHER,&#x27;inch2&#x27;: Plurality.SINGULAR,&#x27;inch^2&#x27;: Plurality.SINGULAR,&#x27;inch\xb2&#x27;: Plurality.SINGULAR,&#x27;inches2&#x27;: Plurality.PLURAL,&#x27;inches^2&#x27;: Plurality.PLURAL,&#x27;inches\xb2&#x27;: Plurality.PLURAL,&#x27;square in&#x27;: Plurality.EITHER,&#x27;square inch&#x27;: Plurality.SINGULAR,&#x27;square inches&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;sqft&#x27;,relativeUnit: &#x27;sqin&#x27;,relativeScale: 12 * 12,denominators: [2, 4, 8, 16],units: {&#x27;sqft&#x27;: Plurality.EITHER,&#x27;sq. ft&#x27;: Plurality.EITHER,&#x27;sq ft&#x27;: Plurality.EITHER,&#x27;ft2&#x27;: Plurality.EITHER,&#x27;ft^2&#x27;: Plurality.EITHER,&#x27;ft\xb2&#x27;: Plurality.EITHER,&#x27;foot2&#x27;: Plurality.SINGULAR,&#x27;foot^2&#x27;: Plurality.SINGULAR,&#x27;foot\xb2&#x27;: Plurality.SINGULAR,&#x27;feet2&#x27;: Plurality.PLURAL,&#x27;feet^2&#x27;: Plurality.PLURAL,&#x27;feet\xb2&#x27;: Plurality.PLURAL,&#x27;square ft&#x27;: Plurality.EITHER,&#x27;square foot&#x27;: Plurality.SINGULAR,&#x27;square feet&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,unit: &#x27;sqyd&#x27;,relativeUnit: &#x27;sqft&#x27;,relativeScale: 3 * 3,denominators: [2, 3, 4, 8, 9, 16],units: {&#x27;sqyd&#x27;: Plurality.EITHER,&#x27;sq. yd&#x27;: Plurality.EITHER,&#x27;sq yd&#x27;: Plurality.EITHER,&#x27;yd2&#x27;: Plurality.EITHER,&#x27;yd^2&#x27;: Plurality.EITHER,&#x27;yd\xb2&#x27;: Plurality.EITHER,&#x27;yard2&#x27;: Plurality.SINGULAR,&#x27;yard^2&#x27;: Plurality.SINGULAR,&#x27;yard\xb2&#x27;: Plurality.SINGULAR,&#x27;yards2&#x27;: Plurality.PLURAL,&#x27;yards^2&#x27;: Plurality.PLURAL,&#x27;yards\xb2&#x27;: Plurality.PLURAL,&#x27;square yard&#x27;: Plurality.SINGULAR,&#x27;square yards&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;acre&#x27;,relativeUnit: &#x27;sqyd&#x27;,relativeScale: 4840,denominators: [2, 3, 4, 8, 10],units: {&#x27;acre&#x27;: Plurality.EITHER,&#x27;acres&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;sqmi&#x27;,relativeUnit: &#x27;acre&#x27;,relativeScale: 640,denominators: [2, 3, 4, 8, 10],units: {&#x27;sqmi&#x27;: Plurality.EITHER,&#x27;sq. mi&#x27;: Plurality.EITHER,&#x27;sq mi&#x27;: Plurality.EITHER,&#x27;mi2&#x27;: Plurality.EITHER,&#x27;mi^2&#x27;: Plurality.EITHER,&#x27;mi\xb2&#x27;: Plurality.EITHER,&#x27;mile2&#x27;: Plurality.SINGULAR,&#x27;mile^2&#x27;: Plurality.SINGULAR,&#x27;mile\xb2&#x27;: Plurality.SINGULAR,&#x27;miles2&#x27;: Plurality.PLURAL,&#x27;miles^2&#x27;: Plurality.PLURAL,&#x27;miles\xb2&#x27;: Plurality.PLURAL,&#x27;square mi&#x27;: Plurality.EITHER,&#x27;square mile&#x27;: Plurality.SINGULAR,&#x27;square miles&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;sqmm&#x27;,baseUnit: &#x27;sqmm&#x27;,denominators: [2, 4, 8, 16],units: {&#x27;sqmm&#x27;: Plurality.EITHER,&#x27;sq. mm&#x27;: Plurality.EITHER,&#x27;sq mm&#x27;: Plurality.EITHER,&#x27;mm2&#x27;: Plurality.EITHER,&#x27;mm^2&#x27;: Plurality.EITHER,&#x27;mm\xb2&#x27;: Plurality.EITHER,&#x27;millimeter2&#x27;: Plurality.SINGULAR,&#x27;millimeter^2&#x27;: Plurality.SINGULAR,&#x27;millimeter\xb2&#x27;: Plurality.SINGULAR,&#x27;millimeters2&#x27;: Plurality.PLURAL,&#x27;millimeters^2&#x27;: Plurality.PLURAL,&#x27;millimeters\xb2&#x27;: Plurality.PLURAL,&#x27;square mm&#x27;: Plurality.EITHER,&#x27;square millimeter&#x27;: Plurality.SINGULAR,&#x27;square millimeters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;sqcm&#x27;,relativeUnit: &#x27;sqmm&#x27;,relativeScale: 100,denominators: [2, 4, 8, 16],units: {&#x27;sqcm&#x27;: Plurality.EITHER,&#x27;sq. cm&#x27;: Plurality.EITHER,&#x27;sq cm&#x27;: Plurality.EITHER,&#x27;cm2&#x27;: Plurality.EITHER,&#x27;cm^2&#x27;: Plurality.EITHER,&#x27;cm\xb2&#x27;: Plurality.EITHER,&#x27;centimeter2&#x27;: Plurality.SINGULAR,&#x27;centimeter^2&#x27;: Plurality.SINGULAR,&#x27;centimeter\xb2&#x27;: Plurality.SINGULAR,&#x27;centimeters2&#x27;: Plurality.PLURAL,&#x27;centimeters^2&#x27;: Plurality.PLURAL,&#x27;centimeters\xb2&#x27;: Plurality.PLURAL,&#x27;square cm&#x27;: Plurality.EITHER,&#x27;square centimeter&#x27;: Plurality.SINGULAR,&#x27;square centimeters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;sqm&#x27;,relativeUnit: &#x27;sqcm&#x27;,relativeScale: 10000,denominators: [2, 4, 8, 16],units: {&#x27;sqm&#x27;: Plurality.EITHER,&#x27;sq. m&#x27;: Plurality.EITHER,&#x27;sq m&#x27;: Plurality.EITHER,&#x27;m2&#x27;: Plurality.EITHER,&#x27;m^2&#x27;: Plurality.EITHER,&#x27;m\xb2&#x27;: Plurality.EITHER,&#x27;meter2&#x27;: Plurality.SINGULAR,&#x27;meter^2&#x27;: Plurality.SINGULAR,&#x27;meter\xb2&#x27;: Plurality.SINGULAR,&#x27;meters2&#x27;: Plurality.PLURAL,&#x27;meters^2&#x27;: Plurality.PLURAL,&#x27;meters\xb2&#x27;: Plurality.PLURAL,&#x27;square m&#x27;: Plurality.EITHER,&#x27;square meter&#x27;: Plurality.SINGULAR,&#x27;square meters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;sqkm&#x27;,relativeUnit: &#x27;sqm&#x27;,relativeScale: 1000000,denominators: [2, 4, 8, 16],units: {&#x27;sqkm&#x27;: Plurality.EITHER,&#x27;sq. km&#x27;: Plurality.EITHER,&#x27;sq km&#x27;: Plurality.EITHER,&#x27;km2&#x27;: Plurality.EITHER,&#x27;km^2&#x27;: Plurality.EITHER,&#x27;km\xb2&#x27;: Plurality.EITHER,&#x27;kilometer2&#x27;: Plurality.SINGULAR,&#x27;kilometer^2&#x27;: Plurality.SINGULAR,&#x27;kilometer\xb2&#x27;: Plurality.SINGULAR,&#x27;kilometers2&#x27;: Plurality.PLURAL,&#x27;kilometers^2&#x27;: Plurality.PLURAL,&#x27;kilometers\xb2&#x27;: Plurality.PLURAL,&#x27;square km&#x27;: Plurality.EITHER,&#x27;square kilometer&#x27;: Plurality.SINGULAR,&#x27;square kilometers&#x27;: Plurality.PLURAL}}]).setClassScales()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Area.ts#L20">classes/Area.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Area.ts#L20">classes/Area.ts:20</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1717,7 +1718,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Digital<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Digital&#x27;).addGroups([{system: System.ANY,common: true,unit: &#x27;b&#x27;,baseUnit: &#x27;b&#x27;,denominators: [],units: {&#x27;b&#x27;: Plurality.EITHER,&#x27;bit&#x27;: Plurality.SINGULAR,&#x27;bits&#x27;: Plurality.PLURAL}},{system: System.ANY,unit: &#x27;nibble&#x27;,relativeUnit: &#x27;b&#x27;,relativeScale: 4,denominators: [],units: {&#x27;nibble&#x27;: Plurality.EITHER,&#x27;nibbles&#x27;: Plurality.PLURAL,&#x27;nybble&#x27;: Plurality.EITHER,&#x27;nyble&#x27;: Plurality.EITHER,&#x27;half-byte&#x27;: Plurality.EITHER,&#x27;half byte&#x27;: Plurality.EITHER,&#x27;tetrade&#x27;: Plurality.EITHER,&#x27;semi-octet&#x27;: Plurality.EITHER,&#x27;quadbit&#x27;: Plurality.EITHER,&#x27;quartet&#x27;: Plurality.EITHER}},{system: System.ANY,common: true,unit: &#x27;B&#x27;,relativeUnit: &#x27;b&#x27;,relativeScale: 8,denominators: [2, 8],units: {&#x27;B&#x27;: Plurality.EITHER,&#x27;byte&#x27;: Plurality.SINGULAR,&#x27;bytes&#x27;: Plurality.PLURAL}}])</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Digital.ts#L18">classes/Digital.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Digital.ts#L18">classes/Digital.ts:18</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1741,7 +1742,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Length<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Length&#x27;).setBaseConversion(&#x27;in&#x27;, &#x27;mm&#x27;, (x) &#x3D;&gt; x * 25.4).setBaseConversion(&#x27;mm&#x27;, &#x27;in&#x27;, (x) &#x3D;&gt; x * 0.039370).addGroups([{system: System.IMPERIAL,common: true,unit: &#x27;in&#x27;,baseUnit: &#x27;in&#x27;,denominators: [2, 4, 8, 16, 32],units: {&#x27;in&#x27;: Plurality.EITHER,&#x27;inch&#x27;: Plurality.SINGULAR,&#x27;inches&#x27;: Plurality.PLURAL,&#x27;&quot;&#x27;: Plurality.EITHER}},{system: System.IMPERIAL,common: true,unit: &#x27;ft&#x27;,relativeUnit: &#x27;in&#x27;,relativeScale: 12,denominators: [2],units: {&#x27;ft&#x27;: Plurality.EITHER,&#x27;foot&#x27;: Plurality.SINGULAR,&#x27;feet&#x27;: Plurality.PLURAL,&#x27;\&#x27;&#x27;: Plurality.EITHER}},{system: System.IMPERIAL,unit: &#x27;yd&#x27;,relativeUnit: &#x27;ft&#x27;,relativeScale: 3,denominators: [],units: {&#x27;yd&#x27;: Plurality.EITHER,&#x27;yard&#x27;: Plurality.SINGULAR,&#x27;yards&#x27;: Plurality.PLURAL,&#x27;yds&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;mi&#x27;,relativeUnit: &#x27;ft&#x27;,relativeScale: 5280,denominators: [2, 3, 4, 10],units: {&#x27;mi&#x27;: Plurality.EITHER,&#x27;mile&#x27;: Plurality.SINGULAR,&#x27;miles&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,unit: &#x27;league&#x27;,relativeUnit: &#x27;mi&#x27;,relativeScale: 3,denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],units: {&#x27;league&#x27;: Plurality.EITHER,&#x27;leagues&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;mm&#x27;,baseUnit: &#x27;mm&#x27;,denominators: [10],units: {&#x27;mm&#x27;: Plurality.EITHER,&#x27;millimeter&#x27;: Plurality.SINGULAR,&#x27;millimeters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;cm&#x27;,relativeUnit: &#x27;mm&#x27;,relativeScale: 10,denominators: [2, 4, 10],units: {&#x27;cm&#x27;: Plurality.EITHER,&#x27;centimeter&#x27;: Plurality.SINGULAR,&#x27;centimeters&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;dc&#x27;,relativeUnit: &#x27;cm&#x27;,relativeScale: 10,denominators: [10],units: {&#x27;dc&#x27;: Plurality.EITHER,&#x27;decimeter&#x27;: Plurality.SINGULAR,&#x27;decimeters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;m&#x27;,relativeUnit: &#x27;cm&#x27;,relativeScale: 100,denominators: [2, 3, 4, 5, 10],units: {&#x27;m&#x27;: Plurality.EITHER,&#x27;meter&#x27;: Plurality.SINGULAR,&#x27;meters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;km&#x27;,relativeUnit: &#x27;m&#x27;,relativeScale: 1000,denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],units: {&#x27;km&#x27;: Plurality.EITHER,&#x27;kilometer&#x27;: Plurality.SINGULAR,&#x27;kilometers&#x27;: Plurality.PLURAL}}]).setClassScales()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Length.ts#L21">classes/Length.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Length.ts#L21">classes/Length.ts:21</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1768,7 +1769,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Temperature<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Temperature&#x27;).setBaseConversion(&#x27;F&#x27;, _C_, x &#x3D;&gt; ((x - 32) * 5 / 9)).setBaseConversion(&#x27;F&#x27;, &#x27;K&#x27;, x &#x3D;&gt; ((x + 459.67) * 5 / 9)).setBaseConversion(_C_, &#x27;F&#x27;, x &#x3D;&gt; ((x * 9 / 5) + 32)).setBaseConversion(_C_, &#x27;K&#x27;, x &#x3D;&gt; (x + 273.15)).setBaseConversion(&#x27;K&#x27;, _C_, x &#x3D;&gt; (x - 273.15)).setBaseConversion(&#x27;K&#x27;, &#x27;F&#x27;, x &#x3D;&gt; ((x * 9 / 5) - 459.67)).addGroups([{system: System.IMPERIAL,common: true,unit: &#x27;F&#x27;,baseUnit: &#x27;F&#x27;,denominators: [],units: {&#x27;F&#x27;: Plurality.EITHER,&#x27;\xb0F&#x27;: Plurality.EITHER,&#x27;Fahrenheit&#x27;: Plurality.EITHER}},{system: System.METRIC,common: true,unit: _C_,baseUnit: _C_,denominators: [],units: {&#x27;\xb0C&#x27;: Plurality.EITHER,&#x27;Celsius&#x27;: Plurality.EITHER}},{system: System.METRIC,unit: &#x27;K&#x27;,baseUnit: &#x27;K&#x27;,denominators: [],units: {&#x27;K&#x27;: Plurality.EITHER,&#x27;kelvin&#x27;: Plurality.SINGULAR,&#x27;kelvins&#x27;: Plurality.PLURAL}}]).setClassScales()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Temperature.ts#L16">classes/Temperature.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Temperature.ts#L16">classes/Temperature.ts:16</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1788,7 +1789,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Time<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Time&#x27;).addGroups([{system: System.ANY,unit: &#x27;ns&#x27;,baseUnit: &#x27;ns&#x27;,denominators: [10, 100],units: {&#x27;ns&#x27;: Plurality.EITHER,&#x27;nanosecond&#x27;: Plurality.SINGULAR,&#x27;nanoseconds&#x27;: Plurality.PLURAL,&#x27;nano&#x27;: Plurality.SINGULAR,&#x27;nanos&#x27;: Plurality.PLURAL}},{system: System.ANY,unit: &#x27;us&#x27;,relativeUnit: &#x27;ns&#x27;,relativeScale: 1000,denominators: [10, 100, 1000],units: {&#x27;us&#x27;: Plurality.EITHER,&#x27;microsecond&#x27;: Plurality.SINGULAR,&#x27;microseconds&#x27;: Plurality.PLURAL,&#x27;micro&#x27;: Plurality.SINGULAR,&#x27;micros&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;ms&#x27;,relativeUnit: &#x27;us&#x27;,relativeScale: 1000,denominators: [10, 100, 1000],units: {&#x27;ms&#x27;: Plurality.EITHER,&#x27;millisecond&#x27;: Plurality.SINGULAR,&#x27;milliseconds&#x27;: Plurality.PLURAL,&#x27;milli&#x27;: Plurality.SINGULAR,&#x27;millis&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;s&#x27;,relativeUnit: &#x27;ms&#x27;,relativeScale: 1000,denominators: [10, 100, 1000],units: {&#x27;s&#x27;: Plurality.EITHER,&#x27;second&#x27;: Plurality.SINGULAR,&#x27;seconds&#x27;: Plurality.PLURAL,&#x27;sec&#x27;: Plurality.SINGULAR,&#x27;secs&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;min&#x27;,relativeUnit: &#x27;s&#x27;,relativeScale: 60,denominators: [2, 3, 4, 60],units: {&#x27;min&#x27;: Plurality.EITHER,&#x27;minute&#x27;: Plurality.SINGULAR,&#x27;minutes&#x27;: Plurality.PLURAL,&#x27;mins&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;hr&#x27;,relativeUnit: &#x27;min&#x27;,relativeScale: 60,denominators: [2, 3, 4, 60],units: {&#x27;hr&#x27;: Plurality.EITHER,&#x27;hour&#x27;: Plurality.SINGULAR,&#x27;hours&#x27;: Plurality.PLURAL,&#x27;hrs&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;day&#x27;,relativeUnit: &#x27;hr&#x27;,relativeScale: 24,denominators: [2, 3, 4, 6, 24],units: {&#x27;day&#x27;: Plurality.EITHER,&#x27;days&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;wk&#x27;,relativeUnit: &#x27;day&#x27;,relativeScale: 7,denominators: [7],units: {&#x27;wk&#x27;: Plurality.EITHER,&#x27;week&#x27;: Plurality.SINGULAR,&#x27;weeks&#x27;: Plurality.PLURAL,&#x27;wks&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;yr&#x27;,relativeUnit: &#x27;day&#x27;,relativeScale: 365.2425,denominators: [2, 3, 4, 6, 12, 52],units: {&#x27;yr&#x27;: Plurality.EITHER,&#x27;year&#x27;: Plurality.SINGULAR,&#x27;years&#x27;: Plurality.PLURAL,&#x27;yrs&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;score&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 20,denominators: [20],units: {&#x27;score&#x27;: Plurality.EITHER}},{system: System.ANY,common: true,unit: &#x27;decade&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 10,denominators: [10],units: {&#x27;decade&#x27;: Plurality.EITHER,&#x27;decades&#x27;: Plurality.PLURAL}},{system: System.ANY,unit: &#x27;biennium&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 2,denominators: [],units: {&#x27;biennium&#x27;: Plurality.EITHER,&#x27;bienniums&#x27;: Plurality.PLURAL}},{system: System.ANY,unit: &#x27;triennium&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 3,denominators: [],units: {&#x27;triennium&#x27;: Plurality.EITHER,&#x27;trienniums&#x27;: Plurality.PLURAL}},{system: System.ANY,unit: &#x27;quadrennium&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 4,denominators: [],units: {&#x27;quadrennium&#x27;: Plurality.EITHER,&#x27;quadrenniums&#x27;: Plurality.PLURAL}},{system: System.ANY,unit: &#x27;lustrum&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 5,denominators: [],units: {&#x27;lustrum&#x27;: Plurality.EITHER,&#x27;lustrums&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;decade&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 10,denominators: [2, 10],units: {&#x27;decade&#x27;: Plurality.EITHER,&#x27;decades&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;century&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 100,denominators: [2, 10],units: {&#x27;century&#x27;: Plurality.EITHER,&#x27;centurys&#x27;: Plurality.PLURAL,&#x27;centuries&#x27;: Plurality.PLURAL}},{system: System.ANY,common: true,unit: &#x27;millennium&#x27;,relativeUnit: &#x27;yr&#x27;,relativeScale: 1000,denominators: [2, 3, 4],units: {&#x27;millennium&#x27;: Plurality.EITHER,&#x27;millenniums&#x27;: Plurality.PLURAL,&#x27;millennia&#x27;: Plurality.PLURAL,&#x27;millennias&#x27;: Plurality.PLURAL}}]).setClassScales()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Time.ts#L23">classes/Time.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Time.ts#L23">classes/Time.ts:23</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1817,7 +1818,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Volume<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Volume&#x27;).setBaseConversion(&#x27;tsp&#x27;, &#x27;ml&#x27;, (x) &#x3D;&gt; x * 4.92892).setBaseConversion(&#x27;tsp&#x27;, &#x27;mm3&#x27;, (x) &#x3D;&gt; x * 4928.92).setBaseConversion(&#x27;tsp&#x27;, &#x27;in3&#x27;, (x) &#x3D;&gt; x * 0.300781).setBaseConversion(&#x27;ml&#x27;, &#x27;tsp&#x27;, (x) &#x3D;&gt; x * 0.202884).setBaseConversion(&#x27;ml&#x27;, &#x27;mm3&#x27;, (x) &#x3D;&gt; x * 1000).setBaseConversion(&#x27;ml&#x27;, &#x27;in3&#x27;, (x) &#x3D;&gt; x * 0.0610237).setBaseConversion(&#x27;mm3&#x27;, &#x27;tsp&#x27;, (x) &#x3D;&gt; x * 0.000202884).setBaseConversion(&#x27;mm3&#x27;, &#x27;ml&#x27;, (x) &#x3D;&gt; x * 0.001).setBaseConversion(&#x27;mm3&#x27;, &#x27;in3&#x27;, (x) &#x3D;&gt; x * 0.0000610237).setBaseConversion(&#x27;in3&#x27;, &#x27;tsp&#x27;, (x) &#x3D;&gt; x * 3.32468).setBaseConversion(&#x27;in3&#x27;, &#x27;ml&#x27;, (x) &#x3D;&gt; x * 16.3871).setBaseConversion(&#x27;in3&#x27;, &#x27;mm3&#x27;, (x) &#x3D;&gt; x * 16387.1).addGroups([{system: System.IMPERIAL,common: true,unit: &#x27;tsp&#x27;,baseUnit: &#x27;tsp&#x27;,denominators: [2, 3, 4],units: {&#x27;tsp&#x27;: Plurality.EITHER,&#x27;ts&#x27;: Plurality.EITHER,&#x27;tsps&#x27;: Plurality.PLURAL,&#x27;teaspoon&#x27;: Plurality.SINGULAR,&#x27;teaspoons&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;tbsp&#x27;,relativeUnit: &#x27;tsp&#x27;,relativeScale: 3,denominators: [2, 3, 4],units: {&#x27;tbsp&#x27;: Plurality.EITHER,&#x27;tbsps&#x27;: Plurality.PLURAL,&#x27;tablespoon&#x27;: Plurality.SINGULAR,&#x27;tablespoons&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;floz&#x27;,relativeUnit: &#x27;tsp&#x27;,relativeScale: 6,denominators: [2, 3, 6],units: {// &#x27;oz&#x27;: Plurality.EITHER,// &#x27;ounce&#x27;: Plurality.SINGULAR,// &#x27;ounces&#x27;: Plurality.PLURAL,&#x27;floz&#x27;: Plurality.EITHER,&#x27;fl-oz&#x27;: Plurality.EITHER,&#x27;fl oz&#x27;: Plurality.EITHER,&#x27;fluid ounce&#x27;: Plurality.SINGULAR,&#x27;fluid ounces&#x27;: Plurality.PLURAL,&#x27;fl. oz&#x27;: Plurality.EITHER,&#x27;oz. fl&#x27;: Plurality.EITHER,&#x27;oz fl&#x27;: Plurality.EITHER}},{system: System.IMPERIAL,common: true,unit: &#x27;c&#x27;,relativeUnit: &#x27;floz&#x27;,relativeScale: 8,denominators: [2, 3, 4],units: {&#x27;c&#x27;: Plurality.EITHER,&#x27;cup&#x27;: Plurality.SINGULAR,&#x27;cups&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;pt&#x27;,relativeUnit: &#x27;c&#x27;,relativeScale: 2,denominators: [2, 4, 8],units: {&#x27;pt&#x27;: Plurality.EITHER,&#x27;pint&#x27;: Plurality.SINGULAR,&#x27;pints&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;qt&#x27;,relativeUnit: &#x27;c&#x27;,relativeScale: 4,denominators: [2, 4, 8],units: {&#x27;qt&#x27;: Plurality.EITHER,&#x27;quart&#x27;: Plurality.SINGULAR,&#x27;quarts&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;gal&#x27;,relativeUnit: &#x27;qt&#x27;,relativeScale: 4,denominators: [2, 4, 8, 16],units: {&#x27;gal&#x27;: Plurality.EITHER,&#x27;gallon&#x27;: Plurality.SINGULAR,&#x27;gallons&#x27;: Plurality.PLURAL,&#x27;gals&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;ml&#x27;,baseUnit: &#x27;ml&#x27;,denominators: [2, 10],units: {&#x27;ml&#x27;: Plurality.EITHER,&#x27;millilitre&#x27;: Plurality.SINGULAR,&#x27;millilitres&#x27;: Plurality.PLURAL,&#x27;milliliter&#x27;: Plurality.SINGULAR,&#x27;milliliters&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;cl&#x27;,relativeUnit: &#x27;ml&#x27;,relativeScale: 10,denominators: [10],units: {&#x27;cl&#x27;: Plurality.EITHER,&#x27;centilitre&#x27;: Plurality.SINGULAR,&#x27;centilitres&#x27;: Plurality.PLURAL,&#x27;centiliter&#x27;: Plurality.SINGULAR,&#x27;centiliters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;l&#x27;,relativeUnit: &#x27;ml&#x27;,relativeScale: 1000,denominators: [2, 3, 4, 10],units: {&#x27;l&#x27;: Plurality.EITHER,&#x27;litre&#x27;: Plurality.SINGULAR,&#x27;litres&#x27;: Plurality.PLURAL,&#x27;liter&#x27;: Plurality.SINGULAR,&#x27;liters&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;dl&#x27;,relativeUnit: &#x27;l&#x27;,relativeScale: 10,denominators: [10, 100],units: {&#x27;dl&#x27;: Plurality.EITHER,&#x27;decalitre&#x27;: Plurality.SINGULAR,&#x27;decalitres&#x27;: Plurality.PLURAL,&#x27;decaliter&#x27;: Plurality.SINGULAR,&#x27;decaliters&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;kl&#x27;,relativeUnit: &#x27;l&#x27;,relativeScale: 1000,denominators: [10, 100],units: {&#x27;kl&#x27;: Plurality.EITHER,&#x27;kilolitre&#x27;: Plurality.SINGULAR,&#x27;kilolitres&#x27;: Plurality.PLURAL,&#x27;kiloliter&#x27;: Plurality.SINGULAR,&#x27;kiloliters&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;mm3&#x27;,baseUnit: &#x27;mm3&#x27;,denominators: [2, 4, 8],units: {&#x27;mm3&#x27;: Plurality.EITHER,&#x27;mm^3&#x27;: Plurality.EITHER,&#x27;mm\xb3&#x27;: Plurality.EITHER,&#x27;millimeter3&#x27;: Plurality.SINGULAR,&#x27;millimeter^3&#x27;: Plurality.SINGULAR,&#x27;millimeter\xb3&#x27;: Plurality.SINGULAR,&#x27;millimeters3&#x27;: Plurality.PLURAL,&#x27;millimeters^3&#x27;: Plurality.PLURAL,&#x27;millimeters\xb3&#x27;: Plurality.PLURAL,&#x27;cubic mm&#x27;: Plurality.EITHER,&#x27;cubic millimeter&#x27;: Plurality.SINGULAR,&#x27;cubic millimeters&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;cm3&#x27;,relativeUnit: &#x27;mm3&#x27;,relativeScale: 1000,denominators: [2, 4, 8],units: {&#x27;cm3&#x27;: Plurality.EITHER,&#x27;cm^3&#x27;: Plurality.EITHER,&#x27;cm\xb3&#x27;: Plurality.EITHER,&#x27;centimeter3&#x27;: Plurality.SINGULAR,&#x27;centimeter^3&#x27;: Plurality.SINGULAR,&#x27;centimeter\xb3&#x27;: Plurality.SINGULAR,&#x27;centimeters3&#x27;: Plurality.PLURAL,&#x27;centimeters^3&#x27;: Plurality.PLURAL,&#x27;centimeters\xb3&#x27;: Plurality.PLURAL,&#x27;cubic cm&#x27;: Plurality.EITHER,&#x27;cubic centimeter&#x27;: Plurality.SINGULAR,&#x27;cubic centimeters&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;m3&#x27;,relativeUnit: &#x27;cm3&#x27;,relativeScale: 1000000,denominators: [2, 4, 8],units: {&#x27;m3&#x27;: Plurality.EITHER,&#x27;m^3&#x27;: Plurality.EITHER,&#x27;m\xb3&#x27;: Plurality.EITHER,&#x27;meter3&#x27;: Plurality.SINGULAR,&#x27;meter^3&#x27;: Plurality.SINGULAR,&#x27;meter\xb3&#x27;: Plurality.SINGULAR,&#x27;meters3&#x27;: Plurality.PLURAL,&#x27;meters^3&#x27;: Plurality.PLURAL,&#x27;meters\xb3&#x27;: Plurality.PLURAL,&#x27;cubic m&#x27;: Plurality.EITHER,&#x27;cubic meter&#x27;: Plurality.SINGULAR,&#x27;cubic meters&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;km3&#x27;,relativeUnit: &#x27;m3&#x27;,relativeScale: 1000000000,denominators: [2, 4, 8],units: {&#x27;km3&#x27;: Plurality.EITHER,&#x27;km^3&#x27;: Plurality.EITHER,&#x27;km\xb3&#x27;: Plurality.EITHER,&#x27;kilometer3&#x27;: Plurality.SINGULAR,&#x27;kilometer^3&#x27;: Plurality.SINGULAR,&#x27;kilometer\xb3&#x27;: Plurality.SINGULAR,&#x27;kilometers3&#x27;: Plurality.PLURAL,&#x27;kilometers^3&#x27;: Plurality.PLURAL,&#x27;kilometers\xb3&#x27;: Plurality.PLURAL,&#x27;cubic km&#x27;: Plurality.EITHER,&#x27;cubic kilometer&#x27;: Plurality.SINGULAR,&#x27;cubic kilometers&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,unit: &#x27;in3&#x27;,baseUnit: &#x27;in3&#x27;,denominators: [2, 4, 8],units: {&#x27;in3&#x27;: Plurality.EITHER,&#x27;in^3&#x27;: Plurality.EITHER,&#x27;in\xb3&#x27;: Plurality.EITHER,&#x27;inch3&#x27;: Plurality.SINGULAR,&#x27;inch^3&#x27;: Plurality.SINGULAR,&#x27;inch\xb3&#x27;: Plurality.SINGULAR,&#x27;inches3&#x27;: Plurality.PLURAL,&#x27;inches^3&#x27;: Plurality.PLURAL,&#x27;inches\xb3&#x27;: Plurality.PLURAL,&#x27;cubic in&#x27;: Plurality.EITHER,&#x27;cubic inch&#x27;: Plurality.SINGULAR,&#x27;cubic inches&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;ft3&#x27;,relativeUnit: &#x27;in3&#x27;,relativeScale: 1728,denominators: [2, 4, 8],units: {&#x27;ft3&#x27;: Plurality.EITHER,&#x27;ft^3&#x27;: Plurality.EITHER,&#x27;ft\xb3&#x27;: Plurality.EITHER,&#x27;foot3&#x27;: Plurality.SINGULAR,&#x27;foot^3&#x27;: Plurality.SINGULAR,&#x27;foot\xb3&#x27;: Plurality.SINGULAR,&#x27;feet3&#x27;: Plurality.PLURAL,&#x27;feet^3&#x27;: Plurality.PLURAL,&#x27;feet\xb3&#x27;: Plurality.PLURAL,&#x27;cubic ft&#x27;: Plurality.EITHER,&#x27;cubic foot&#x27;: Plurality.SINGULAR,&#x27;cubic feet&#x27;: Plurality.PLURAL}},{system: System.METRIC,unit: &#x27;yd3&#x27;,relativeUnit: &#x27;ft3&#x27;,relativeScale: 27,denominators: [2, 4, 8],units: {&#x27;yd3&#x27;: Plurality.EITHER,&#x27;yd^3&#x27;: Plurality.EITHER,&#x27;yd\xb3&#x27;: Plurality.EITHER,&#x27;yard3&#x27;: Plurality.SINGULAR,&#x27;yard^3&#x27;: Plurality.SINGULAR,&#x27;yard\xb3&#x27;: Plurality.SINGULAR,&#x27;yards3&#x27;: Plurality.PLURAL,&#x27;yards^3&#x27;: Plurality.PLURAL,&#x27;yards\xb3&#x27;: Plurality.PLURAL,&#x27;cubic yd&#x27;: Plurality.EITHER,&#x27;cubic yard&#x27;: Plurality.SINGULAR,&#x27;cubic yards&#x27;: Plurality.PLURAL}}]).setClassScales()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Volume.ts#L29">classes/Volume.ts:29</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Volume.ts#L29">classes/Volume.ts:29</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1852,7 +1853,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Weight<span class="tsd-signature-symbol">:</span> <a href="classes/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol"> =&nbsp;new Class(&#x27;Weight&#x27;).setBaseConversion(&#x27;mg&#x27;, &#x27;oz&#x27;, (x) &#x3D;&gt; x * 0.000035274).setBaseConversion(&#x27;oz&#x27;, &#x27;mg&#x27;, (x) &#x3D;&gt; x * 28349.5).addGroups([{system: System.METRIC,common: true,unit: &#x27;mg&#x27;,baseUnit: &#x27;mg&#x27;,denominators: [2, 10],units: {&#x27;mg&#x27;: Plurality.EITHER,&#x27;milligram&#x27;: Plurality.SINGULAR,&#x27;milligrams&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;g&#x27;,relativeUnit: &#x27;mg&#x27;,relativeScale: 1000,denominators: [2, 10, 1000],units: {&#x27;g&#x27;: Plurality.EITHER,&#x27;gram&#x27;: Plurality.SINGULAR,&#x27;grams&#x27;: Plurality.PLURAL}},{system: System.METRIC,common: true,unit: &#x27;kg&#x27;,relativeUnit: &#x27;g&#x27;,relativeScale: 1000,denominators: [2, 10, 1000],units: {&#x27;kg&#x27;: Plurality.EITHER,&#x27;kilo&#x27;: Plurality.SINGULAR,&#x27;kilos&#x27;: Plurality.PLURAL,&#x27;kilogram&#x27;: Plurality.SINGULAR,&#x27;kilograms&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;oz&#x27;,baseUnit: &#x27;oz&#x27;,denominators: [2, 3, 4, 16],units: {&#x27;oz&#x27;: Plurality.EITHER,&#x27;ounce&#x27;: Plurality.SINGULAR,&#x27;ounces&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;lb&#x27;,relativeUnit: &#x27;oz&#x27;,relativeScale: 16,denominators: [2, 3, 4, 16],units: {&#x27;lb&#x27;: Plurality.EITHER,&#x27;lbs&#x27;: Plurality.PLURAL,&#x27;pound&#x27;: Plurality.SINGULAR,&#x27;pounds&#x27;: Plurality.PLURAL}},{system: System.IMPERIAL,common: true,unit: &#x27;ton&#x27;,relativeUnit: &#x27;lb&#x27;,relativeScale: 2000,denominators: [2, 3, 4, 10],units: {&#x27;ton&#x27;: Plurality.EITHER,&#x27;tons&#x27;: Plurality.PLURAL,&#x27;tonnes&#x27;: Plurality.PLURAL}}]).setClassScales()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/Weight.ts#L17">classes/Weight.ts:17</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/Weight.ts#L17">classes/Weight.ts:17</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1882,7 +1883,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/classes/index.ts#L15">classes/index.ts:15</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/classes/index.ts#L15">classes/index.ts:15</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1904,7 +1905,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/c1b845f/src/Base.ts#L18">Base.ts:18</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/d6fed0a/src/Base.ts#L18">Base.ts:18</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
