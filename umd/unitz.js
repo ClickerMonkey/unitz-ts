@@ -189,454 +189,6 @@ var Functions = (function () {
 }());
 
 
-// CONCATENATED MODULE: ./src/Value.ts
-
-
-var Value_Value = (function () {
-    function Value(value, num, den, unit, group) {
-        var divisor = Functions.gcd(num, den);
-        this.value = value;
-        this.num = num / divisor;
-        this.den = den / divisor;
-        this.unit = unit;
-        this.group = group;
-    }
-    Object.defineProperty(Value.prototype, "isValid", {
-        get: function () {
-            return isFinite(this.value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "isFraction", {
-        get: function () {
-            return this.den !== 1;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "isDecimal", {
-        get: function () {
-            return this.den === 1;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "scaled", {
-        get: function () {
-            return this.group ? this.value * this.group.baseScale : this.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "classScaled", {
-        get: function () {
-            return this.group ? this.value * this.group.classScale : this.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "actual", {
-        get: function () {
-            return this.num / this.den;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "mixedWhole", {
-        get: function () {
-            return this.den !== 1 ? Math.floor(this.num / this.den) : 0;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "mixedNum", {
-        get: function () {
-            return this.den !== 1 ? this.num % this.den : this.num;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "floor", {
-        get: function () {
-            return Math.floor(this.value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "ceil", {
-        get: function () {
-            return Math.ceil(this.value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "truncate", {
-        get: function () {
-            return this.value < 0 ? this.ceil : this.floor;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "remainder", {
-        get: function () {
-            return this.value - this.floor;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "error", {
-        get: function () {
-            return this.actual - this.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "distance", {
-        get: function () {
-            return Functions.abs(this.error);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Value.prototype, "asString", {
-        get: function () {
-            return (this.den === 1) ?
-                (this.value + '') :
-                (this.mixedWhole !== 0 ?
-                    (this.mixedWhole + Value.SEPARATOR_MIXED + this.mixedNum + Value.SEPARATOR_FRACTION + this.den) :
-                    (this.num + Value.SEPARATOR_FRACTION + this.den));
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Value.prototype.preferred = function () {
-        return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group) : this;
-    };
-    Value.prototype.copy = function () {
-        return new Value(this.value, this.num, this.den, this.unit, this.group);
-    };
-    Value.prototype.zero = function () {
-        return new Value(0, 0, 1, this.unit, this.group);
-    };
-    Value.prototype.truncated = function () {
-        return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
-    };
-    Value.prototype.fractioned = function () {
-        if (this.isFraction) {
-            return this;
-        }
-        if (this.group) {
-            return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group);
-        }
-        return this;
-    };
-    Value.prototype.numbered = function () {
-        if (this.isFraction) {
-            return new Value(this.value, this.value, 1, this.unit, this.group);
-        }
-        return this;
-    };
-    Value.prototype.convertTo = function (to) {
-        var group = this.group;
-        return group ? group.parent.convert(this.value, group, to) : this.value;
-    };
-    Value.prototype.convertToValue = function (group) {
-        return Value.fromNumberForGroup(this.convertTo(group), group);
-    };
-    Value.prototype.conversions = function (transform, reverse, callback) {
-        var _this = this;
-        if (this.group) {
-            this.group.matches(transform, reverse, function (group, index) {
-                callback(_this.convertToValue(group), index);
-            });
-        }
-    };
-    Value.prototype.normalize = function (transform, forOutput) {
-        var closest;
-        var closestString;
-        this.conversions(transform, false, function (convert) {
-            var acceptable = !forOutput.isNumber(convert);
-            if (!acceptable) {
-                var number = forOutput.number(convert.value);
-                acceptable = number !== '0';
-            }
-            if (acceptable) {
-                var convertString = forOutput.value(convert);
-                if (!closest || convertString.length <= closestString.length) {
-                    closest = convert;
-                    closestString = convertString;
-                }
-            }
-        });
-        return closest || this;
-    };
-    Value.prototype.add = function (addend, scale) {
-        if (scale === void 0) { scale = 1; }
-        var num = this.num * addend.den + addend.num * this.den * scale;
-        var den = this.den * addend.den;
-        var result = this.value + addend.value * scale;
-        return new Value(result, num, den, this.unit, this.group);
-    };
-    Value.prototype.sub = function (subtrahend, scale) {
-        if (scale === void 0) { scale = 1; }
-        var num = this.num * subtrahend.den - subtrahend.num * this.den * scale;
-        var den = this.den * subtrahend.den;
-        var result = this.value - subtrahend.value * scale;
-        return new Value(result, num, den, this.unit, this.group);
-    };
-    Value.prototype.mul = function (scale) {
-        return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
-    };
-    Value.fromNumber = function (value, unit, group) {
-        if (unit === void 0) { unit = ''; }
-        if (group === void 0) { group = null; }
-        return new Value(value, value, 1, unit, group);
-    };
-    Value.fromNumberWithRange = function (value, unit, group, minDen, maxDen) {
-        if (unit === void 0) { unit = ''; }
-        if (group === void 0) { group = null; }
-        if (minDen === void 0) { minDen = 1; }
-        if (maxDen === void 0) { maxDen = 100; }
-        var closestDenominator = 0;
-        var closestDistance = -1;
-        for (var i = minDen; i <= maxDen; i++) {
-            var den = i;
-            var num = Math.floor(den * value);
-            var actual = num / den;
-            var distance = Functions.abs(value - actual);
-            if (closestDistance === -1 || distance < closestDistance) {
-                closestDistance = distance;
-                closestDenominator = den;
-            }
-        }
-        if (closestDistance > Functions.EPSILON) {
-            return new Value(value, value, 1, unit, group);
-        }
-        if (closestDenominator === 0) {
-            closestDenominator = 1;
-        }
-        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
-    };
-    Value.fromNumberForGroup = function (value, group) {
-        return this.fromNumberWithDenominators(value, group.denominators, group.preferredUnit, group);
-    };
-    Value.fromNumberWithDenominators = function (value, denominators, unit, group) {
-        if (unit === void 0) { unit = ''; }
-        if (group === void 0) { group = null; }
-        var closestDenominator = 0;
-        var closestDistance = -1;
-        for (var i = 0; i < denominators.length; i++) {
-            var den = denominators[i];
-            var num = Math.floor(den * value);
-            var actual = num / den;
-            var distance = Functions.abs(value - actual);
-            if (closestDistance === -1 || distance < closestDistance) {
-                closestDistance = distance;
-                closestDenominator = den;
-            }
-        }
-        if (closestDistance > Functions.EPSILON) {
-            return new Value(value, value, 1, unit, group);
-        }
-        if (closestDenominator === 0) {
-            closestDenominator = 1;
-        }
-        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
-    };
-    Value.fromFraction = function (num, den, unit, group) {
-        if (unit === void 0) { unit = ''; }
-        if (group === void 0) { group = null; }
-        return new Value(num / den, num, den, unit, group);
-    };
-    Value.INVALID = new Value(Number.NaN, Number.NaN, 1, '', null);
-    Value.SEPARATOR_FRACTION = '/';
-    Value.SEPARATOR_MIXED = ' ';
-    return Value;
-}());
-
-
-// CONCATENATED MODULE: ./src/Range.ts
-
-
-var Range_Range = (function () {
-    function Range(min, max) {
-        this.min = min.value < max.value ? min : max;
-        this.max = max.value > min.value ? max : min;
-    }
-    Object.defineProperty(Range.prototype, "isValid", {
-        get: function () {
-            return this.min.isValid && this.max.isValid;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "isFraction", {
-        get: function () {
-            return this.min.isFraction || this.max.isFraction;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "isDecimal", {
-        get: function () {
-            return this.min.isDecimal && this.max.isDecimal;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "isRange", {
-        get: function () {
-            return this.min.value !== this.max.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "isFixed", {
-        get: function () {
-            return this.min.value === this.max.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "average", {
-        get: function () {
-            return (this.min.value + this.max.value) * 0.5;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "value", {
-        get: function () {
-            return this.min.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "minimum", {
-        get: function () {
-            return this.min.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "maximum", {
-        get: function () {
-            return this.max.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "unit", {
-        get: function () {
-            return this.min.group.unit;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Range.prototype, "asString", {
-        get: function () {
-            return (this.min.value === this.max.value) ?
-                (this.min.asString) :
-                (this.min.asString + Range.SEPARATOR + this.max.asString);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Range.prototype.isMatch = function (range) {
-        return this.min.group === range.min.group &&
-            this.max.group === range.max.group;
-    };
-    Range.prototype.preferred = function () {
-        var min = this.min.preferred();
-        var max = this.max.preferred();
-        return new Range(min, max);
-    };
-    Range.prototype.positive = function () {
-        var minNegative = this.min.value < 0;
-        var maxNegative = this.max.value < 0;
-        if (maxNegative) {
-            return null;
-        }
-        var min = minNegative ? this.min.zero() : this.min.copy();
-        var max = this.max.copy();
-        return new Range(min, max);
-    };
-    Range.prototype.negative = function () {
-        var minPositive = this.min.value >= 0;
-        var maxPositive = this.max.value >= 0;
-        if (minPositive) {
-            return null;
-        }
-        var min = this.min.copy();
-        var max = maxPositive ? this.max.zero() : this.max.copy();
-        return new Range(min, max);
-    };
-    Range.prototype.nonzero = function () {
-        var minZero = this.min.value === 0;
-        var maxZero = this.max.value === 0;
-        if (minZero && maxZero) {
-            return null;
-        }
-        var min = this.min.copy();
-        var max = this.max.copy();
-        return new Range(min, max);
-    };
-    Range.prototype.maxd = function () {
-        var fixed = this.max.copy();
-        return new Range(fixed, fixed);
-    };
-    Range.prototype.mind = function () {
-        var fixed = this.min.copy();
-        return new Range(fixed, fixed);
-    };
-    Range.prototype.normalize = function (transform, forOutput) {
-        var min = this.min.normalize(transform, forOutput);
-        var max = this.max.normalize(transform, forOutput);
-        return new Range(min, max);
-    };
-    Range.prototype.add = function (addend, scale) {
-        if (scale === void 0) { scale = 1; }
-        var min = this.min.add(addend.min, scale);
-        var max = this.max.add(addend.max, scale);
-        return new Range(min, max);
-    };
-    Range.prototype.sub = function (subtrahend, scale) {
-        if (scale === void 0) { scale = 1; }
-        var min = this.min.sub(subtrahend.min, scale);
-        var max = this.max.sub(subtrahend.max, scale);
-        return new Range(min, max);
-    };
-    Range.prototype.mul = function (scale) {
-        var min = this.min.mul(scale);
-        var max = this.max.mul(scale);
-        return new Range(min, max);
-    };
-    Range.prototype.fractioned = function () {
-        if (this.min.isFraction && this.max.isFraction) {
-            return this;
-        }
-        var min = this.min.fractioned();
-        var max = this.max.fractioned();
-        return new Range(min, max);
-    };
-    Range.prototype.numbered = function () {
-        if (!this.min.isFraction && !this.max.isFraction) {
-            return this;
-        }
-        var min = this.min.numbered();
-        var max = this.max.numbered();
-        return new Range(min, max);
-    };
-    Range.fromFixed = function (fixed) {
-        return new Range(fixed, fixed);
-    };
-    Range.INVALID = new Range(Value_Value.INVALID, Value_Value.INVALID);
-    Range.SEPARATOR = ' - ';
-    return Range;
-}());
-
-
 // CONCATENATED MODULE: ./src/Group.ts
 
 
@@ -1316,6 +868,15 @@ var Core_Core = (function () {
     Core.getDynamicMatch = function (unit) {
         return unit.substring(0, this.dynamicMatchLength).toLowerCase();
     };
+    // @ts-ignore
+    Core.isMoreNormal = function (fromValue, toValue, transform, forOutput) {
+        if (!fromValue) {
+            return true;
+        }
+        var fromString = forOutput.value(fromValue);
+        var toString = forOutput.value(toValue);
+        return toString.length <= fromString.length;
+    };
     Core.classMap = {};
     Core.classes = [];
     Core.unitToGroup = {};
@@ -1329,6 +890,450 @@ var Core_Core = (function () {
 }());
 
 
+// CONCATENATED MODULE: ./src/Value.ts
+
+
+
+var Value_Value = (function () {
+    function Value(value, num, den, unit, group) {
+        var divisor = Functions.gcd(num, den);
+        this.value = value;
+        this.num = num / divisor;
+        this.den = den / divisor;
+        this.unit = unit;
+        this.group = group;
+    }
+    Object.defineProperty(Value.prototype, "isValid", {
+        get: function () {
+            return isFinite(this.value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "isFraction", {
+        get: function () {
+            return this.den !== 1;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "isDecimal", {
+        get: function () {
+            return this.den === 1;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "scaled", {
+        get: function () {
+            return this.group ? this.value * this.group.baseScale : this.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "classScaled", {
+        get: function () {
+            return this.group ? this.value * this.group.classScale : this.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "actual", {
+        get: function () {
+            return this.num / this.den;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "mixedWhole", {
+        get: function () {
+            return this.den !== 1 ? Math.floor(this.num / this.den) : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "mixedNum", {
+        get: function () {
+            return this.den !== 1 ? this.num % this.den : this.num;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "floor", {
+        get: function () {
+            return Math.floor(this.value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "ceil", {
+        get: function () {
+            return Math.ceil(this.value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "truncate", {
+        get: function () {
+            return this.value < 0 ? this.ceil : this.floor;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "remainder", {
+        get: function () {
+            return this.value - this.floor;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "error", {
+        get: function () {
+            return this.actual - this.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "distance", {
+        get: function () {
+            return Functions.abs(this.error);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "asString", {
+        get: function () {
+            return (this.den === 1) ?
+                (this.value + '') :
+                (this.mixedWhole !== 0 ?
+                    (this.mixedWhole + Value.SEPARATOR_MIXED + this.mixedNum + Value.SEPARATOR_FRACTION + this.den) :
+                    (this.num + Value.SEPARATOR_FRACTION + this.den));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Value.prototype.preferred = function () {
+        return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group) : this;
+    };
+    Value.prototype.copy = function () {
+        return new Value(this.value, this.num, this.den, this.unit, this.group);
+    };
+    Value.prototype.zero = function () {
+        return new Value(0, 0, 1, this.unit, this.group);
+    };
+    Value.prototype.truncated = function () {
+        return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
+    };
+    Value.prototype.fractioned = function () {
+        if (this.isFraction) {
+            return this;
+        }
+        if (this.group) {
+            return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group);
+        }
+        return this;
+    };
+    Value.prototype.numbered = function () {
+        if (this.isFraction) {
+            return new Value(this.value, this.value, 1, this.unit, this.group);
+        }
+        return this;
+    };
+    Value.prototype.convertTo = function (to) {
+        var group = this.group;
+        return group ? group.parent.convert(this.value, group, to) : this.value;
+    };
+    Value.prototype.convertToValue = function (group) {
+        return Value.fromNumberForGroup(this.convertTo(group), group);
+    };
+    Value.prototype.conversions = function (transform, reverse, callback) {
+        var _this = this;
+        if (this.group) {
+            this.group.matches(transform, reverse, function (group, index) {
+                callback(_this.convertToValue(group), index);
+            });
+        }
+    };
+    Value.prototype.normalize = function (transform, forOutput) {
+        var closest;
+        this.conversions(transform, false, function (convert) {
+            var acceptable = !forOutput.isNumber(convert);
+            if (!acceptable) {
+                var number = forOutput.number(convert.value);
+                acceptable = number !== '0';
+            }
+            if (acceptable && Core_Core.isMoreNormal(closest, convert, transform, forOutput)) {
+                closest = convert;
+            }
+        });
+        return closest || this;
+    };
+    Value.prototype.add = function (addend, scale) {
+        if (scale === void 0) { scale = 1; }
+        var num = this.num * addend.den + addend.num * this.den * scale;
+        var den = this.den * addend.den;
+        var result = this.value + addend.value * scale;
+        return new Value(result, num, den, this.unit, this.group);
+    };
+    Value.prototype.sub = function (subtrahend, scale) {
+        if (scale === void 0) { scale = 1; }
+        var num = this.num * subtrahend.den - subtrahend.num * this.den * scale;
+        var den = this.den * subtrahend.den;
+        var result = this.value - subtrahend.value * scale;
+        return new Value(result, num, den, this.unit, this.group);
+    };
+    Value.prototype.mul = function (scale) {
+        return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
+    };
+    Value.fromNumber = function (value, unit, group) {
+        if (unit === void 0) { unit = ''; }
+        if (group === void 0) { group = null; }
+        return new Value(value, value, 1, unit, group);
+    };
+    Value.fromNumberWithRange = function (value, unit, group, minDen, maxDen) {
+        if (unit === void 0) { unit = ''; }
+        if (group === void 0) { group = null; }
+        if (minDen === void 0) { minDen = 1; }
+        if (maxDen === void 0) { maxDen = 100; }
+        var closestDenominator = 0;
+        var closestDistance = -1;
+        for (var i = minDen; i <= maxDen; i++) {
+            var den = i;
+            var num = Math.floor(den * value);
+            var actual = num / den;
+            var distance = Functions.abs(value - actual);
+            if (closestDistance === -1 || distance < closestDistance) {
+                closestDistance = distance;
+                closestDenominator = den;
+            }
+        }
+        if (closestDistance > Functions.EPSILON) {
+            return new Value(value, value, 1, unit, group);
+        }
+        if (closestDenominator === 0) {
+            closestDenominator = 1;
+        }
+        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
+    };
+    Value.fromNumberForGroup = function (value, group) {
+        return this.fromNumberWithDenominators(value, group.denominators, group.preferredUnit, group);
+    };
+    Value.fromNumberWithDenominators = function (value, denominators, unit, group) {
+        if (unit === void 0) { unit = ''; }
+        if (group === void 0) { group = null; }
+        var closestDenominator = 0;
+        var closestDistance = -1;
+        for (var i = 0; i < denominators.length; i++) {
+            var den = denominators[i];
+            var num = Math.floor(den * value);
+            var actual = num / den;
+            var distance = Functions.abs(value - actual);
+            if (closestDistance === -1 || distance < closestDistance) {
+                closestDistance = distance;
+                closestDenominator = den;
+            }
+        }
+        if (closestDistance > Functions.EPSILON) {
+            return new Value(value, value, 1, unit, group);
+        }
+        if (closestDenominator === 0) {
+            closestDenominator = 1;
+        }
+        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
+    };
+    Value.fromFraction = function (num, den, unit, group) {
+        if (unit === void 0) { unit = ''; }
+        if (group === void 0) { group = null; }
+        return new Value(num / den, num, den, unit, group);
+    };
+    Value.INVALID = new Value(Number.NaN, Number.NaN, 1, '', null);
+    Value.SEPARATOR_FRACTION = '/';
+    Value.SEPARATOR_MIXED = ' ';
+    return Value;
+}());
+
+
+// CONCATENATED MODULE: ./src/Range.ts
+
+
+var Range_Range = (function () {
+    function Range(min, max) {
+        this.min = min.value < max.value ? min : max;
+        this.max = max.value > min.value ? max : min;
+    }
+    Object.defineProperty(Range.prototype, "isValid", {
+        get: function () {
+            return this.min.isValid && this.max.isValid;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "isFraction", {
+        get: function () {
+            return this.min.isFraction || this.max.isFraction;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "isDecimal", {
+        get: function () {
+            return this.min.isDecimal && this.max.isDecimal;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "isRange", {
+        get: function () {
+            return this.min.value !== this.max.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "isFixed", {
+        get: function () {
+            return this.min.value === this.max.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "average", {
+        get: function () {
+            return (this.min.value + this.max.value) * 0.5;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "value", {
+        get: function () {
+            return this.min.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "minimum", {
+        get: function () {
+            return this.min.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "maximum", {
+        get: function () {
+            return this.max.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "unit", {
+        get: function () {
+            return this.min.group.unit;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Range.prototype, "asString", {
+        get: function () {
+            return (this.min.value === this.max.value) ?
+                (this.min.asString) :
+                (this.min.asString + Range.SEPARATOR + this.max.asString);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Range.prototype.isMatch = function (range) {
+        return this.min.group === range.min.group &&
+            this.max.group === range.max.group;
+    };
+    Range.prototype.preferred = function () {
+        var min = this.min.preferred();
+        var max = this.max.preferred();
+        return new Range(min, max);
+    };
+    Range.prototype.positive = function () {
+        var minNegative = this.min.value < 0;
+        var maxNegative = this.max.value < 0;
+        if (maxNegative) {
+            return null;
+        }
+        var min = minNegative ? this.min.zero() : this.min.copy();
+        var max = this.max.copy();
+        return new Range(min, max);
+    };
+    Range.prototype.negative = function () {
+        var minPositive = this.min.value >= 0;
+        var maxPositive = this.max.value >= 0;
+        if (minPositive) {
+            return null;
+        }
+        var min = this.min.copy();
+        var max = maxPositive ? this.max.zero() : this.max.copy();
+        return new Range(min, max);
+    };
+    Range.prototype.nonzero = function () {
+        var minZero = this.min.value === 0;
+        var maxZero = this.max.value === 0;
+        if (minZero && maxZero) {
+            return null;
+        }
+        var min = this.min.copy();
+        var max = this.max.copy();
+        return new Range(min, max);
+    };
+    Range.prototype.maxd = function () {
+        var fixed = this.max.copy();
+        return new Range(fixed, fixed);
+    };
+    Range.prototype.mind = function () {
+        var fixed = this.min.copy();
+        return new Range(fixed, fixed);
+    };
+    Range.prototype.normalize = function (transform, forOutput) {
+        var min = this.min.normalize(transform, forOutput);
+        var max = this.max.normalize(transform, forOutput);
+        return new Range(min, max);
+    };
+    Range.prototype.add = function (addend, scale) {
+        if (scale === void 0) { scale = 1; }
+        var min = this.min.add(addend.min, scale);
+        var max = this.max.add(addend.max, scale);
+        return new Range(min, max);
+    };
+    Range.prototype.sub = function (subtrahend, scale) {
+        if (scale === void 0) { scale = 1; }
+        var min = this.min.sub(subtrahend.min, scale);
+        var max = this.max.sub(subtrahend.max, scale);
+        return new Range(min, max);
+    };
+    Range.prototype.mul = function (scale) {
+        var min = this.min.mul(scale);
+        var max = this.max.mul(scale);
+        return new Range(min, max);
+    };
+    Range.prototype.fractioned = function () {
+        if (this.min.isFraction && this.max.isFraction) {
+            return this;
+        }
+        var min = this.min.fractioned();
+        var max = this.max.fractioned();
+        return new Range(min, max);
+    };
+    Range.prototype.numbered = function () {
+        if (!this.min.isFraction && !this.max.isFraction) {
+            return this;
+        }
+        var min = this.min.numbered();
+        var max = this.max.numbered();
+        return new Range(min, max);
+    };
+    Range.fromFixed = function (fixed) {
+        return new Range(fixed, fixed);
+    };
+    Range.INVALID = new Range(Value_Value.INVALID, Value_Value.INVALID);
+    Range.SEPARATOR = ' - ';
+    return Range;
+}());
+
+
 // CONCATENATED MODULE: ./src/Base.ts
 
 
@@ -1336,9 +1341,15 @@ var Core_Core = (function () {
 
 
 
+/**
+ * Takes user input and returns a new instance of [Base].
+ */
 function uz(input) {
     return new Base_Base(input);
 }
+/**
+ * The main class which contains a list of ranges and the user input.
+ */
 var Base_Base = (function () {
     function Base(input, ranges) {
         this.input = input;
@@ -1871,6 +1882,16 @@ var Parse_Parse = (function () {
 
 
 
+/**
+ * The Weight clas which contains the following groups.
+ *
+ * - milligram
+ * - gram
+ * - kilogram
+ * - ounce
+ * - pound
+ * - ton
+ */
 var Weight = new Class_Class('Weight')
     .setBaseConversion('mg', 'oz', function (x) { return x * 0.000035274; })
     .setBaseConversion('oz', 'mg', function (x) { return x * 28349.5; })
@@ -1960,6 +1981,19 @@ var Weight = new Class_Class('Weight')
 
 
 
+/**
+ * The Area class which contains the following groups:
+ *
+ * - square inch
+ * - square foot
+ * - square yard
+ * - acre
+ * - square mile
+ * - square millimeter
+ * - square centimeter
+ * - square meter
+ * - square kilometer
+ */
 var Area = new Class_Class('Area')
     .setBaseConversion('sqin', 'sqmm', function (x) { return x * 645.16; })
     .setBaseConversion('sqmm', 'sqin', function (x) { return x * 0.00155; })
@@ -2180,6 +2214,22 @@ var Area = new Class_Class('Area')
 
 
 
+/**
+ * The Time class which contains the following groups.
+ *
+ * - nanosecond
+ * - microsecond
+ * - millisecond
+ * - second
+ * - hour
+ * - day
+ * - week
+ * - year
+ * - score
+ * - decade
+ * - centry
+ * - millennium
+ */
 var Time = new Class_Class('Time')
     .addGroups([
     {
@@ -2421,6 +2471,17 @@ var Time = new Class_Class('Time')
 
 
 
+/**
+ * The Digital class which contains the following groups:
+ *
+ * - bit
+ * - nibble
+ * - byte
+ * - kilo/mego/giga/tera/peta/exa/zetta/yotta byte
+ * - kibi/mebi/gibi/tebi/pebi/exbi/zebi/yobi byte
+ * - kilo/mego/giga/tera/peta/exa/zetta/yotta bit
+ * - ki/mi/gi/ti/pi/ez/zi/yi bit
+ */
 var Digital = new Class_Class('Digital')
     .addGroups([
     {
@@ -2538,6 +2599,13 @@ function addDigitalUnits(parent, relativeTo, relativeScales, denominators, suffi
 
 
 var _C_ = '\xb0C';
+/**
+ * The Temperature class which contains the following groups.
+ *
+ * - celsius
+ * - kelvin
+ * - fahrenheit
+ */
 var Temperature = new Class_Class('Temperature')
     .setBaseConversion('F', _C_, function (x) { return ((x - 32) * 5 / 9); })
     .setBaseConversion('F', 'K', function (x) { return ((x + 459.67) * 5 / 9); })
@@ -2583,14 +2651,20 @@ var Temperature = new Class_Class('Temperature')
 ])
     .setClassScales();
 
-// CONCATENATED MODULE: ./src/classes/Rotation.ts
+// CONCATENATED MODULE: ./src/classes/Angle.ts
 
 
 
 
 var RAD2DEG = 180 / Math.PI;
 var DEG2RAD = Math.PI / 180;
-var Rotation = new Class_Class('Rotation')
+/**
+ * The Angle class which contains the following groups.
+ *
+ * - degree
+ * - radian
+ */
+var Angle = new Class_Class('Angle')
     .setBaseConversion('deg', 'rad', function (x) { return x * DEG2RAD; })
     .setBaseConversion('rad', 'deg', function (x) { return x * RAD2DEG; })
     .addGroups([
@@ -2627,6 +2701,28 @@ var Rotation = new Class_Class('Rotation')
 
 
 
+/**
+ * The Volume clas which contains the following groups.
+ *
+ * - teaspoon
+ * - tablespoon
+ * - fluid ounce
+ * - cup
+ * - pint
+ * - quart
+ * - gallon
+ * - milliliter
+ * - centiliter
+ * - decaliter
+ * - kiloliter
+ * - cubic millimeter
+ * - cubic centimeter
+ * - cubic meter
+ * - cubic kilometer
+ * - cubic inch
+ * - cubic foot
+ * - cubic yard
+ */
 var Volume = new Class_Class('Volume')
     .setBaseConversion('tsp', 'ml', function (x) { return x * 4.92892; })
     .setBaseConversion('tsp', 'mm3', function (x) { return x * 4928.92; })
@@ -2968,6 +3064,20 @@ var Volume = new Class_Class('Volume')
 
 
 
+/**
+ * The Length class which contains the following groups.
+ *
+ * - inch
+ * - foot
+ * - yard
+ * - mile
+ * - league
+ * - millimeter
+ * - centimeter
+ * - decimeter
+ * - meter
+ * - kilometer
+ */
 var Length = new Class_Class('Length')
     .setBaseConversion('in', 'mm', function (x) { return x * 25.4; })
     .setBaseConversion('mm', 'in', function (x) { return x * 0.039370; })
@@ -3113,8 +3223,11 @@ var Length = new Class_Class('Length')
 
 
 
+/**
+ * Adds all classes that come with Unitz to [Core].
+ */
 function addDefaults() {
-    Core_Core.addClasses(Weight, Area, Time, Digital, Temperature, Rotation, Volume, Length);
+    Core_Core.addClasses(Weight, Area, Time, Digital, Temperature, Angle, Volume, Length);
 }
 
 // CONCATENATED MODULE: ./src/index.ts

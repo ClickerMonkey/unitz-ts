@@ -3,6 +3,7 @@ import { Functions as fn } from './Functions';
 import { Transform } from './Transform';
 import { Output } from './Output';
 import { Group } from './Group';
+import { Core } from './Core';
 
 
 // TODO perUnit & perGroup (or: rateUnit & rateGroup)
@@ -184,7 +185,6 @@ export class Value
   public normalize(transform: Transform, forOutput: Output): Value
   {
     let closest: Value;
-    let closestString: string;
 
     this.conversions(transform, false, (convert) =>
     {
@@ -199,12 +199,9 @@ export class Value
 
       if (acceptable)
       {
-        let convertString: string = forOutput.value( convert );
-
-        if (!closest || convertString.length <= closestString.length)
+        if (!closest || Core.isMoreNormal(closest, convert, transform, forOutput))
         {
           closest = convert;
-          closestString = convertString;
         }
       }
     });

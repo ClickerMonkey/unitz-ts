@@ -26,58 +26,184 @@ export function uz(input: RangesInput)
 export class Base
 {
 
+  /**
+   * The input parsed to generate this instance or the input passed from the
+   * parent instance when an operation was performed on it.
+   */
   public input: RangesInput;
+
+  /**
+   * The list of ranges in this instance.
+   */
   public ranges: RangeList;
 
+  /**
+   * Creates a new instance of Base given some user input to parse or an
+   * existing list of ranges to use instead.
+   *
+   * @param input The input to parse if ranges is not provided.
+   * @param ranges The already parsed ranges to use for this instance.
+   */
   public constructor(input: RangesInput, ranges?: RangeList )
   {
     this.input = input;
     this.ranges = ranges || Parse.ranges( input, Core.getGroup );
   }
 
-  // 1c, 2.3m SCALE BY 2 = 2c, 4.6m
+  /**
+   * Scales the ranges in this instance by the given factor and returns a
+   * new instance.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1c, 2.3m').scale(2); // '2c, 4.6m'
+   * ```
+   *
+   * @param amount The factor to scale the ranges in this instance by.
+   * @return A new instance.
+   * @see [[Range.mul]]
+   * @see [[Base.mutate]]
+   */
   public scale(amount: number): Base
   {
     return this.mutate(r => r.mul( amount ));
   }
 
   // 1c, 3m SCALE TO 1/2c = 1/2c, 1.5m
-  public scaleTo(unitValue: string, rangeDelta: number = 0.5): Base
+
+  /**
+   * Scales the ranges in this instance up to some value with a unit and returns
+   * a new instance. Because this instance might contain ranges, a rangeDelta
+   * can be specified to instruct on which value (min or max) to use when
+   * calculating how much to scale by.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1m, 2 - 3c').scaleTo('6c'); // '2m, 4 - 6c'
+   * uz('1m, 2 - 3c').scaleTo('6c', 0); // '3m, 6 - 9c'
+   * uz('1m, 2 - 3c').scaleTo('6c', 0.5); // '2.4m, 4.8 - 6c'
+   * ```
+   *
+   * @param unitValue A value & unit pair to scale the ranges in this instance to.
+   * @param rangeDelta When this instance contains ranges this value instructs
+   *  how the scale factor is calculated. A value of 0 means it looks at the
+   *  minimum, 1 is the maximum, and 0.5 is the average.
+   * @return A new instance.
+   * @see [[Base.getScaleTo]]
+   * @see [[Base.scale]]
+   */
+  public scaleTo(unitValue: string, rangeDelta: number = 1.0): Base
   {
     return this.scale( this.getScaleTo(unitValue, rangeDelta) );
   }
 
-  // 5 kilograms = 5kg
+  /**
+   * Changes the units used on each of the ranges in this instance to the
+   * preferred unit for each group.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('5 kilos').preferred(); // '5 kg'
+   * ```
+   *
+   * @return A new instance.
+   * @see [[Core.setPreferred]]
+   * @see [[Range.preferred]]
+   * @see [[Base.mutate]]
+   */
   public preferred(): Base
   {
     return this.mutate(r => r.preferred());
   }
 
-  // 0c, 2tbsp, -4tbsp = 0c, 2tbsp
+  /**
+   * Drops negative ranges and modifies partially negative ranges so that all
+   * values are greater than or equal to zero.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('0c, 2tbsp, -4tbsp').positive(); // '0c, 2tbsp'
+   * uz('-2 - 3 in').positive(); // '0 - 3in'
+   * ```
+   *
+   * @return A new instance.
+   * @see [[Range.positive]]
+   * @see [[Base.mutate]]
+   */
   public positive(): Base
   {
     return this.mutate(r => r.positive());
   }
 
-  // 0c, 2tbsp, -4tbsp = -4tbsp
+  /**
+   * Drops positive ranges and modifies partially positive ranges so that all
+   * values are less than zero.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('0c, 2tbsp, -4tbsp').negative(); // '-4tbsp'
+   * uz('-2 - 3 in').negative(); // '-2 - 0in'
+   * ```
+   *
+   * @return A new instance.
+   * @see [[Range.negative]]
+   * @see [[Base.mutate]]
+   */
   public negative(): Base
   {
     return this.mutate(r => r.negative());
   }
 
-  // 0c, 2tbsp = 2tbsp
+  /**
+   * Drops ranges that are equal to zero.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('0c, 2tbsp').negative(); // '2tbsp'
+   * ```
+   *
+   * @return A new instance.
+   * @see [[Range.nonzero]]
+   * @see [[Base.mutate]]
+   */
   public nonzero(): Base
   {
     return this.mutate(r => r.nonzero());
   }
 
-  // 1/2, 0.3 = 1/2, 3/10
+  /**
+   * Converts each range to fractions if a denominator for the specified units
+   * yields a fraction close enough to the original value.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1/2 cup').fractions(); // '1/2 cup'
+   * uz('0.3cm').fractions(); // '3/10 cm'
+   * uz('0.33 decades').fractions(); // '0.33 decades' closest is 3/10 but that's not close enough
+   * ```
+   *
+   * @return A new instance.
+   * @see [[Range.fractioned]]
+   * @see [[Base.mutate]]
+   */
   public fractions(): Base
   {
     return this.mutate(r => r.fractioned());
   }
 
-  // 1/2, 0.3 = 0.5, 0.3
+  /**
+   * Converts each range to numbers if they are fractions.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1/2 cup').fractions(); // '0.5 cup'
+   * uz('0.3cm').fractions(); // '0.3 cm'
+   * ```
+   *
+   * @return A new instance.
+   * @see [[Range.numbered]]
+   * @see [[Base.mutate]]
+   */
   public numbers(): Base
   {
     return this.mutate(r => r.numbered());

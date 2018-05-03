@@ -5,6 +5,7 @@ import { Class, ClassMap } from './Class';
 import { Output } from './Output';
 import { Group, GroupMap, GroupList } from './Group';
 import { Transform } from './Transform';
+import { Value } from './Value';
 import { Sort } from './Sort';
 
 
@@ -177,9 +178,18 @@ export class Core
     return group;
   }
 
-  public static getDynamicMatch(unit: string)
+  public static getDynamicMatch(unit: string): string
   {
     return unit.substring( 0, this.dynamicMatchLength ).toLowerCase();
+  }
+
+  // @ts-ignore
+  public static isMoreNormal(fromValue: Value, toValue: Value, transform: Transform, forOutput: Output): boolean
+  {
+    let fromString: string = forOutput.value( fromValue );
+    let toString: string = forOutput.value( toValue );
+
+    return toString.length <= fromString.length;
   }
 
 }

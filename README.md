@@ -2,6 +2,9 @@
 
 A unit parser, converter, & calculator for TypeScript and JS.
 
+- [Documentation](https://clickermonkey.github.io/unitz-ts/docs/)
+- [Online Tool](https://clickermonkey.github.io/unitz-ts/tester.html)
+
 ```
 // TypeScript
 import { uz } from 'unitz';
@@ -48,6 +51,9 @@ uz('1 tsp, 1 pt, 4 gal').sort(); // = 4 gal, 1 pt, 1 tsp: sort values
 
 // Dynamic
 uz('1 loaf').add('4 loaves').normalize(); // = 5 loaves
+
+// Output
+uz('1 cup').output( options ); // the above functions return objects, to get a string you must call output which can take options to override the global output options.
 ```
 
 ### Customization
@@ -55,6 +61,18 @@ uz('1 loaf').add('4 loaves').normalize(); // = 5 loaves
 You can customize exactly how Unitz behaves.
 
 ```
+// The "distance" used to determine if a value is close enough to 0, 1, or if a calculated fraction is close enough to the real value.
+Unitz.Functions.EPSILON = 0.001;
+
+// The default settings for outputting values
+Unitz.Core.globalOutput;
+
+// The default settings for transforms
+Unitz.Core.globalTransform;
+
+// The default settings for sorting
+Unitz.Core.globalSort;
+
 // When preferred() is ran, use this unit
 Unitz.Core.setPreferred( 'cup' );
 
@@ -94,5 +112,10 @@ Unitz.Core.addClass(new Class('Loaf', [
 Unitz.Core.getDynamicMatch = function(unit) {
   // use soundex instead of the first three characters. cup and kup are equal now!
   return soundex( unit );
+};
+
+// To override the logic for determining what value is "normal" (most user friendly)
+Unitz.Core.isMoreNormal = function(fromValue, toValue, transform, forOutput) {
+  return true;
 };
 ```

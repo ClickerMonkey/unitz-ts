@@ -54,6 +54,8 @@ export let Weight = new Class('Weight')
       denominators: [2, 10, 1000],
       units: {
         'kg': Plurality.EITHER,
+        'kilo': Plurality.SINGULAR,
+        'kilos': Plurality.PLURAL,
         'kilogram': Plurality.SINGULAR,
         'kilograms': Plurality.PLURAL
       }
