@@ -975,6 +975,15 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>The global class which keeps track of all unit mappings and global options.</p>
+				</div>
+				<p>This class is also responsible for creating dynamic classes and groups based
+				on approximation when a desired unit is not defined by the developer.</p>
+			</div>
+		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
@@ -1027,9 +1036,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">class<wbr>Map<span class="tsd-signature-symbol">:</span> <a href="../globals.html#classmap" class="tsd-signature-type">ClassMap</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L15">Core.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L24">Core.ts:24</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The map of defined classes by their name.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="classes" class="tsd-anchor"></a>
@@ -1037,9 +1051,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">classes<span class="tsd-signature-symbol">:</span> <a href="class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L16">Core.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L29">Core.ts:29</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>An array of the defined classes.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="dynamicgroups" class="tsd-anchor"></a>
@@ -1047,9 +1066,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">dynamic<wbr>Groups<span class="tsd-signature-symbol">:</span> <a href="../globals.html#grouplist" class="tsd-signature-type">GroupList</a><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L18">Core.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L40">Core.ts:40</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A list of dynamically created groups based on units specified by a user
+						which are not defined by the developer.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="dynamicmatchlength" class="tsd-anchor"></a>
@@ -1057,9 +1082,20 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">dynamic<wbr>Match<wbr>Length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;3</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L20">Core.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L54">Core.ts:54</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Dynamic groups are mapped together (by default) by looking at the first few
+						characters.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="core.html#getdynamicmatch">Core.getDynamicMatch</a></p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="dynamicmatches" class="tsd-anchor"></a>
@@ -1067,9 +1103,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">dynamic<wbr>Matches<span class="tsd-signature-symbol">:</span> <a href="../globals.html#groupmap" class="tsd-signature-type">GroupMap</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L19">Core.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L46">Core.ts:46</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A map of the dynamically created groups by a key determined by
+						<a href="core.html#getdynamicmatch">Core.getDynamicMatch</a>.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="globaloutput" class="tsd-anchor"></a>
@@ -1077,9 +1119,26 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">global<wbr>Output<span class="tsd-signature-symbol">:</span> <a href="output.html" class="tsd-signature-type">Output</a><span class="tsd-signature-symbol"> =&nbsp;new Output()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L22">Core.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L65">Core.ts:65</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The global options used for outputting <a href="base.html">Base</a>, <a href="range.html">Range</a>, and <a href="value.html">Value</a>s
+						which may be overridden by specifying any number of options.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="base.html#output">Base.output</a></p>
+						</dd>
+						<dt>see</dt>
+						<dd><p><a href="range.html#output">Range.output</a></p>
+						</dd>
+						<dt>see</dt>
+						<dd><p><a href="value.html#output">Value.output</a></p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="globalsort" class="tsd-anchor"></a>
@@ -1087,9 +1146,19 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">global<wbr>Sort<span class="tsd-signature-symbol">:</span> <a href="sort.html" class="tsd-signature-type">Sort</a><span class="tsd-signature-symbol"> =&nbsp;new Sort()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L24">Core.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L84">Core.ts:84</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The global sort options used for ordering ranges in a <a href="base.html">Base</a> instance.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="base.html#sort">Base.sort</a></p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="globaltransform" class="tsd-anchor"></a>
@@ -1097,9 +1166,32 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">global<wbr>Transform<span class="tsd-signature-symbol">:</span> <a href="transform.html" class="tsd-signature-type">Transform</a><span class="tsd-signature-symbol"> =&nbsp;new Transform()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L23">Core.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L77">Core.ts:77</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The global transform options used for transforming a <a href="base.html">Base</a> instance
+						by specifying what sort of units/groups are visible to the user.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="base.html#normalize">Base.normalize</a></p>
+						</dd>
+						<dt>see</dt>
+						<dd><p><a href="base.html#compact">Base.compact</a></p>
+						</dd>
+						<dt>see</dt>
+						<dd><p><a href="base.html#expand">Base.expand</a></p>
+						</dd>
+						<dt>see</dt>
+						<dd><p><a href="base.html#conversions">Base.conversions</a></p>
+						</dd>
+						<dt>see</dt>
+						<dd><p><a href="base.html#filter">Base.filter</a></p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="unittogroup" class="tsd-anchor"></a>
@@ -1107,9 +1199,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">unit<wbr>ToGroup<span class="tsd-signature-symbol">:</span> <a href="../globals.html#groupmap" class="tsd-signature-type">GroupMap</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L17">Core.ts:17</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L34">Core.ts:34</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A map of groups by their acceptable units.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
@@ -1124,13 +1221,23 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L95">Core.ts:95</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L200">Core.ts:200</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Adds the given class and all groups and units to the global state. If there
+									are units mapped to other groups they are overwritten by the units in the
+								given class.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>parent: <a href="class.html" class="tsd-signature-type">Class</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The class to add to the global state.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1147,9 +1254,19 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L108">Core.ts:108</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L218">Core.ts:218</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Adds an array of classes to the global state.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#addclass">Core.addClass</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1170,19 +1287,32 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L116">Core.ts:116</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L234">Core.ts:234</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Adds the unit to the given dynamic group. This function also updates the
+								plurality of all the units currently in the group.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The unit to add to the given group.</p>
+								</div>
 							</li>
 							<li>
 								<h5>group: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The dynamically created group.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="group.html" class="tsd-signature-type">Group</a></h4>
+						<p>The instance of the given group.</p>
 					</li>
 				</ul>
 			</section>
@@ -1196,16 +1326,26 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L181">Core.ts:181</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L315">Core.ts:315</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The function which takes a unit and generates a string which should be used
+								to mark similarly spelled units under the same dynamic group.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The unit to build a key from.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						<p>The key which identifies the dynamic group.</p>
 					</li>
 				</ul>
 			</section>
@@ -1219,19 +1359,46 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L27">Core.ts:27</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L101">Core.ts:101</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a <a href="group.html">Group</a> instance mapped by the given unit. If no unit is given
+									<code>null</code> is returned. If the unit isn&#39;t mapped to a group a dynamic group
+									match is looked at and if none are found and <code>createDynamic</code> is true a new
+								dynamic group is created.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#getdynamicmatch">Core.getDynamicMatch</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="core.html#adddynamicunit">Core.addDynamicUnit</a></p>
+								</dd>
+								<dt>see</dt>
+								<dd><p><a href="core.html#newdynamicgroup">Core.newDynamicGroup</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The unit of the group to get.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> createDynamic: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>If creating a dynamic group should be created if an
+									existing group could not be found.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="group.html" class="tsd-signature-type">Group</a></h4>
+						<p>The group matched to the unit or null if none was found.</p>
 					</li>
 				</ul>
 			</section>
@@ -1245,25 +1412,46 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L187">Core.ts:187</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L333">Core.ts:333</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>The function which takes to values and determines which one is more
+								&quot;normal&quot; or &quot;human friendly&quot;.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>fromValue: <a href="value.html" class="tsd-signature-type">Value</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The most normal value found so far.</p>
+								</div>
 							</li>
 							<li>
 								<h5>toValue: <a href="value.html" class="tsd-signature-type">Value</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The value to compare to.</p>
+								</div>
 							</li>
 							<li>
 								<h5>transform: <a href="transform.html" class="tsd-signature-type">Transform</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The transformation rules to guide the function to choose
+									the more normal value.</p>
+								</div>
 							</li>
 							<li>
 								<h5>forOutput: <a href="output.html" class="tsd-signature-type">Output</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The output options to guide the function to choose the
+									more normal value.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if <code>toValue</code> appears more normal than <code>fromValue</code>.</p>
 					</li>
 				</ul>
 			</section>
@@ -1277,16 +1465,28 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L160">Core.ts:160</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L287">Core.ts:287</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Creates a dynamic class &amp; group based on the given unit and adds it to the
+									global state. By default the group is marked with <a href="../enums/system.html#any">System.ANY</a>, is
+								common, and has the valid denominators 2, 3, 4, 5, 6, 8, 10.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The initial unit of the group to use as the name of the class
+									and the base unit of the group.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="group.html" class="tsd-signature-type">Group</a></h4>
+						<p>An instance of a new Group with a new parent Class.</p>
 					</li>
 				</ul>
 			</section>
@@ -1300,16 +1500,34 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L75">Core.ts:75</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L165">Core.ts:165</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Sets whether the group associated with the given unit is common. A common
+									group is one a user is familiar with and would be okay seeing values
+								represented in. If a group is not found then this has no affect.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#getgroup">Core.getGroup</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The unit of a group to set the common flag.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> common: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Whether the associated group should be common.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1326,16 +1544,33 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L85">Core.ts:85</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L183">Core.ts:183</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Sets the denominators for the group associated to the given unit.
+								Denominators are useful for calculating a fraction from a value.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#getgroup">Core.getGroup</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The unit of a group to set the denominators of.</p>
+								</div>
 							</li>
 							<li>
 								<h5>denominators: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The new denominators for the group.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1352,13 +1587,27 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Core.ts#L65">Core.ts:65</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Core.ts#L146">Core.ts:146</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Sets the given unit as the preferred unit for the group it belongs to. If a
+								group is not found then this has no affect.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="core.html#getgroup">Core.getGroup</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The unit to mark as the preferred unit.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

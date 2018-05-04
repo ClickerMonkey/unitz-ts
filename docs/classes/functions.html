@@ -943,9 +943,6 @@ img { max-width: 100%; }
 					<a href="functions.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a href="functions.html#isplural" class="tsd-kind-icon">is<wbr>Plural</a>
-				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a href="functions.html#israngedefinition" class="tsd-kind-icon">is<wbr>Range<wbr>Definition</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
@@ -975,6 +972,15 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>The class which contains commonly used functions by the library. These
+						functions and variables exist in a class so they may be overridden if
+					desired.</p>
+				</div>
+			</div>
+		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
@@ -1005,7 +1011,6 @@ img { max-width: 100%; }
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="functions.html#isequal" class="tsd-kind-icon">is<wbr>Equal</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="functions.html#isgroupdefinition" class="tsd-kind-icon">is<wbr>Group<wbr>Definition</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="functions.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="functions.html#isplural" class="tsd-kind-icon">is<wbr>Plural</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="functions.html#israngedefinition" class="tsd-kind-icon">is<wbr>Range<wbr>Definition</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="functions.html#issingular" class="tsd-kind-icon">is<wbr>Singular</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="functions.html#isstring" class="tsd-kind-icon">is<wbr>String</a></li>
@@ -1027,9 +1032,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">EPSILON<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0.00001</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L6">Functions.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L15">Functions.ts:15</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The maximum distance a number can be from another to be considered
+						equivalent. This is to compensate for floating point precision issues.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
@@ -1044,16 +1055,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L65">Functions.ts:65</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L126">Functions.ts:126</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines the absolute value of the given number.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>x: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The number to return the positive version of.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The absolute value of x.</p>
 					</li>
 				</ul>
 			</section>
@@ -1067,9 +1087,14 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L75">Functions.ts:75</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L150">Functions.ts:150</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Appends an element or array of elements to the end of the given array.</p>
+							</div>
+						</div>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
 						<ul class="tsd-type-parameters">
 							<li>
@@ -1080,12 +1105,19 @@ img { max-width: 100%; }
 						<ul class="tsd-parameters">
 							<li>
 								<h5>array: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The array to append values to the end of.</p>
+								</div>
 							</li>
 							<li>
 								<h5>input: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The element or array of elements to append to the end.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
+						<p>The reference to the <code>array</code> given.</p>
 					</li>
 				</ul>
 			</section>
@@ -1099,19 +1131,36 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L119">Functions.ts:119</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L238">Functions.ts:238</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the first argument which is defined.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="functions.html#isdefined">Functions.isDefined</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>a: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The first argument to look at.</p>
+								</div>
 							</li>
 							<li>
 								<h5>b: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The second argument to look at.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						<p>The first defined argument.</p>
 					</li>
 				</ul>
 			</section>
@@ -1125,19 +1174,33 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L43">Functions.ts:43</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L98">Functions.ts:98</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Calculates the greatest common denominator between the two numbers. If
+									either of the numbers are not whole (integers) then 1 is immediately
+								returned.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>a: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The first number.</p>
+								</div>
 							</li>
 							<li>
 								<h5>b: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The second number.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The greatest common denominator between the two numbers.</p>
 					</li>
 				</ul>
 			</section>
@@ -1151,16 +1214,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L104">Functions.ts:104</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L203">Functions.ts:203</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given input is an array.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The variable to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the variable is an array, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1174,16 +1246,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L114">Functions.ts:114</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L225">Functions.ts:225</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given input is defined.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The variable to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the variable is defined, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1197,19 +1278,36 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L13">Functions.ts:13</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L37">Functions.ts:37</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines if the given number is equal to another.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="functions.html#epsilon">Functions.EPSILON</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>a: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The first number to compare.</p>
+								</div>
 							</li>
 							<li>
 								<h5>b: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The second number to compare.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the two numbers are equal.</p>
 					</li>
 				</ul>
 			</section>
@@ -1223,16 +1321,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L89">Functions.ts:89</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L170">Functions.ts:170</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given input looks like a <a href="../interfaces/groupdefinition.html">GroupDefinition</a>.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The variable to inspect.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the variable appears to be a <a href="../interfaces/groupdefinition.html">GroupDefinition</a>.</p>
 					</li>
 				</ul>
 			</section>
@@ -1246,39 +1353,26 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L33">Functions.ts:33</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L73">Functions.ts:73</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines if the given number is valid. A valid number is finite and not
+								NaN or Infinity.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>x: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The number to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-				<a name="isplural" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagStatic">Static</span> is<wbr>Plural</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">is<wbr>Plural<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L28">Functions.ts:28</a></li>
-							</ul>
-						</aside>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>x: <span class="tsd-signature-type">number</span></h5>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the input is finite number.</p>
 					</li>
 				</ul>
 			</section>
@@ -1292,16 +1386,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L99">Functions.ts:99</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L192">Functions.ts:192</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given input looks like a <a href="../interfaces/rangedefinition.html">RangeDefinition</a>.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The variable to inspect.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the variable appears to be a <a href="../interfaces/rangedefinition.html">RangeDefinition</a>.</p>
 					</li>
 				</ul>
 			</section>
@@ -1315,16 +1418,30 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L23">Functions.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L61">Functions.ts:61</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines if the given number is singular. A singular number is 1 or -1.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="functions.html#epsilon">Functions.EPSILON</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>x: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The number to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the number is singular, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1338,16 +1455,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L109">Functions.ts:109</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L214">Functions.ts:214</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given input is a string.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The variable to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the variable is a string, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1361,16 +1487,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L94">Functions.ts:94</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L181">Functions.ts:181</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given input looks like a <a href="../interfaces/valuedefinition.html">ValueDefinition</a>.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The variable to inspect.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the variable appears to be a <a href="../interfaces/valuedefinition.html">ValueDefinition</a>.</p>
 					</li>
 				</ul>
 			</section>
@@ -1384,16 +1519,30 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L18">Functions.ts:18</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L49">Functions.ts:49</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines if the given number is a whole number (integer).</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="functions.html#epsilon">Functions.EPSILON</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>x: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The number to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the number is whole, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1407,16 +1556,30 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L8">Functions.ts:8</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L24">Functions.ts:24</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines if the given number is zero.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="functions.html#epsilon">Functions.EPSILON</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>x: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The number to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the number is zero, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1430,16 +1593,26 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L70">Functions.ts:70</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L138">Functions.ts:138</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines the sign of the given number. One of three values will be
+								returned: 1, 0, or -1.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>x: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The number to determine the sign of.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The sign of the given number.</p>
 					</li>
 				</ul>
 			</section>
@@ -1453,16 +1626,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Functions.ts#L38">Functions.ts:38</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Functions.ts#L84">Functions.ts:84</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Trims the given input if its a string.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>x: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The string to remove space from the beginning and end.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						<p>A trimmed string.</p>
 					</li>
 				</ul>
 			</section>

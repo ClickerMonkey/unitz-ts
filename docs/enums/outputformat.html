@@ -913,9 +913,6 @@ img { max-width: 100%; }
 			<a href="outputformat.html" class="tsd-kind-icon">Output<wbr>Format</a>
 			<ul>
 				<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-					<a href="outputformat.html#fraction" class="tsd-kind-icon">FRACTION</a>
-				</li>
-				<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 					<a href="outputformat.html#given" class="tsd-kind-icon">GIVEN</a>
 				</li>
 				<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
@@ -933,6 +930,13 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>The enumeration which decides how a value will be converted to a string.</p>
+				</div>
+			</div>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
@@ -940,7 +944,6 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Enumeration members</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="outputformat.html#fraction" class="tsd-kind-icon">FRACTION</a></li>
 							<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="outputformat.html#given" class="tsd-kind-icon">GIVEN</a></li>
 							<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="outputformat.html#improper" class="tsd-kind-icon">IMPROPER</a></li>
 							<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="outputformat.html#mixed" class="tsd-kind-icon">MIXED</a></li>
@@ -953,24 +956,19 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Enumeration members</h2>
 			<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-				<a name="fraction" class="tsd-anchor"></a>
-				<h3>FRACTION</h3>
-				<div class="tsd-signature tsd-kind-icon">FRACTION<span class="tsd-signature-symbol">:</span> </div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Output.ts#L18">Output.ts:18</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 				<a name="given" class="tsd-anchor"></a>
 				<h3>GIVEN</h3>
 				<div class="tsd-signature tsd-kind-icon">GIVEN<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Output.ts#L15">Output.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Output.ts#L53">Output.ts:53</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The format of the user input will be used if possible.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 				<a name="improper" class="tsd-anchor"></a>
@@ -978,9 +976,20 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">IMPROPER<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Output.ts#L19">Output.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Output.ts#L75">Output.ts:75</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>All values will be displayed as an improper fraction if the value is a
+						fraction and the numerator is larger than the denoninator.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="../classes/value.html#isfraction">Value.isFraction</a></p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 				<a name="mixed" class="tsd-anchor"></a>
@@ -988,9 +997,21 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">MIXED<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Output.ts#L17">Output.ts:17</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Output.ts#L67">Output.ts:67</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>All values will be displayed as a mixed fraction if the value is a fraction.
+							A mixed fraction has a whole number followed by a fraction where the
+						numerator is smaller than the denominator.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="../classes/value.html#isfraction">Value.isFraction</a></p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 				<a name="number" class="tsd-anchor"></a>
@@ -998,9 +1019,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">NUMBER<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/cbde184/src/Output.ts#L16">Output.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Output.ts#L58">Output.ts:58</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>All values will be displayed using their decimal representation.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<footer class="with-border-bottom">
