@@ -45,7 +45,7 @@ export let Volume = new Class('Volume')
 
   .addGroups([
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'tsp',
       baseUnit: 'tsp',
@@ -59,7 +59,7 @@ export let Volume = new Class('Volume')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'tbsp',
       relativeUnit: 'tsp',
@@ -73,7 +73,7 @@ export let Volume = new Class('Volume')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'floz',
       relativeUnit: 'tsp',
@@ -94,7 +94,7 @@ export let Volume = new Class('Volume')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'c',
       relativeUnit: 'floz',
@@ -107,7 +107,7 @@ export let Volume = new Class('Volume')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'pt',
       relativeUnit: 'c',
@@ -120,7 +120,7 @@ export let Volume = new Class('Volume')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'qt',
       relativeUnit: 'c',
@@ -133,7 +133,7 @@ export let Volume = new Class('Volume')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'gal',
       relativeUnit: 'qt',
@@ -302,7 +302,7 @@ export let Volume = new Class('Volume')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       unit: 'in3',
       baseUnit: 'in3',
       denominators: [2, 4, 8],

@@ -37,7 +37,7 @@ export interface GroupDefinition
 {
   /**
    * The system the group exists in. Should be one of:
-   * [[System.METRIC]], [[System.IMPERIAL]], or [[System.ANY]]
+   * [[System.METRIC]], [[System.US]], or [[System.ANY]]
    */
   system: System;
   /**

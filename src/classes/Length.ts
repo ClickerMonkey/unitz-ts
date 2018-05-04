@@ -25,7 +25,7 @@ export let Length = new Class('Length')
 
   .addGroups([
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'in',
       baseUnit: 'in',
@@ -38,7 +38,7 @@ export let Length = new Class('Length')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'ft',
       relativeUnit: 'in',
@@ -52,7 +52,7 @@ export let Length = new Class('Length')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       unit: 'yd',
       relativeUnit: 'ft',
       relativeScale: 3,
@@ -65,7 +65,7 @@ export let Length = new Class('Length')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'mi',
       relativeUnit: 'ft',
@@ -78,7 +78,7 @@ export let Length = new Class('Length')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       unit: 'league',
       relativeUnit: 'mi',
       relativeScale: 3,

@@ -1,7 +1,7 @@
 
 import { Functions as fn } from './Functions';
 import { Transform } from './Transform';
-import { Output } from './Output';
+import { Output, OutputInput } from './Output';
 import { Group } from './Group';
 import { Core } from './Core';
 
@@ -14,8 +14,6 @@ export class Value
 {
 
   public static INVALID: Value = new Value(Number.NaN, Number.NaN, 1, '', null);
-  public static SEPARATOR_FRACTION: string = '/';
-  public static SEPARATOR_MIXED: string = ' ';
 
   public readonly value: number;
   public readonly num: number;
@@ -46,6 +44,16 @@ export class Value
   public get isDecimal(): boolean
   {
     return this.den === 1;
+  }
+
+  public get isZero(): boolean
+  {
+    return fn.isZero( this.value );
+  }
+
+  public get isSingular(): boolean
+  {
+    return fn.isSingular( this.value );
   }
 
   public get scaled(): number
@@ -101,17 +109,6 @@ export class Value
   public get distance(): number
   {
     return fn.abs(this.error);
-  }
-
-  public get asString(): string
-  {
-    return (this.den === 1) ?
-      (this.value + '') :
-      (this.mixedWhole !== 0 ?
-          (this.mixedWhole + Value.SEPARATOR_MIXED + this.mixedNum + Value.SEPARATOR_FRACTION + this.den) :
-          (this.num + Value.SEPARATOR_FRACTION + this.den)
-      )
-    ;
   }
 
   public preferred(): Value
@@ -230,6 +227,21 @@ export class Value
   public mul(scale: number): Value
   {
     return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
+  }
+
+  /**
+   * Converts this range to a string with the given output options taking into
+   * account the global options.
+   *
+   * @param options The options to override the global output options.
+   * @return The string representation of this instance.
+   * @see [[Output]]
+   */
+  public output(options?: OutputInput): string
+  {
+    let output: Output = Core.globalOutput.extend( options );
+
+    return output.value( this );
   }
 
   public static fromNumber(value: number, unit: string = '', group: Group = null): Value

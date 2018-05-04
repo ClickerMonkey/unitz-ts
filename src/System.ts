@@ -3,7 +3,7 @@
 export enum System
 {
   METRIC,
-  IMPERIAL,
+  US,
   NONE,
   ANY,
   GIVEN

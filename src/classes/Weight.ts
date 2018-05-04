@@ -61,7 +61,7 @@ export let Weight = new Class('Weight')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'oz',
       baseUnit: 'oz',
@@ -73,7 +73,7 @@ export let Weight = new Class('Weight')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'lb',
       relativeUnit: 'oz',
@@ -87,7 +87,7 @@ export let Weight = new Class('Weight')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'ton',
       relativeUnit: 'lb',

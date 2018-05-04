@@ -607,7 +607,6 @@ var outputOptions = {
   <option :value="OutputFormat.GIVEN">Unitz.OutputFormat.GIVEN</option>
   <option :value="OutputFormat.NUMBER">Unitz.OutputFormat.NUMBER</option>
   <option :value="OutputFormat.MIXED">Unitz.OutputFormat.MIXED</option>
-  <option :value="OutputFormat.FRACTION">Unitz.OutputFormat.FRACTION</option>
   <option :value="OutputFormat.IMPROPER">Unitz.OutputFormat.IMPROPER</option>
 </select>, // control the values that are displayed
   repeatUnit: <select class="ui selection dropdown" v-model="output.repeatUnit">
@@ -635,7 +634,7 @@ var transformOptions = {
   </select>, // should only "common" units be used for the transformation
   system: <select class="ui selection dropdown" v-model="transform.system">
     <option :value="System.METRIC">Unitz.System.METRIC</option>
-    <option :value="System.IMPERIAL">Unitz.System.IMPERIAL</option>
+    <option :value="System.US">Unitz.System.US</option>
     <option :value="System.NONE">Unitz.System.NONE</option>
     <option :value="System.ANY">Unitz.System.ANY</option>
     <option :value="System.GIVEN">Unitz.System.GIVEN</option>

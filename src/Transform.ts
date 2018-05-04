@@ -3,6 +3,7 @@ import { Functions as fn } from './Functions';
 import { System } from './System';
 import { Group } from './Group';
 import { Class } from './Class';
+import { Range } from './Range';
 
 
 export interface TransformInput {
@@ -76,8 +77,30 @@ export class Transform implements TransformInput
     return extended;
   }
 
+  public isValidRange(range: Range): boolean
+  {
+    let group: Group = this.convertWithMax ? range.max.group : range.min.group;
+
+    if (range.max.value < this.min)
+    {
+      return false;
+    }
+
+    if (range.min.value > this.max)
+    {
+      return false;
+    }
+
+    return this.isVisibleGroup(group);
+  }
+
   public isVisibleGroup(group: Group, givenGroup?: Group): boolean
   {
+    if (!group)
+    {
+      return this.groupless;
+    }
+
     return this.isCommonMatch( group ) &&
       this.isSystemMatch( group, givenGroup ) &&
       this.isUnitMatch( group ) &&
@@ -95,8 +118,8 @@ export class Transform implements TransformInput
     {
       case System.METRIC:
         return group.system === System.METRIC || group.system === System.ANY;
-      case System.IMPERIAL:
-        return group.system === System.IMPERIAL || group.system === System.ANY;
+      case System.US:
+        return group.system === System.US || group.system === System.ANY;
       case System.NONE:
         return false;
       case System.ANY:

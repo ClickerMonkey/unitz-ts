@@ -188,11 +188,11 @@ describe('Base', () => {
 
     expect(uz('23oz').normalize(METRIC).output(OUT)).toBe('652g');
 
-    let IMPERIAL = new Transform();
-    IMPERIAL.system = System.IMPERIAL;
-    IMPERIAL.min = 0.01;
+    let US = new Transform();
+    US.system = System.US;
+    US.min = 0.01;
 
-    expect(uz('652g').normalize(IMPERIAL).output(OUT)).toBe('1.4lb');
+    expect(uz('652g').normalize(US).output(OUT)).toBe('1.4lb');
   })
 
   it('add match', () => {

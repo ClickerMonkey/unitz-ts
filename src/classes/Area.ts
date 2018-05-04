@@ -24,7 +24,7 @@ export let Area = new Class('Area')
 
   .addGroups([
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'sqin',
       baseUnit: 'sqin',
@@ -48,7 +48,7 @@ export let Area = new Class('Area')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'sqft',
       relativeUnit: 'sqin',
@@ -73,7 +73,7 @@ export let Area = new Class('Area')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       unit: 'sqyd',
       relativeUnit: 'sqft',
       relativeScale: 3 * 3,
@@ -96,7 +96,7 @@ export let Area = new Class('Area')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'acre',
       relativeUnit: 'sqyd',
@@ -108,7 +108,7 @@ export let Area = new Class('Area')
       }
     },
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'sqmi',
       relativeUnit: 'acre',

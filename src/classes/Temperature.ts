@@ -25,7 +25,7 @@ export let Temperature = new Class('Temperature')
 
   .addGroups([
     {
-      system: System.IMPERIAL,
+      system: System.US,
       common: true,
       unit: 'F',
       baseUnit: 'F',

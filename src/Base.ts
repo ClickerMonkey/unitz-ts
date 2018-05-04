@@ -255,6 +255,8 @@ export class Base
    * @param forOutput The output options that should be used to determine which
    *  value & unit is best.
    * @return A new instance.
+   * @see [[Transform]]
+   * @see [[Output]]
    * @see [[Core.isMoreNormal]]
    * @see [[Core.globalTransform]]
    * @see [[Core.globalOutput]]
@@ -280,6 +282,7 @@ export class Base
    *
    * @param options Options to control which units and values are acceptable.
    * @return A new instance.
+   * @see [[Transform]]
    * @see [[Core.globalTransform]]
    */
   public compact(options?: TransformInput): Base
@@ -386,6 +389,7 @@ export class Base
    *
    * @param options Options to control which units and values are acceptable.
    * @return A new instance.
+   * @see [[Transform]]
    * @see [[Core.globalTransform]]
    */
   public expand(options?: TransformInput): Base
@@ -548,6 +552,23 @@ export class Base
     return new Base( this.input, output );
   }
 
+  /**
+   * Joins all ranges of the same classes together and then calculates all
+   * equivalent ranges for each range for each valid group according to the
+   * given options.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1.5pt').conversions(); // '3/16gal, 3/4qt, 1 1/2pt, 3c, 24floz, 48tbsp, 144tsp'
+   * uz('20celsius, 45deg'); // '68F, 20celsius, 45deg, 0.785rad'
+   * ```
+   *
+   * @param options Options to control which units and values are acceptable.
+   * @return A new instance.
+   * @see [[Transform]]
+   * @see [[Core.globalTransform]]
+   * @see [[Value.conversions]]
+   */
   public conversions(options?: TransformInput): Base
   {
     let transform: Transform = Core.globalTransform.extend( options );
@@ -575,6 +596,18 @@ export class Base
     return new Base( this.input, output );
   }
 
+  /**
+   * Executes the given function on each range in this instance and if the
+   * function returns a valid range its added to the result.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1.5pt').mutate(r => r.mul(2)); // '3pt'
+   * ```
+   *
+   * @param mutator The function which may return a range.
+   * @return A new instance.
+   */
   public mutate(mutator: RangeMutator): Base
   {
     let ranges: RangeList = [];
@@ -584,7 +617,7 @@ export class Base
     {
       let mutated: Range = mutator( source[ i ] ) ;
 
-      if (mutated)
+      if (mutated && mutated.isValid)
       {
         ranges.push( mutated );
       }
@@ -593,6 +626,21 @@ export class Base
     return new Base( this.input, ranges );
   }
 
+  /**
+   * Removes the ranges from this instance that aren't valid according to the
+   * transform options provided taking into account the global options.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1in, 2m').filter({system: Unitz.System.METRIC}); // '2m'
+   * ```
+   *
+   * @param options Options to control which units and values are acceptable.
+   * @return A new instance.
+   * @see [[Transform]]
+   * @see [[Core.globalTransform]]
+   * @see [[Transform.isValidRange]]
+   */
   public filter(options?: TransformInput): Base
   {
     let transform: Transform = Core.globalTransform.extend( options );
@@ -602,9 +650,8 @@ export class Base
     for (let i = 0; i < ranges.length; i++)
     {
       let range: Range = ranges[ i ];
-      let group: Group = transform.convertWithMax ? range.max.group : range.min.group;
 
-      if ((group && transform.isVisibleGroup( group )) || (!group && transform.groupless))
+      if (transform.isValidRange( range ))
       {
         filtered.push( range );
       }
@@ -613,6 +660,28 @@ export class Base
     return new Base( this.input, filtered );
   }
 
+  /**
+   * Sorts the ranges in this instance based on the options provided taking into
+   * account the global options.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1in, 3ft, 1.3yd, 1m').sort(); // 1.3yd, 1m, 3ft, 1in
+   * uz('1in, 3ft, 1.3yd, 1m').sort({ascending: true}); // 1in, 3ft, 1m, 1.3yd
+   * uz('1-3cups, 2-2.5cups, 4in').sort({
+   *  type: Unitz.SortType.MIN,
+   *  classes: {
+   *   Volume: 1,
+   *   Length: 2
+   *  }
+   * }); // 4in, 2 - 2.5cups, 1 - 3cups
+   * ```
+   *
+   * @param options Options to control how sorting is done.
+   * @return A new instance.
+   * @see [[Sort]]
+   * @see [[Core.globalSort]]
+   */
   public sort(options?: SortInput): Base
   {
     let sort: Sort = Core.globalSort.extend( options );
@@ -623,6 +692,10 @@ export class Base
     return new Base( this.input, ranges );
   }
 
+  /**
+   * Returns the ranges in this instance grouped by their class. All groupless
+   * ranges are added to their own list.
+   */
   public groupByClass(): ClassGrouping
   {
     let ranges: RangeList = this.ranges;
@@ -657,7 +730,32 @@ export class Base
     return { classes, groupless };
   }
 
-  public getScaleTo(unitValue: string, rangeDelta: number = 0.5): number
+  /**
+   * Calculates what this instance would need to be scaled by so that the given
+   * value & unit pair is equal to the sum of ranges in this instance of the
+   * same class. If there are no ranges with the same class then zero is
+   * returned. If the sum of ranges with the same class results in an actual
+   * range (where min != max) then you can specify how to pick a value from the
+   * range with rangeDetla. A value of 0 uses the min, 1 uses the max, and 0.5
+   * uses the average between them.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1m, 2 - 3c').getScaleTo('6c'); // 2
+   * uz('1m, 2 - 3c').getScaleTo('6c', 0); // 3
+   * uz('1m, 2 - 3c').getScaleTo('6c', 0.5); // 2.4
+   * uz('1m, 2 - 3c').getScaleTo('45deg'); // 0
+   * ```
+
+   * @param unitValue A value & unit pair to scale the ranges in this instance to.
+   * @param rangeDelta When this instance contains ranges this value instructs
+   *  how the scale factor is calculated. A value of 0 means it looks at the
+   *  minimum, 1 is the maximum, and 0.5 is the average.
+   * @return A value to scale by or zero if this instance cannot match the input.
+   * @see [[Base.convert]]
+   * @see [[Parse.value]]
+   */
+  public getScaleTo(unitValue: string, rangeDelta: number = 1.0): number
   {
     let to: Value = Parse.value( unitValue, Core.getGroup );
 
@@ -679,6 +777,14 @@ export class Base
     return scale;
   }
 
+  /**
+   * Converts the ranges in this instance to a string with the given output
+   * options taking into account the global options.
+   *
+   * @param options The options to override the global output options.
+   * @return The string representation of this instance.
+   * @see [[Output]]
+   */
   public output(options?: OutputInput): string
   {
     let output: Output = Core.globalOutput.extend( options );
@@ -686,6 +792,23 @@ export class Base
     return output.ranges( this.ranges );
   }
 
+  /**
+   * Converts the appropriate ranges in this instance into the desired unit
+   * and returns their converted sum. If the given unit does not map to a group
+   * then null is returned. If there are no ranges in this instance in the same
+   * class then the range returned is equivalent to zero.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1in, 1m, 1ft').convert('cm'); // '133.02 cm'
+   * ```
+   *
+   * @param unit The unit to calculate the sum of.
+   * @return A new range which is the sum of ranges in the same class converted
+   *  to the desired unit.
+   * @see [[Core.getGroup]]
+   * @see [[Range.isZero]]
+   */
   public convert(unit: string): Range
   {
     let group: Group = Core.getGroup( unit );
@@ -715,7 +838,18 @@ export class Base
     return new Range( min, max );
   }
 
-  public each(iterate: (range: Range) => any, reverse: boolean = false): this
+  /**
+   * Iterates over each range in this instance in order or reversed and passes
+   * each one to the given iterate function. If the iterate function returns
+   * false the iteration will stop.
+   *
+   * @param iterate The function to invoke with each range and it's index.
+   * @param iterate.range The current range being iterated.
+   * @param iterate.index The index of the current range in this instance.
+   * @param reverse Whether the iteration should be done forward or backward.
+   * @return The reference to this instance.
+   */
+  public each(iterate: (range: Range, index: number) => any, reverse: boolean = false): this
   {
     let ranges: RangeList = this.ranges;
     let start = reverse ? ranges.length - 1 : 0;
@@ -724,7 +858,7 @@ export class Base
 
     for (let i = start; i !== end; i += move)
     {
-      if (iterate( ranges[ i ] ) === false)
+      if (iterate( ranges[ i ], i ) === false)
       {
         break;
       }
@@ -733,6 +867,12 @@ export class Base
     return this;
   }
 
+  /**
+   * Returns an array of the classes represented in this instance. If there are
+   * no classes in this instance then an empty array is returned.
+   *
+   * @return An array of the classes in this instance.
+   */
   public classes(): Class[]
   {
     let ranges: RangeList = this.ranges;
@@ -758,6 +898,12 @@ export class Base
     return classes;
   }
 
+  /**
+   * Returns whether this instance has actual ranges. An actual range is where
+   * the minimum and maximum values differ.
+   *
+   * @see [[Range.isRange]]
+   */
   public get hasRanges(): boolean
   {
     let ranges: RangeList = this.ranges;
@@ -773,6 +919,12 @@ export class Base
     return false;
   }
 
+  /**
+   * Returns whether this instance only has valid ranges. If any of the ranges
+   * in this instance are not valid false is returned, otherwise true.
+   *
+   * @see [[Range.isValid]]
+   */
   public get isValid(): boolean
   {
     let ranges: RangeList = this.ranges;
