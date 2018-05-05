@@ -934,7 +934,7 @@ img { max-width: 100%; }
 					<a href="value.html#invalid" class="tsd-kind-icon">INVALID</a>
 				</li>
 				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-					<a href="value.html#actual" class="tsd-kind-icon">actual</a>
+					<a href="value.html#calculated" class="tsd-kind-icon">calculated</a>
 				</li>
 				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 					<a href="value.html#ceil" class="tsd-kind-icon">ceil</a>
@@ -1044,6 +1044,13 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>A class which contains a parsed number or fraction.</p>
+				</div>
+			</div>
+		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
@@ -1076,7 +1083,7 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Accessors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="value.html#actual" class="tsd-kind-icon">actual</a></li>
+							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="value.html#calculated" class="tsd-kind-icon">calculated</a></li>
 							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="value.html#ceil" class="tsd-kind-icon">ceil</a></li>
 							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="value.html#classscaled" class="tsd-kind-icon">class<wbr>Scaled</a></li>
 							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="value.html#distance" class="tsd-kind-icon">distance</a></li>
@@ -1133,25 +1140,56 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L22">Value.ts:22</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L45">Value.ts:45</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Creates a new instance of Value given the value, possible numerator and
+								denominator, and the unit and it&#39;s group.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>value: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p><a href="value.html#value-1">Value.value</a></p>
+									</div>
+								</div>
 							</li>
 							<li>
 								<h5>num: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p><a href="value.html#num">Value.num</a></p>
+									</div>
+								</div>
 							</li>
 							<li>
 								<h5>den: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p><a href="value.html#den">Value.den</a></p>
+									</div>
+								</div>
 							</li>
 							<li>
 								<h5>unit: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p><a href="value.html#unit">Value.unit</a></p>
+									</div>
+								</div>
 							</li>
 							<li>
 								<h5>group: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p><a href="value.html#group">Value.group</a></p>
+									</div>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
@@ -1167,9 +1205,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">den<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L20">Value.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L35">Value.ts:35</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The denominator parsed or calculated if this is a fraction, otherwise this
+						will be equal to 1.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="group" class="tsd-anchor"></a>
@@ -1177,9 +1221,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">group<span class="tsd-signature-symbol">:</span> <a href="group.html" class="tsd-signature-type">Group</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L21">Value.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L40">Value.ts:40</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The group determined based on the unit.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="num" class="tsd-anchor"></a>
@@ -1187,9 +1236,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">num<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L19">Value.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L29">Value.ts:29</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The numerator parsed or calculated if this is a fraction, otherwise this
+						will be equal to <a href="value.html#value-1">Value.value</a>.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="unit" class="tsd-anchor"></a>
@@ -1197,9 +1252,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">unit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L22">Value.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L45">Value.ts:45</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The unit parsed or chosen to be output to the user.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="value-1" class="tsd-anchor"></a>
@@ -1207,9 +1267,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L18">Value.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L23">Value.ts:23</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The number parsed or num / den if a fraction was parsed.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="invalid" class="tsd-anchor"></a>
@@ -1217,22 +1282,34 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">INVALID<span class="tsd-signature-symbol">:</span> <a href="value.html" class="tsd-signature-type">Value</a><span class="tsd-signature-symbol"> =&nbsp;new Value(Number.NaN, Number.NaN, 1, &#x27;&#x27;, null)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L16">Value.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L18">Value.ts:18</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A value instance which contains invalid numbers.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Accessors</h2>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-				<a name="actual" class="tsd-anchor"></a>
-				<h3>actual</h3>
-				<div class="tsd-signature tsd-kind-icon">actual<span class="tsd-signature-symbol">:</span> </div>
+				<a name="calculated" class="tsd-anchor"></a>
+				<h3>calculated</h3>
+				<div class="tsd-signature tsd-kind-icon">calculated<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L69">Value.ts:69</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L132">Value.ts:132</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the number which represents the fraction in the value. There may
+							be a difference between this value and the number when the fraction is
+						calculated from the denominators of the group.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="ceil" class="tsd-anchor"></a>
@@ -1240,9 +1317,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">ceil<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L89">Value.ts:89</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L166">Value.ts:166</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the ceiling of the number in this value.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="classscaled" class="tsd-anchor"></a>
@@ -1250,9 +1332,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">class<wbr>Scaled<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L64">Value.ts:64</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L122">Value.ts:122</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the number of this value relative to the first base unit of it&#39;s
+						class.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="distance" class="tsd-anchor"></a>
@@ -1260,9 +1348,16 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">distance<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L109">Value.ts:109</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L202">Value.ts:202</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the absolute distance the number of this value is from the fraction
+							numerator and denominator determined. If this value is not a fraction then
+						this should return zero.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="error" class="tsd-anchor"></a>
@@ -1270,9 +1365,16 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L104">Value.ts:104</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L192">Value.ts:192</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the signed distance the number of this value is from the fraction
+							numerator and denominator determined. If this value is not a fraction then
+						this should return zero.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="floor" class="tsd-anchor"></a>
@@ -1280,9 +1382,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">floor<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L84">Value.ts:84</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L158">Value.ts:158</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the floor of the number in this value.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="isdecimal" class="tsd-anchor"></a>
@@ -1290,9 +1397,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">is<wbr>Decimal<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L44">Value.ts:44</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L87">Value.ts:87</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns true if this value is a number and not a fraction.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="isfraction" class="tsd-anchor"></a>
@@ -1300,9 +1412,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">is<wbr>Fraction<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L39">Value.ts:39</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L79">Value.ts:79</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns true if this value is a fraction with a numerator and denoninator.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="issingular" class="tsd-anchor"></a>
@@ -1310,9 +1427,19 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">is<wbr>Singular<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L54">Value.ts:54</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L105">Value.ts:105</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns true if this value is singular.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="functions.html#issingular">Functions.isSingular</a></p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="isvalid" class="tsd-anchor"></a>
@@ -1320,9 +1447,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L34">Value.ts:34</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L71">Value.ts:71</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns true if this value was successfully parsed from some input.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="iszero" class="tsd-anchor"></a>
@@ -1330,9 +1462,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">is<wbr>Zero<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L49">Value.ts:49</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L95">Value.ts:95</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns true if this value is zero.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="mixednum" class="tsd-anchor"></a>
@@ -1340,9 +1477,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">mixed<wbr>Num<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L79">Value.ts:79</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L150">Value.ts:150</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the numerator for the mixed fraction of this value. If this value
+						is not a fraction then the numerator is returned.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="mixedwhole" class="tsd-anchor"></a>
@@ -1350,9 +1493,15 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">mixed<wbr>Whole<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L74">Value.ts:74</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L141">Value.ts:141</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the whole number for the mixed fraction of this value. If this
+						value is not a fraction 0 is returned.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="remainder" class="tsd-anchor"></a>
@@ -1360,9 +1509,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">remainder<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L99">Value.ts:99</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L182">Value.ts:182</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the fractional part of the number in this value.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="scaled" class="tsd-anchor"></a>
@@ -1370,9 +1524,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">scaled<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L59">Value.ts:59</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L113">Value.ts:113</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the number of this value relative to the base unit.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="truncate" class="tsd-anchor"></a>
@@ -1380,9 +1539,14 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">truncate<span class="tsd-signature-symbol">:</span> </div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L94">Value.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L174">Value.ts:174</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Returns the truncated number in this value taking into account it&#39;s sign.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
@@ -1397,9 +1561,11 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L209">Value.ts:209</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L371">Value.ts:371</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1423,9 +1589,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L171">Value.ts:171</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L319">Value.ts:319</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="group.html#matches">Group.matches</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1473,16 +1646,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L159">Value.ts:159</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L290">Value.ts:290</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Converts this value to the given group and returns the result.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>to: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The group to convert to.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The converted value or the number of this value if there&#39;s no group.</p>
 					</li>
 				</ul>
 			</section>
@@ -1496,16 +1678,26 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L166">Value.ts:166</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L304">Value.ts:304</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Converts this value to the given group and returns a new value. The new
+								value will attempted to be converted to a fraction.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>group: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The group to convert to.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
+						<p>A new value.</p>
 					</li>
 				</ul>
 			</section>
@@ -1519,10 +1711,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L119">Value.ts:119</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L223">Value.ts:223</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a copy of this value.</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
+						<p>A new value.</p>
 					</li>
 				</ul>
 			</section>
@@ -1536,10 +1734,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L134">Value.ts:134</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L254">Value.ts:254</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a version of this value as a fraction.</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
+						<p>A new value or the reference to this instance if it&#39;s a fraction.</p>
 					</li>
 				</ul>
 			</section>
@@ -1553,9 +1757,11 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L227">Value.ts:227</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L400">Value.ts:400</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1576,9 +1782,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L182">Value.ts:182</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L338">Value.ts:338</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="value.html#conversions">Value.conversions</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1602,10 +1815,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L149">Value.ts:149</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L274">Value.ts:274</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a version of this value as a number.</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
+						<p>A new value or the reference to this instance if it&#39;s a number.</p>
 					</li>
 				</ul>
 			</section>
@@ -1619,7 +1838,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L240">Value.ts:240</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L413">Value.ts:413</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1657,10 +1876,21 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L114">Value.ts:114</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L213">Value.ts:213</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a version of this value with the preferred unit.</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>see</dt>
+								<dd><p><a href="group.html#preferredunit">Group.preferredUnit</a></p>
+								</dd>
+							</dl>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
+						<p>A new value or the reference to this instance if it&#39;s groupless.</p>
 					</li>
 				</ul>
 			</section>
@@ -1674,9 +1904,11 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L218">Value.ts:218</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L386">Value.ts:386</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1700,10 +1932,17 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L129">Value.ts:129</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L244">Value.ts:244</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the truncated version of this value. That&#39;s a value where the
+								number is a whole number.</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
+						<p>A new value.</p>
 					</li>
 				</ul>
 			</section>
@@ -1717,10 +1956,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L124">Value.ts:124</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L233">Value.ts:233</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a value equivalent to zero with the unt and group of this instance.</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
+						<p>A new value.</p>
 					</li>
 				</ul>
 			</section>
@@ -1734,7 +1979,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L321">Value.ts:321</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L508">Value.ts:508</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1766,9 +2011,11 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L247">Value.ts:247</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L427">Value.ts:427</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1795,7 +2042,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L284">Value.ts:284</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L471">Value.ts:471</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1821,7 +2068,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L289">Value.ts:289</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L476">Value.ts:476</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1853,9 +2100,11 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Value.ts#L252">Value.ts:252</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Value.ts#L439">Value.ts:439</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>

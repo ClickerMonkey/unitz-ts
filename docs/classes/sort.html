@@ -939,6 +939,13 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>The class which determines how to sort ranges.</p>
+				</div>
+			</div>
+		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
@@ -994,13 +1001,24 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Sort.ts#L27">Sort.ts:27</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Sort.ts#L100">Sort.ts:100</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Creates a new instance of Sort with an optional set of options to override
+								the default values.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> input: <a href="../interfaces/sortinput.html" class="tsd-signature-type">SortInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>The options to apply to the new instance.</p>
+									</div>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="sort.html" class="tsd-signature-type">Sort</a></h4>
@@ -1017,9 +1035,15 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/sortinput.html">SortInput</a>.<a href="../interfaces/sortinput.html#ascending">ascending</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Sort.ts#L25">Sort.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Sort.ts#L88">Sort.ts:88</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>If the ranges should be in ascending order (small values followed by large
+						values). The default value is in descending order.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="classes" class="tsd-anchor"></a>
@@ -1028,9 +1052,16 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/sortinput.html">SortInput</a>.<a href="../interfaces/sortinput.html#classes">classes</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Sort.ts#L27">Sort.ts:27</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Sort.ts#L100">Sort.ts:100</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>This object describes how ranges of different classes should be sorted by
+							given each class a priority. If a class is not defined here the priority
+						assumed is zero.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="type" class="tsd-anchor"></a>
@@ -1039,9 +1070,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/sortinput.html">SortInput</a>.<a href="../interfaces/sortinput.html#type">type</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Sort.ts#L26">Sort.ts:26</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Sort.ts#L93">Sort.ts:93</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>How ranges should be compared when the minimum and maximum values differ.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
@@ -1056,16 +1092,29 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Sort.ts#L53">Sort.ts:53</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Sort.ts#L150">Sort.ts:150</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a Sort instance which matches the desired options. If no options
+									are specified the reference to this instance is returned. If the options
+									are already an instance of Sort its returned. If options are specified
+									a new instance is created with the options of this instance, and the given
+								options applied with <a href="sort.html#set">Sort.set</a>.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> input: <a href="../interfaces/sortinput.html" class="tsd-signature-type">SortInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The options desired.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="sort.html" class="tsd-signature-type">Sort</a></h4>
+						<p>An instance of this class which matches the desired options.</p>
 					</li>
 				</ul>
 			</section>
@@ -1079,9 +1128,15 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Sort.ts#L73">Sort.ts:73</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Sort.ts#L174">Sort.ts:174</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a function which can sort ranges based on the options in this
+								instance. Comparison is first done by class, and followed by type.</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="../globals.html#sorter" class="tsd-signature-type">Sorter</a></h4>
 					</li>
 				</ul>
@@ -1096,16 +1151,27 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Sort.ts#L37">Sort.ts:37</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Sort.ts#L124">Sort.ts:124</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Overrides values in this instance ith ones specified in the input. If class
+									sorting options are specified they are merged into this instance as opposed
+								to a complete overwrite.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <a href="../interfaces/sortinput.html" class="tsd-signature-type">SortInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The values to override.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						<p>The reference to this instance.</p>
 					</li>
 				</ul>
 			</section>

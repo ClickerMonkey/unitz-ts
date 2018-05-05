@@ -975,6 +975,31 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>THe class which controls which units and values are acceptable when
+					transforming a set of ranges.</p>
+				</div>
+				<dl class="tsd-comment-tags">
+					<dt>see</dt>
+					<dd><p><a href="base.html#normalize">Base.normalize</a></p>
+					</dd>
+					<dt>see</dt>
+					<dd><p><a href="base.html#compact">Base.compact</a></p>
+					</dd>
+					<dt>see</dt>
+					<dd><p><a href="base.html#expand">Base.expand</a></p>
+					</dd>
+					<dt>see</dt>
+					<dd><p><a href="base.html#conversions">Base.conversions</a></p>
+					</dd>
+					<dt>see</dt>
+					<dd><p><a href="base.html#filter">Base.filter</a></p>
+					</dd>
+				</dl>
+			</div>
+		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
@@ -1042,13 +1067,24 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L34">Transform.ts:34</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L128">Transform.ts:128</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Creates a new instance of Transform with an optional set of options to
+								override the default values.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> input: <a href="../interfaces/transforminput.html" class="tsd-signature-type">TransformInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>The options to apply to the new instance.</p>
+									</div>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="transform.html" class="tsd-signature-type">Transform</a></h4>
@@ -1065,9 +1101,16 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#common">common</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L25">Transform.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L82">Transform.ts:82</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The option which determines whether only common or any group are valid.
+							To only include common units this value must be <code>true</code> and to include
+						common and uncommon this value must be <code>false</code>.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="convertwithmax" class="tsd-anchor"></a>
@@ -1076,9 +1119,15 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#convertwithmax">convertWithMax</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L29">Transform.ts:29</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L103">Transform.ts:103</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Whether the minimum or maximum value of a range is used when producing
+						conversions.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="groupless" class="tsd-anchor"></a>
@@ -1087,9 +1136,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#groupless">groupless</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L30">Transform.ts:30</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L108">Transform.ts:108</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Whether ranges without units are considered valid for the transformation.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="max" class="tsd-anchor"></a>
@@ -1098,9 +1152,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#max">max</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L28">Transform.ts:28</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L97">Transform.ts:97</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The maximum allowed value for the transformation.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="min" class="tsd-anchor"></a>
@@ -1109,9 +1168,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#min">min</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L27">Transform.ts:27</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L92">Transform.ts:92</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The mimimum allowed value for the transformation.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="notclasses" class="tsd-anchor"></a>
@@ -1120,9 +1184,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#notclasses">notClasses</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L34">Transform.ts:34</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L128">Transform.ts:128</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>An array of class names that define the invalid ranges for a transformation.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="notunits" class="tsd-anchor"></a>
@@ -1131,9 +1200,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#notunits">notUnits</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L32">Transform.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L118">Transform.ts:118</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>An array of units that define the invalid ranges for a transformation.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="onlyclasses" class="tsd-anchor"></a>
@@ -1142,9 +1216,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#onlyclasses">onlyClasses</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L33">Transform.ts:33</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L123">Transform.ts:123</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>An array of class names that define the valid ranges for a transformation.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="onlyunits" class="tsd-anchor"></a>
@@ -1153,9 +1232,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#onlyunits">onlyUnits</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L31">Transform.ts:31</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L113">Transform.ts:113</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>An array of units that define the valid ranges for a transformation.</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="system" class="tsd-anchor"></a>
@@ -1164,9 +1248,14 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Implementation of <a href="../interfaces/transforminput.html">TransformInput</a>.<a href="../interfaces/transforminput.html#system">system</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L26">Transform.ts:26</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L87">Transform.ts:87</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The desired system for the transformation.</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
@@ -1181,16 +1270,29 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L60">Transform.ts:60</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L177">Transform.ts:177</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a Transform instance which matches the desired options. If no
+									options are specified the reference to this instance is returned. If the
+									options are already an instance of Transform its returned. If options are
+									specified a new instance is created with the options of this instance, and
+								the given options applied with <a href="transform.html#set">Transform.set</a>.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> input: <a href="../interfaces/transforminput.html" class="tsd-signature-type">TransformInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The options desired.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="transform.html" class="tsd-signature-type">Transform</a></h4>
+						<p>An instance of this class which matches the desired options.</p>
 					</li>
 				</ul>
 			</section>
@@ -1204,16 +1306,26 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L134">Transform.ts:134</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L287">Transform.ts:287</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given class matches the classes options on this
+								instance.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>parent: <a href="class.html" class="tsd-signature-type">Class</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The class to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the class matches the classes options, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1227,16 +1339,26 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L110">Transform.ts:110</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L248">Transform.ts:248</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given group matches the common option on this
+								instance.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>group: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The group to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the group matches the common option, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1250,19 +1372,32 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L115">Transform.ts:115</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L261">Transform.ts:261</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given group (and optionally a current group)
+								matches the system option on this instance.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>group: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The group to test.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> givenGroup: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The current group if available.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the group matches ths system option, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1276,16 +1411,26 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L149">Transform.ts:149</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L309">Transform.ts:309</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given group matches the unit options on this
+								instance.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>group: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The group to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the group matches the unit options, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1299,16 +1444,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L80">Transform.ts:80</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L203">Transform.ts:203</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given range is valid according to this instance.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>range: <a href="range.html" class="tsd-signature-type">Range</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The range to test.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the range matches this transform, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1322,19 +1476,32 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L97">Transform.ts:97</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L228">Transform.ts:228</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Determines whether the given group (and optionally a current group) is
+								valid or visible according to this instance.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>group: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The group to test.</p>
+								</div>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> givenGroup: <a href="group.html" class="tsd-signature-type">Group</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The current group if available.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>True if the group matches this transform, otherwise false.</p>
 					</li>
 				</ul>
 			</section>
@@ -1348,16 +1515,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/491d7f1/src/Transform.ts#L44">Transform.ts:44</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/533957d/src/Transform.ts#L151">Transform.ts:151</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Overrides values in this instance with ones specified in input.</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <a href="../interfaces/transforminput.html" class="tsd-signature-type">TransformInput</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The values to override.</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						<p>The reference to this instance.</p>
 					</li>
 				</ul>
 			</section>
