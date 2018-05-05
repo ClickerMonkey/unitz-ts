@@ -1998,13 +1998,15 @@ var Value_Value = (function () {
         return Value.fromNumberForGroup(this.convertTo(group), group);
     };
     /**
+     * Determines the available conversions of this value for all groups
+     * that are valid for the given transform.
      *
-     *
-     * @param transform
-     * @param reverse
-     * @param callback
-     * @param callback.transformed
-     * @param callback.index
+     * @param transform Transform which controls the units and values acceptable.
+     * @param reverse Whether to iterate from largest units to smallest units
+     *  (`true`), or from smallest to largest (`false`).
+     * @param callback The function to invoke for each valid conversion.
+     * @param callback.transformed The conversion calculated.
+     * @param callback.index The index of the conversion during iteration.
      * @see [[Group.matches]]
      */
     Value.prototype.conversions = function (transform, reverse, callback) {
@@ -2016,12 +2018,17 @@ var Value_Value = (function () {
         }
     };
     /**
+     * Returns a value based on this value with the unit that best represents the
+     * value. What is best is typically related to the magnitude of the value.
+     * Really small and really large values are harder for people to comprehend so
+     * the unit which results in the most normal looking value is determined.
      *
-     *
-     * @param transform
-     * @param forOutput
-     * @return
+     * @param transform Transform which controls the units and values acceptable.
+     * @param forOutput The output that may be used so the most normal looking
+     *  value can be determined.
+     * @return The most normal value found.
      * @see [[Value.conversions]]
+     * @see [[Core.isMoreNormal]]
      */
     Value.prototype.normalize = function (transform, forOutput) {
         var closest;
@@ -2040,10 +2047,12 @@ var Value_Value = (function () {
         return closest || this;
     };
     /**
+     * Calculates the sum of this value and the given addend scaled by some
+     * factor. This is equivalent to `result = this + (addend * scale)`.
      *
-     * @param addend
-     * @param scale
-     * @return
+     * @param addend The value to add to this.
+     * @param scale The factor to scale the addend by before adding it to this.
+     * @return A new instance.
      */
     Value.prototype.add = function (addend, scale) {
         if (scale === void 0) { scale = 1; }
@@ -2053,10 +2062,12 @@ var Value_Value = (function () {
         return new Value(result, num, den, this.unit, this.group);
     };
     /**
+     * Calculates the difference between this value and the subtrahend scaled by
+     * some factor. This is equivalent to `result = this - (subtrahend * scale)`.
      *
-     * @param subtrahend
-     * @param scale
-     * @return
+     * @param subtrahend The value to subtract from this.
+     * @param scale The factor to scale the subtrahend by before subtraction.
+     * @return A new instance.
      */
     Value.prototype.sub = function (subtrahend, scale) {
         if (scale === void 0) { scale = 1; }
@@ -2066,15 +2077,17 @@ var Value_Value = (function () {
         return new Value(result, num, den, this.unit, this.group);
     };
     /**
+     * Calculates a new value by multiplying this by a given factor. This is
+     * equivalent to `result = this * scale`.
      *
-     * @param scale
-     * @return
+     * @param scale The factor to scale this instance by.
+     * @return A new instance.
      */
     Value.prototype.mul = function (scale) {
         return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
     };
     /**
-     * Converts this range to a string with the given output options taking into
+     * Converts this value to a string with the given output options taking into
      * account the global options.
      *
      * @param options The options to override the global output options.
@@ -2086,11 +2099,12 @@ var Value_Value = (function () {
         return output.value(this);
     };
     /**
+     * Returns a Value instance which is a number with the optional unit and group.
      *
-     * @param value
-     * @param unit
-     * @param group
-     * @return
+     * @param value The number.
+     * @param unit The unit, if any, of the number.
+     * @param group The group which matches the unit.
+     * @return A new instance.
      */
     Value.fromNumber = function (value, unit, group) {
         if (unit === void 0) { unit = ''; }
@@ -2098,11 +2112,16 @@ var Value_Value = (function () {
         return new Value(value, value, 1, unit, group);
     };
     /**
+     * Returns a Value instance which tries to be a fraction given a range of
+     * denominators. If the number is already whole or a fraction close
+     * enough to the number cannot be found a value which is a number is returned.
      *
-     * @param value
-     * @param unit
-     * @param group
-     * @return
+     * @param value The number to try to find a fraction for.
+     * @param unit The unit, if any, of the number.
+     * @param group The group which matches the unit.
+     * @param minDen The starting denominator to inclusively try.
+     * @param maxDen The last denominator to inclusively try.
+     * @return A new instance.
      */
     Value.fromNumberWithRange = function (value, unit, group, minDen, maxDen) {
         if (unit === void 0) { unit = ''; }
@@ -2129,9 +2148,30 @@ var Value_Value = (function () {
         }
         return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
     };
+    /**
+     * Returns a Value instance which tries to be a fraction based on the
+     * denominators of the group. If a valid fraction could not be found then the
+     * instance returned will be a number value. Since a unit is not passed here,
+     * the preferred unit of the group is used as the unit of the value.
+     *
+     * @param value The number to try to find a fraction for.
+     * @param group The group for the unit and also the denominators to try.
+     * @return A new instance.
+     */
     Value.fromNumberForGroup = function (value, group) {
         return this.fromNumberWithDenominators(value, group.denominators, group.preferredUnit, group);
     };
+    /**
+     * Returns a Value instance which tries to be a fraction based on the
+     * denominators of the group. If a valid fraction could not be found then the
+     * instance returned will be a number value.
+     *
+     * @param value The number to try to find a fraction for.
+     * @param denominators The array of denominators to try.
+     * @param unit The unit, if any, of the number.
+     * @param group The group which matches the unit.
+     * @return A new instance.
+     */
     Value.fromNumberWithDenominators = function (value, denominators, unit, group) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
@@ -2155,6 +2195,16 @@ var Value_Value = (function () {
         }
         return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
     };
+    /**
+     * Returns a Value instance for a given fraction specified by a numerator and
+     * denominator.
+     *
+     * @param num The numerator of the fraction.
+     * @param den The denominator of the fraction.
+     * @param unit The unit, if any, of the fraction.
+     * @param group The group which matches the unit.
+     * @return A new instance.
+     */
     Value.fromFraction = function (num, den, unit, group) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
@@ -3565,102 +3615,43 @@ var Parse_Parse = (function () {
 }());
 
 
-// CONCATENATED MODULE: ./src/classes/Weight.ts
+// CONCATENATED MODULE: ./src/classes/Angle.ts
 
 
 
 
+var RAD2DEG = 180 / Math.PI;
+var DEG2RAD = Math.PI / 180;
 /**
- * The Weight clas which contains the following groups.
- *
- * - milligram
- * - gram
- * - kilogram
- * - ounce
- * - pound
- * - ton
+ * @hidden
  */
-var Weight = new Class_Class('Weight')
-    .setBaseConversion('mg', 'oz', function (x) { return x * 0.000035274; })
-    .setBaseConversion('oz', 'mg', function (x) { return x * 28349.5; })
+var Angle = new Class_Class('Angle')
+    .setBaseConversion('deg', 'rad', function (x) { return x * DEG2RAD; })
+    .setBaseConversion('rad', 'deg', function (x) { return x * RAD2DEG; })
     .addGroups([
     {
-        system: System.METRIC,
+        system: System.ANY,
         common: true,
-        unit: 'mg',
-        baseUnit: 'mg',
-        denominators: [2, 10],
+        unit: 'deg',
+        baseUnit: 'deg',
+        denominators: [],
         units: {
-            'mg': Plurality.EITHER,
-            'milligram': Plurality.SINGULAR,
-            'milligrams': Plurality.PLURAL
+            'deg': Plurality.EITHER,
+            '\xb0': Plurality.EITHER,
+            'degrees': Plurality.PLURAL,
+            'degree': Plurality.SINGULAR
         }
     },
     {
-        system: System.METRIC,
+        system: System.ANY,
         common: true,
-        unit: 'g',
-        relativeUnit: 'mg',
-        relativeScale: 1000,
-        denominators: [2, 10, 1000],
+        unit: 'rad',
+        baseUnit: 'rad',
+        denominators: [],
         units: {
-            'g': Plurality.EITHER,
-            'gram': Plurality.SINGULAR,
-            'grams': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.METRIC,
-        common: true,
-        unit: 'kg',
-        relativeUnit: 'g',
-        relativeScale: 1000,
-        denominators: [2, 10, 1000],
-        units: {
-            'kg': Plurality.EITHER,
-            'kilo': Plurality.SINGULAR,
-            'kilos': Plurality.PLURAL,
-            'kilogram': Plurality.SINGULAR,
-            'kilograms': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.US,
-        common: true,
-        unit: 'oz',
-        baseUnit: 'oz',
-        denominators: [2, 3, 4, 16],
-        units: {
-            'oz': Plurality.EITHER,
-            'ounce': Plurality.SINGULAR,
-            'ounces': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.US,
-        common: true,
-        unit: 'lb',
-        relativeUnit: 'oz',
-        relativeScale: 16,
-        denominators: [2, 3, 4, 16],
-        units: {
-            'lb': Plurality.EITHER,
-            'lbs': Plurality.PLURAL,
-            'pound': Plurality.SINGULAR,
-            'pounds': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.US,
-        common: true,
-        unit: 'ton',
-        relativeUnit: 'lb',
-        relativeScale: 2000,
-        denominators: [2, 3, 4, 10],
-        units: {
-            'ton': Plurality.EITHER,
-            'tons': Plurality.PLURAL,
-            'tonnes': Plurality.PLURAL
+            'rad': Plurality.EITHER,
+            'radians': Plurality.PLURAL,
+            'radian': Plurality.SINGULAR
         }
     }
 ])
@@ -3672,17 +3663,7 @@ var Weight = new Class_Class('Weight')
 
 
 /**
- * The Area class which contains the following groups:
- *
- * - square inch
- * - square foot
- * - square yard
- * - acre
- * - square mile
- * - square millimeter
- * - square centimeter
- * - square meter
- * - square kilometer
+ * @hidden
  */
 var Area = new Class_Class('Area')
     .setBaseConversion('sqin', 'sqmm', function (x) { return x * 645.16; })
@@ -3899,26 +3880,328 @@ var Area = new Class_Class('Area')
 ])
     .setClassScales();
 
+// CONCATENATED MODULE: ./src/classes/Digital.ts
+
+
+
+
+/**
+ * @hidden
+ */
+var Digital = new Class_Class('Digital')
+    .addGroups([
+    {
+        system: System.ANY,
+        common: true,
+        unit: 'b',
+        baseUnit: 'b',
+        denominators: [],
+        units: {
+            'b': Plurality.EITHER,
+            'bit': Plurality.SINGULAR,
+            'bits': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.ANY,
+        unit: 'nibble',
+        relativeUnit: 'b',
+        relativeScale: 4,
+        denominators: [],
+        units: {
+            'nibble': Plurality.EITHER,
+            'nibbles': Plurality.PLURAL,
+            'nybble': Plurality.EITHER,
+            'nyble': Plurality.EITHER,
+            'half-byte': Plurality.EITHER,
+            'half byte': Plurality.EITHER,
+            'tetrade': Plurality.EITHER,
+            'semi-octet': Plurality.EITHER,
+            'quadbit': Plurality.EITHER,
+            'quartet': Plurality.EITHER
+        }
+    },
+    {
+        system: System.ANY,
+        common: true,
+        unit: 'B',
+        relativeUnit: 'b',
+        relativeScale: 8,
+        denominators: [2, 8],
+        units: {
+            'B': Plurality.EITHER,
+            'byte': Plurality.SINGULAR,
+            'bytes': Plurality.PLURAL
+        }
+    }
+]);
+addDigitalUnits(Digital, 'B', 1000, [2, 4, 5, 10], 'byte', 'bytes', [
+    ['kB', 'kilo'],
+    ['mB', 'mega'],
+    ['gB', 'giga'],
+    ['tB', 'tera'],
+    ['pB', 'peta'],
+    ['eB', 'exa'],
+    ['zB', 'zetta'],
+    ['yB', 'yotta']
+]);
+addDigitalUnits(Digital, 'B', 1024, [2, 4, 8, 16], 'byte', 'bytes', [
+    ['KB', 'kibi'],
+    ['MB', 'mebi'],
+    ['GB', 'gibi'],
+    ['TB', 'tebi'],
+    ['PB', 'pebi'],
+    ['EB', 'exbi'],
+    ['ZB', 'zebi'],
+    ['YB', 'yobi']
+]);
+addDigitalUnits(Digital, 'b', 1000, [2, 4, 5, 10], 'bit', 'bits', [
+    ['kb', 'kilo', 'kbit'],
+    ['mb', 'mega', 'mbit'],
+    ['gb', 'giga', 'gbit'],
+    ['tb', 'tera', 'tbit'],
+    ['pb', 'peta', 'pbit'],
+    ['eb', 'exa', 'ebit'],
+    ['zb', 'zetta', 'zbit'],
+    ['yb', 'yotta', 'ybit']
+]);
+addDigitalUnits(Digital, 'b', 1024, [2, 4, 8, 16], 'bit', 'bits', [
+    ['kibit', 'kibi'],
+    ['mibit', 'mebi'],
+    ['gibit', 'gibi'],
+    ['tibit', 'tebi'],
+    ['pibit', 'pebi'],
+    ['eibit', 'exbi'],
+    ['zibit', 'zebi'],
+    ['yibit', 'yobi']
+]);
+Digital.setClassScales();
+function addDigitalUnits(parent, relativeTo, relativeScales, denominators, suffixSingular, suffixPlural, unitAndPrefixes) {
+    for (var i = 0; i < unitAndPrefixes.length; i++) {
+        var _a = unitAndPrefixes[i], unit = _a[0], prefix = _a[1], extra = _a[2];
+        var units = {};
+        units[unit] = Plurality.EITHER;
+        units[prefix + suffixSingular] = Plurality.SINGULAR;
+        units[prefix + suffixPlural] = Plurality.PLURAL;
+        if (extra) {
+            units[extra] = Plurality.EITHER;
+        }
+        parent.addGroup({
+            system: System.ANY,
+            common: true,
+            unit: unit,
+            relativeUnit: relativeTo,
+            relativeScale: relativeScales,
+            denominators: denominators,
+            units: units
+        });
+        relativeTo = unit;
+    }
+}
+
+// CONCATENATED MODULE: ./src/classes/Length.ts
+
+
+
+
+/**
+ * @hidden
+ */
+var Length = new Class_Class('Length')
+    .setBaseConversion('in', 'mm', function (x) { return x * 25.4; })
+    .setBaseConversion('mm', 'in', function (x) { return x * 0.039370; })
+    .addGroups([
+    {
+        system: System.US,
+        common: true,
+        unit: 'in',
+        baseUnit: 'in',
+        denominators: [2, 4, 8, 16, 32],
+        units: {
+            'in': Plurality.EITHER,
+            'inch': Plurality.SINGULAR,
+            'inches': Plurality.PLURAL,
+            '"': Plurality.EITHER
+        }
+    },
+    {
+        system: System.US,
+        common: true,
+        unit: 'ft',
+        relativeUnit: 'in',
+        relativeScale: 12,
+        denominators: [2],
+        units: {
+            'ft': Plurality.EITHER,
+            'foot': Plurality.SINGULAR,
+            'feet': Plurality.PLURAL,
+            '\'': Plurality.EITHER
+        }
+    },
+    {
+        system: System.US,
+        unit: 'yd',
+        relativeUnit: 'ft',
+        relativeScale: 3,
+        denominators: [],
+        units: {
+            'yd': Plurality.EITHER,
+            'yard': Plurality.SINGULAR,
+            'yards': Plurality.PLURAL,
+            'yds': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.US,
+        common: true,
+        unit: 'mi',
+        relativeUnit: 'ft',
+        relativeScale: 5280,
+        denominators: [2, 3, 4, 10],
+        units: {
+            'mi': Plurality.EITHER,
+            'mile': Plurality.SINGULAR,
+            'miles': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.US,
+        unit: 'league',
+        relativeUnit: 'mi',
+        relativeScale: 3,
+        denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        units: {
+            'league': Plurality.EITHER,
+            'leagues': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'mm',
+        baseUnit: 'mm',
+        denominators: [10],
+        units: {
+            'mm': Plurality.EITHER,
+            'millimeter': Plurality.SINGULAR,
+            'millimeters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'cm',
+        relativeUnit: 'mm',
+        relativeScale: 10,
+        denominators: [2, 4, 10],
+        units: {
+            'cm': Plurality.EITHER,
+            'centimeter': Plurality.SINGULAR,
+            'centimeters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'dc',
+        relativeUnit: 'cm',
+        relativeScale: 10,
+        denominators: [10],
+        units: {
+            'dc': Plurality.EITHER,
+            'decimeter': Plurality.SINGULAR,
+            'decimeters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'm',
+        relativeUnit: 'cm',
+        relativeScale: 100,
+        denominators: [2, 3, 4, 5, 10],
+        units: {
+            'm': Plurality.EITHER,
+            'meter': Plurality.SINGULAR,
+            'meters': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'km',
+        relativeUnit: 'm',
+        relativeScale: 1000,
+        denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        units: {
+            'km': Plurality.EITHER,
+            'kilometer': Plurality.SINGULAR,
+            'kilometers': Plurality.PLURAL
+        }
+    }
+])
+    .setClassScales();
+
+// CONCATENATED MODULE: ./src/classes/Temperature.ts
+
+
+
+
+var _C_ = '\xb0C';
+/**
+ * @hidden
+ */
+var Temperature = new Class_Class('Temperature')
+    .setBaseConversion('F', _C_, function (x) { return ((x - 32) * 5 / 9); })
+    .setBaseConversion('F', 'K', function (x) { return ((x + 459.67) * 5 / 9); })
+    .setBaseConversion(_C_, 'F', function (x) { return ((x * 9 / 5) + 32); })
+    .setBaseConversion(_C_, 'K', function (x) { return (x + 273.15); })
+    .setBaseConversion('K', _C_, function (x) { return (x - 273.15); })
+    .setBaseConversion('K', 'F', function (x) { return ((x * 9 / 5) - 459.67); })
+    .addGroups([
+    {
+        system: System.US,
+        common: true,
+        unit: 'F',
+        baseUnit: 'F',
+        denominators: [],
+        units: {
+            'F': Plurality.EITHER,
+            '\xb0F': Plurality.EITHER,
+            'Fahrenheit': Plurality.EITHER
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: _C_,
+        baseUnit: _C_,
+        denominators: [],
+        units: {
+            '\xb0C': Plurality.EITHER,
+            'Celsius': Plurality.EITHER
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'K',
+        baseUnit: 'K',
+        denominators: [],
+        units: {
+            'K': Plurality.EITHER,
+            'kelvin': Plurality.SINGULAR,
+            'kelvins': Plurality.PLURAL
+        }
+    }
+])
+    .setClassScales();
+
 // CONCATENATED MODULE: ./src/classes/Time.ts
 
 
 
 
 /**
- * The Time class which contains the following groups.
- *
- * - nanosecond
- * - microsecond
- * - millisecond
- * - second
- * - hour
- * - day
- * - week
- * - year
- * - score
- * - decade
- * - centry
- * - millennium
+ * @hidden
  */
 var Time = new Class_Class('Time')
     .addGroups([
@@ -4156,262 +4439,13 @@ var Time = new Class_Class('Time')
 ])
     .setClassScales();
 
-// CONCATENATED MODULE: ./src/classes/Digital.ts
-
-
-
-
-/**
- * The Digital class which contains the following groups:
- *
- * - bit
- * - nibble
- * - byte
- * - kilo/mego/giga/tera/peta/exa/zetta/yotta byte
- * - kibi/mebi/gibi/tebi/pebi/exbi/zebi/yobi byte
- * - kilo/mego/giga/tera/peta/exa/zetta/yotta bit
- * - ki/mi/gi/ti/pi/ez/zi/yi bit
- */
-var Digital = new Class_Class('Digital')
-    .addGroups([
-    {
-        system: System.ANY,
-        common: true,
-        unit: 'b',
-        baseUnit: 'b',
-        denominators: [],
-        units: {
-            'b': Plurality.EITHER,
-            'bit': Plurality.SINGULAR,
-            'bits': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.ANY,
-        unit: 'nibble',
-        relativeUnit: 'b',
-        relativeScale: 4,
-        denominators: [],
-        units: {
-            'nibble': Plurality.EITHER,
-            'nibbles': Plurality.PLURAL,
-            'nybble': Plurality.EITHER,
-            'nyble': Plurality.EITHER,
-            'half-byte': Plurality.EITHER,
-            'half byte': Plurality.EITHER,
-            'tetrade': Plurality.EITHER,
-            'semi-octet': Plurality.EITHER,
-            'quadbit': Plurality.EITHER,
-            'quartet': Plurality.EITHER
-        }
-    },
-    {
-        system: System.ANY,
-        common: true,
-        unit: 'B',
-        relativeUnit: 'b',
-        relativeScale: 8,
-        denominators: [2, 8],
-        units: {
-            'B': Plurality.EITHER,
-            'byte': Plurality.SINGULAR,
-            'bytes': Plurality.PLURAL
-        }
-    }
-]);
-addDigitalUnits(Digital, 'B', 1000, [2, 4, 5, 10], 'byte', 'bytes', [
-    ['kB', 'kilo'],
-    ['mB', 'mega'],
-    ['gB', 'giga'],
-    ['tB', 'tera'],
-    ['pB', 'peta'],
-    ['eB', 'exa'],
-    ['zB', 'zetta'],
-    ['yB', 'yotta']
-]);
-addDigitalUnits(Digital, 'B', 1024, [2, 4, 8, 16], 'byte', 'bytes', [
-    ['KB', 'kibi'],
-    ['MB', 'mebi'],
-    ['GB', 'gibi'],
-    ['TB', 'tebi'],
-    ['PB', 'pebi'],
-    ['EB', 'exbi'],
-    ['ZB', 'zebi'],
-    ['YB', 'yobi']
-]);
-addDigitalUnits(Digital, 'b', 1000, [2, 4, 5, 10], 'bit', 'bits', [
-    ['kb', 'kilo', 'kbit'],
-    ['mb', 'mega', 'mbit'],
-    ['gb', 'giga', 'gbit'],
-    ['tb', 'tera', 'tbit'],
-    ['pb', 'peta', 'pbit'],
-    ['eb', 'exa', 'ebit'],
-    ['zb', 'zetta', 'zbit'],
-    ['yb', 'yotta', 'ybit']
-]);
-addDigitalUnits(Digital, 'b', 1024, [2, 4, 8, 16], 'bit', 'bits', [
-    ['kibit', 'kibi'],
-    ['mibit', 'mebi'],
-    ['gibit', 'gibi'],
-    ['tibit', 'tebi'],
-    ['pibit', 'pebi'],
-    ['eibit', 'exbi'],
-    ['zibit', 'zebi'],
-    ['yibit', 'yobi']
-]);
-Digital.setClassScales();
-function addDigitalUnits(parent, relativeTo, relativeScales, denominators, suffixSingular, suffixPlural, unitAndPrefixes) {
-    for (var i = 0; i < unitAndPrefixes.length; i++) {
-        var _a = unitAndPrefixes[i], unit = _a[0], prefix = _a[1], extra = _a[2];
-        var units = {};
-        units[unit] = Plurality.EITHER;
-        units[prefix + suffixSingular] = Plurality.SINGULAR;
-        units[prefix + suffixPlural] = Plurality.PLURAL;
-        if (extra) {
-            units[extra] = Plurality.EITHER;
-        }
-        parent.addGroup({
-            system: System.ANY,
-            common: true,
-            unit: unit,
-            relativeUnit: relativeTo,
-            relativeScale: relativeScales,
-            denominators: denominators,
-            units: units
-        });
-        relativeTo = unit;
-    }
-}
-
-// CONCATENATED MODULE: ./src/classes/Temperature.ts
-
-
-
-
-var _C_ = '\xb0C';
-/**
- * The Temperature class which contains the following groups.
- *
- * - celsius
- * - kelvin
- * - fahrenheit
- */
-var Temperature = new Class_Class('Temperature')
-    .setBaseConversion('F', _C_, function (x) { return ((x - 32) * 5 / 9); })
-    .setBaseConversion('F', 'K', function (x) { return ((x + 459.67) * 5 / 9); })
-    .setBaseConversion(_C_, 'F', function (x) { return ((x * 9 / 5) + 32); })
-    .setBaseConversion(_C_, 'K', function (x) { return (x + 273.15); })
-    .setBaseConversion('K', _C_, function (x) { return (x - 273.15); })
-    .setBaseConversion('K', 'F', function (x) { return ((x * 9 / 5) - 459.67); })
-    .addGroups([
-    {
-        system: System.US,
-        common: true,
-        unit: 'F',
-        baseUnit: 'F',
-        denominators: [],
-        units: {
-            'F': Plurality.EITHER,
-            '\xb0F': Plurality.EITHER,
-            'Fahrenheit': Plurality.EITHER
-        }
-    },
-    {
-        system: System.METRIC,
-        common: true,
-        unit: _C_,
-        baseUnit: _C_,
-        denominators: [],
-        units: {
-            '\xb0C': Plurality.EITHER,
-            'Celsius': Plurality.EITHER
-        }
-    },
-    {
-        system: System.METRIC,
-        unit: 'K',
-        baseUnit: 'K',
-        denominators: [],
-        units: {
-            'K': Plurality.EITHER,
-            'kelvin': Plurality.SINGULAR,
-            'kelvins': Plurality.PLURAL
-        }
-    }
-])
-    .setClassScales();
-
-// CONCATENATED MODULE: ./src/classes/Angle.ts
-
-
-
-
-var RAD2DEG = 180 / Math.PI;
-var DEG2RAD = Math.PI / 180;
-/**
- * The Angle class which contains the following groups.
- *
- * - degree
- * - radian
- */
-var Angle = new Class_Class('Angle')
-    .setBaseConversion('deg', 'rad', function (x) { return x * DEG2RAD; })
-    .setBaseConversion('rad', 'deg', function (x) { return x * RAD2DEG; })
-    .addGroups([
-    {
-        system: System.ANY,
-        common: true,
-        unit: 'deg',
-        baseUnit: 'deg',
-        denominators: [],
-        units: {
-            'deg': Plurality.EITHER,
-            '\xb0': Plurality.EITHER,
-            'degrees': Plurality.PLURAL,
-            'degree': Plurality.SINGULAR
-        }
-    },
-    {
-        system: System.ANY,
-        common: true,
-        unit: 'rad',
-        baseUnit: 'rad',
-        denominators: [],
-        units: {
-            'rad': Plurality.EITHER,
-            'radians': Plurality.PLURAL,
-            'radian': Plurality.SINGULAR
-        }
-    }
-])
-    .setClassScales();
-
 // CONCATENATED MODULE: ./src/classes/Volume.ts
 
 
 
 
 /**
- * The Volume clas which contains the following groups.
- *
- * - teaspoon
- * - tablespoon
- * - fluid ounce
- * - cup
- * - pint
- * - quart
- * - gallon
- * - milliliter
- * - centiliter
- * - decaliter
- * - kiloliter
- * - cubic millimeter
- * - cubic centimeter
- * - cubic meter
- * - cubic kilometer
- * - cubic inch
- * - cubic foot
- * - cubic yard
+ * @hidden
  */
 var Volume = new Class_Class('Volume')
     .setBaseConversion('tsp', 'ml', function (x) { return x * 4.92892; })
@@ -4749,160 +4783,101 @@ var Volume = new Class_Class('Volume')
 ])
     .setClassScales();
 
-// CONCATENATED MODULE: ./src/classes/Length.ts
+// CONCATENATED MODULE: ./src/classes/Weight.ts
 
 
 
 
 /**
- * The Length class which contains the following groups.
- *
- * - inch
- * - foot
- * - yard
- * - mile
- * - league
- * - millimeter
- * - centimeter
- * - decimeter
- * - meter
- * - kilometer
+ * @hidden
  */
-var Length = new Class_Class('Length')
-    .setBaseConversion('in', 'mm', function (x) { return x * 25.4; })
-    .setBaseConversion('mm', 'in', function (x) { return x * 0.039370; })
+var Weight = new Class_Class('Weight')
+    .setBaseConversion('mg', 'oz', function (x) { return x * 0.000035274; })
+    .setBaseConversion('oz', 'mg', function (x) { return x * 28349.5; })
     .addGroups([
     {
-        system: System.US,
+        system: System.METRIC,
         common: true,
-        unit: 'in',
-        baseUnit: 'in',
-        denominators: [2, 4, 8, 16, 32],
+        unit: 'mg',
+        baseUnit: 'mg',
+        denominators: [2, 10],
         units: {
-            'in': Plurality.EITHER,
-            'inch': Plurality.SINGULAR,
-            'inches': Plurality.PLURAL,
-            '"': Plurality.EITHER
+            'mg': Plurality.EITHER,
+            'milligram': Plurality.SINGULAR,
+            'milligrams': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'g',
+        relativeUnit: 'mg',
+        relativeScale: 1000,
+        denominators: [2, 10, 1000],
+        units: {
+            'g': Plurality.EITHER,
+            'gram': Plurality.SINGULAR,
+            'grams': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        common: true,
+        unit: 'kg',
+        relativeUnit: 'g',
+        relativeScale: 1000,
+        denominators: [2, 10, 1000],
+        units: {
+            'kg': Plurality.EITHER,
+            'kilo': Plurality.SINGULAR,
+            'kilos': Plurality.PLURAL,
+            'kilogram': Plurality.SINGULAR,
+            'kilograms': Plurality.PLURAL
         }
     },
     {
         system: System.US,
         common: true,
-        unit: 'ft',
-        relativeUnit: 'in',
-        relativeScale: 12,
-        denominators: [2],
+        unit: 'oz',
+        baseUnit: 'oz',
+        denominators: [2, 3, 4, 16],
         units: {
-            'ft': Plurality.EITHER,
-            'foot': Plurality.SINGULAR,
-            'feet': Plurality.PLURAL,
-            '\'': Plurality.EITHER
-        }
-    },
-    {
-        system: System.US,
-        unit: 'yd',
-        relativeUnit: 'ft',
-        relativeScale: 3,
-        denominators: [],
-        units: {
-            'yd': Plurality.EITHER,
-            'yard': Plurality.SINGULAR,
-            'yards': Plurality.PLURAL,
-            'yds': Plurality.PLURAL
+            'oz': Plurality.EITHER,
+            'ounce': Plurality.SINGULAR,
+            'ounces': Plurality.PLURAL
         }
     },
     {
         system: System.US,
         common: true,
-        unit: 'mi',
-        relativeUnit: 'ft',
-        relativeScale: 5280,
+        unit: 'lb',
+        relativeUnit: 'oz',
+        relativeScale: 16,
+        denominators: [2, 3, 4, 16],
+        units: {
+            'lb': Plurality.EITHER,
+            'lbs': Plurality.PLURAL,
+            'pound': Plurality.SINGULAR,
+            'pounds': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.US,
+        common: true,
+        unit: 'ton',
+        relativeUnit: 'lb',
+        relativeScale: 2000,
         denominators: [2, 3, 4, 10],
         units: {
-            'mi': Plurality.EITHER,
-            'mile': Plurality.SINGULAR,
-            'miles': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.US,
-        unit: 'league',
-        relativeUnit: 'mi',
-        relativeScale: 3,
-        denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],
-        units: {
-            'league': Plurality.EITHER,
-            'leagues': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.METRIC,
-        common: true,
-        unit: 'mm',
-        baseUnit: 'mm',
-        denominators: [10],
-        units: {
-            'mm': Plurality.EITHER,
-            'millimeter': Plurality.SINGULAR,
-            'millimeters': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.METRIC,
-        common: true,
-        unit: 'cm',
-        relativeUnit: 'mm',
-        relativeScale: 10,
-        denominators: [2, 4, 10],
-        units: {
-            'cm': Plurality.EITHER,
-            'centimeter': Plurality.SINGULAR,
-            'centimeters': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.METRIC,
-        unit: 'dc',
-        relativeUnit: 'cm',
-        relativeScale: 10,
-        denominators: [10],
-        units: {
-            'dc': Plurality.EITHER,
-            'decimeter': Plurality.SINGULAR,
-            'decimeters': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.METRIC,
-        common: true,
-        unit: 'm',
-        relativeUnit: 'cm',
-        relativeScale: 100,
-        denominators: [2, 3, 4, 5, 10],
-        units: {
-            'm': Plurality.EITHER,
-            'meter': Plurality.SINGULAR,
-            'meters': Plurality.PLURAL
-        }
-    },
-    {
-        system: System.METRIC,
-        common: true,
-        unit: 'km',
-        relativeUnit: 'm',
-        relativeScale: 1000,
-        denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],
-        units: {
-            'km': Plurality.EITHER,
-            'kilometer': Plurality.SINGULAR,
-            'kilometers': Plurality.PLURAL
+            'ton': Plurality.EITHER,
+            'tons': Plurality.PLURAL,
+            'tonnes': Plurality.PLURAL
         }
     }
 ])
     .setClassScales();
 
-// CONCATENATED MODULE: ./src/classes/index.ts
+// CONCATENATED MODULE: ./src/Classes.ts
 
 
 
@@ -4914,11 +4889,133 @@ var Length = new Class_Class('Length')
 
 
 /**
- * Adds all classes that come with Unitz to [Core].
+ * The class which keeps a reference to the [[Class]] instances available in
+ * this library.
  */
-function addDefaults() {
-    Core_Core.addClasses(Weight, Area, Time, Digital, Temperature, Angle, Volume, Length);
-}
+var Classes_Classes = (function () {
+    function Classes() {
+    }
+    /**
+     * Adds all classes in the library to be available when parsing units.
+     */
+    Classes.addDefaults = function () {
+        Core_Core.addClasses(Classes.Weight, Classes.Area, Classes.Time, Classes.Digital, Classes.Temperature, Classes.Angle, Classes.Volume, Classes.Length);
+    };
+    /**
+     * The Angle class which contains the following groups.
+     *
+     * - degree
+     * - radian
+     */
+    Classes.Angle = Angle;
+    /**
+     * The Area class which contains the following groups:
+     *
+     * - square inch
+     * - square foot
+     * - square yard
+     * - acre
+     * - square mile
+     * - square millimeter
+     * - square centimeter
+     * - square meter
+     * - square kilometer
+     */
+    Classes.Area = Area;
+    /**
+     * The Digital class which contains the following groups:
+     *
+     * - bit
+     * - nibble
+     * - byte
+     * - kilo/mego/giga/tera/peta/exa/zetta/yotta byte
+     * - kibi/mebi/gibi/tebi/pebi/exbi/zebi/yobi byte
+     * - kilo/mego/giga/tera/peta/exa/zetta/yotta bit
+     * - ki/mi/gi/ti/pi/ez/zi/yi bit
+     */
+    Classes.Digital = Digital;
+    /**
+     * The Length class which contains the following groups.
+     *
+     * - inch
+     * - foot
+     * - yard
+     * - mile
+     * - league
+     * - millimeter
+     * - centimeter
+     * - decimeter
+     * - meter
+     * - kilometer
+     */
+    Classes.Length = Length;
+    /**
+     * The Temperature class which contains the following groups.
+     *
+     * - celsius
+     * - kelvin
+     * - fahrenheit
+     */
+    Classes.Temperature = Temperature;
+    /**
+     * The Time class which contains the following groups.
+     *
+     * - nanosecond
+     * - microsecond
+     * - millisecond
+     * - second
+     * - hour
+     * - day
+     * - week
+     * - year
+     * - score
+     * - decade
+     * - biennium
+     * - triennium
+     * - quadrennium
+     * - lustrum
+     * - decade
+     * - centry
+     * - millennium
+     */
+    Classes.Time = Time;
+    /**
+     * The Volume clas which contains the following groups.
+     *
+     * - teaspoon
+     * - tablespoon
+     * - fluid ounce
+     * - cup
+     * - pint
+     * - quart
+     * - gallon
+     * - milliliter
+     * - centiliter
+     * - decaliter
+     * - kiloliter
+     * - cubic millimeter
+     * - cubic centimeter
+     * - cubic meter
+     * - cubic kilometer
+     * - cubic inch
+     * - cubic foot
+     * - cubic yard
+     */
+    Classes.Volume = Volume;
+    /**
+     * The Weight clas which contains the following groups.
+     *
+     * - milligram
+     * - gram
+     * - kilogram
+     * - ounce
+     * - pound
+     * - ton
+     */
+    Classes.Weight = Weight;
+    return Classes;
+}());
+
 
 // CONCATENATED MODULE: ./src/index.ts
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Plurality", function() { return Plurality; });
@@ -4938,7 +5035,7 @@ function addDefaults() {
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Range", function() { return Range_Range; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "uz", function() { return uz; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Base", function() { return Base_Base; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "addDefaults", function() { return addDefaults; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Classes", function() { return Classes_Classes; });
 
 // Enums
 
