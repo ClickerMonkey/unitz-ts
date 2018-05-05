@@ -111,12 +111,38 @@ var Plurality;
 
 // CONCATENATED MODULE: ./src/System.ts
 
+/**
+ * An enumeration which specifies what system of measurement a unit belongs to
+ * or specifies which system a user desires for output or conversions.
+ *
+ * @see [[Group]]
+ * @see [[Transform]]
+ */
 var System;
 (function (System) {
+    /**
+     * The Metrix System of Measurement.
+     */
     System[System["METRIC"] = 0] = "METRIC";
+    /**
+     * The US "traditional systems of weights and measures". Also known as
+     * "Standard", "Customary", or, erroneously: "Imperial", or "English".
+     */
     System[System["US"] = 1] = "US";
+    /**
+     * A value for groups when the unit does not belong to a system.
+     */
     System[System["NONE"] = 2] = "NONE";
+    /**
+     * A value for transforms which specify that the user or developer are looking
+     * to get results in any system.
+     */
     System[System["ANY"] = 3] = "ANY";
+    /**
+     * A value for transforms which specify that the user or developer are looking
+     * to get results in the same system that is already being used for a range.
+     * If a current system cannot be determined then any system is returned.
+     */
     System[System["GIVEN"] = 4] = "GIVEN";
 })(System = System || (System = {}));
 
@@ -816,7 +842,7 @@ var Output_Output = (function () {
      * Creates a new instance of Output with an optional set of options to
      * override the default values.
      *
-     * @param input The options to apply to the new instance.
+     * @param input The options to apply to the this instance.
      */
     function Output(input) {
         /**
@@ -1060,18 +1086,61 @@ var Output_Output = (function () {
 
 
 
+/**
+ * THe class which controls which units and values are acceptable when
+ * transforming a set of ranges.
+ *
+ * @see [[Base.normalize]]
+ * @see [[Base.compact]]
+ * @see [[Base.expand]]
+ * @see [[Base.conversions]]
+ * @see [[Base.filter]]
+ */
 var Transform_Transform = (function () {
+    /**
+     * Creates a new instance of Transform with an optional set of options to
+     * override the default values.
+     *
+     * @param input The options to apply to the new instance.
+     */
     function Transform(input) {
+        /**
+         * The option which determines whether only common or any group are valid.
+         * To only include common units this value must be `true` and to include
+         * common and uncommon this value must be `false`.
+         */
         this.common = true;
+        /**
+         * The desired system for the transformation.
+         */
         this.system = System.GIVEN;
+        /**
+         * The mimimum allowed value for the transformation.
+         */
         this.min = -Number.MAX_VALUE;
+        /**
+         * The maximum allowed value for the transformation.
+         */
         this.max = Number.MAX_VALUE;
+        /**
+         * Whether the minimum or maximum value of a range is used when producing
+         * conversions.
+         */
         this.convertWithMax = true;
+        /**
+         * Whether ranges without units are considered valid for the transformation.
+         */
         this.groupless = true;
         if (Functions.isDefined(input)) {
             this.set(input);
         }
     }
+    /**
+     * Overrides values in this instance with ones specified in input.
+     *
+     * @param input The values to override.
+     * @return The reference to this instance.
+     */
     Transform.prototype.set = function (input) {
         this.common = Functions.coalesce(input.common, this.common);
         this.system = Functions.coalesce(input.system, this.system);
@@ -1085,6 +1154,16 @@ var Transform_Transform = (function () {
         this.notClasses = Functions.coalesce(input.notClasses, this.notClasses);
         return this;
     };
+    /**
+     * Returns a Transform instance which matches the desired options. If no
+     * options are specified the reference to this instance is returned. If the
+     * options are already an instance of Transform its returned. If options are
+     * specified a new instance is created with the options of this instance, and
+     * the given options applied with [[Transform.set]].
+     *
+     * @param input The options desired.
+     * @return An instance of this class which matches the desired options.
+     */
     Transform.prototype.extend = function (input) {
         var extended = this;
         if (Functions.isDefined(input)) {
@@ -1098,16 +1177,30 @@ var Transform_Transform = (function () {
         }
         return extended;
     };
+    /**
+     * Determines whether the given range is valid according to this instance.
+     *
+     * @param range The range to test.
+     * @return True if the range matches this transform, otherwise false.
+     */
     Transform.prototype.isValidRange = function (range) {
-        var group = this.convertWithMax ? range.max.group : range.min.group;
         if (range.max.value < this.min) {
             return false;
         }
         if (range.min.value > this.max) {
             return false;
         }
+        var group = this.convertWithMax ? range.max.group : range.min.group;
         return this.isVisibleGroup(group);
     };
+    /**
+     * Determines whether the given group (and optionally a current group) is
+     * valid or visible according to this instance.
+     *
+     * @param group The group to test.
+     * @param givenGroup The current group if available.
+     * @return True if the group matches this transform, otherwise false.
+     */
     Transform.prototype.isVisibleGroup = function (group, givenGroup) {
         if (!group) {
             return this.groupless;
@@ -1117,9 +1210,24 @@ var Transform_Transform = (function () {
             this.isUnitMatch(group) &&
             this.isClassMatch(group.parent);
     };
+    /**
+     * Determines whether the given group matches the common option on this
+     * instance.
+     *
+     * @param group The group to test.
+     * @return True if the group matches the common option, otherwise false.
+     */
     Transform.prototype.isCommonMatch = function (group) {
         return !this.common || group.common;
     };
+    /**
+     * Determines whether the given group (and optionally a current group)
+     * matches the system option on this instance.
+     *
+     * @param group The group to test.
+     * @param givenGroup The current group if available.
+     * @return True if the group matches ths system option, otherwise false.
+     */
     Transform.prototype.isSystemMatch = function (group, givenGroup) {
         switch (this.system) {
             case System.METRIC:
@@ -1135,6 +1243,13 @@ var Transform_Transform = (function () {
         }
         return false;
     };
+    /**
+     * Determines whether the given class matches the classes options on this
+     * instance.
+     *
+     * @param parent The class to test.
+     * @return True if the class matches the classes options, otherwise false.
+     */
     Transform.prototype.isClassMatch = function (parent) {
         if (this.onlyClasses) {
             return this.onlyClasses.indexOf(parent.name) !== -1;
@@ -1144,6 +1259,13 @@ var Transform_Transform = (function () {
         }
         return true;
     };
+    /**
+     * Determines whether the given group matches the unit options on this
+     * instance.
+     *
+     * @param group The group to test.
+     * @return True if the group matches the unit options, otherwise false.
+     */
     Transform.prototype.isUnitMatch = function (group) {
         if (this.onlyUnits) {
             return this.onlyUnits.indexOf(group.unit) !== -1;
@@ -1160,21 +1282,63 @@ var Transform_Transform = (function () {
 // CONCATENATED MODULE: ./src/Sort.ts
 
 
+/**
+ * The enumeration which decides what value in a range should be used when
+ * sorting between ranges with differing minimum and maximum values.
+ */
 var SortType;
 (function (SortType) {
+    /**
+     * This value will use the minimum of the ranges to sort by.
+     */
     SortType[SortType["MIN"] = 0] = "MIN";
+    /**
+     * This value will use the maximum of the ranges to sort by.
+     */
     SortType[SortType["MAX"] = 1] = "MAX";
+    /**
+     * This value will use the average of the ranges to sort by.
+     */
     SortType[SortType["AVERAGE"] = 2] = "AVERAGE";
 })(SortType = SortType || (SortType = {}));
+/**
+ * The class which determines how to sort ranges.
+ */
 var Sort_Sort = (function () {
+    /**
+     * Creates a new instance of Sort with an optional set of options to override
+     * the default values.
+     *
+     * @param input The options to apply to the new instance.
+     */
     function Sort(input) {
+        /**
+         * If the ranges should be in ascending order (small values followed by large
+         * values). The default value is in descending order.
+         */
         this.ascending = false;
+        /**
+         * How ranges should be compared when the minimum and maximum values differ.
+         */
         this.type = SortType.MAX;
+        /**
+         * This object describes how ranges of different classes should be sorted by
+         * given each class a priority. If a class is not defined here the priority
+         * assumed is zero.
+         */
         this.classes = {};
         if (Functions.isDefined(input)) {
             this.set(input);
         }
     }
+    /**
+     * Overrides values in this instance ith ones specified in the input. If class
+     * sorting options are specified they are merged into this instance as opposed
+     * to a complete overwrite.
+     *
+     * @param input The values to override.
+     * @return The reference to this instance.
+     */
     Sort.prototype.set = function (input) {
         this.ascending = Functions.coalesce(input.ascending, this.ascending);
         this.type = Functions.coalesce(input.type, this.type);
@@ -1185,6 +1349,16 @@ var Sort_Sort = (function () {
         }
         return this;
     };
+    /**
+     * Returns a Sort instance which matches the desired options. If no options
+     * are specified the reference to this instance is returned. If the options
+     * are already an instance of Sort its returned. If options are specified
+     * a new instance is created with the options of this instance, and the given
+     * options applied with [[Sort.set]].
+     *
+     * @param input The options desired.
+     * @return An instance of this class which matches the desired options.
+     */
     Sort.prototype.extend = function (input) {
         var extended = this;
         if (Functions.isDefined(input)) {
@@ -1198,6 +1372,10 @@ var Sort_Sort = (function () {
         }
         return extended;
     };
+    /**
+     * Returns a function which can sort ranges based on the options in this
+     * instance. Comparison is first done by class, and followed by type.
+     */
     Sort.prototype.getSorter = function () {
         var _this = this;
         return function (a, b) {
@@ -1218,17 +1396,45 @@ var Sort_Sort = (function () {
             return _this.ascending ? d : -d;
         };
     };
+    /**
+     * A sort function between two ranges which look at the range minimums.
+     *
+     * @param a The first range.
+     * @param b The second range.
+     * @see [[Sorter]]
+     */
     Sort.prototype.getMinComparison = function (a, b) {
         return Functions.sign(a.min.classScaled - b.min.classScaled);
     };
+    /**
+     * A sort function between two ranges which look at the range maximums.
+     *
+     * @param a The first range.
+     * @param b The second range.
+     * @see [[Sorter]]
+     */
     Sort.prototype.getMaxComparison = function (a, b) {
         return Functions.sign(a.max.classScaled - b.max.classScaled);
     };
+    /**
+     * A sort function between two ranges which look at the range averages.
+     *
+     * @param a The first range.
+     * @param b The second range.
+     * @see [[Sorter]]
+     */
     Sort.prototype.getAverageComparison = function (a, b) {
         var avg = (a.min.classScaled + a.max.classScaled) * 0.5;
         var bvg = (b.min.classScaled + b.max.classScaled) * 0.5;
         return Functions.sign(avg - bvg);
     };
+    /**
+     * A sort function between two ranges which look at the range classes.
+     *
+     * @param a The first range.
+     * @param b The second range.
+     * @see [[Sorter]]
+     */
     Sort.prototype.getClassComparison = function (a, b) {
         var ag = a.min.group ? 1 : -1;
         var bg = b.min.group ? 1 : -1;
@@ -1519,7 +1725,20 @@ var Core_Core = (function () {
 
 
 
+/**
+ * A class which contains a parsed number or fraction.
+ */
 var Value_Value = (function () {
+    /**
+     * Creates a new instance of Value given the value, possible numerator and
+     * denominator, and the unit and it's group.
+     *
+     * @param value [[Value.value]]
+     * @param num [[Value.num]]
+     * @param den [[Value.den]]
+     * @param unit [[Value.unit]]
+     * @param group [[Value.group]]
+     */
     function Value(value, num, den, unit, group) {
         var divisor = Functions.gcd(num, den);
         this.value = value;
@@ -1529,6 +1748,9 @@ var Value_Value = (function () {
         this.group = group;
     }
     Object.defineProperty(Value.prototype, "isValid", {
+        /**
+         * Returns true if this value was successfully parsed from some input.
+         */
         get: function () {
             return isFinite(this.value);
         },
@@ -1536,6 +1758,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "isFraction", {
+        /**
+         * Returns true if this value is a fraction with a numerator and denoninator.
+         */
         get: function () {
             return this.den !== 1;
         },
@@ -1543,6 +1768,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "isDecimal", {
+        /**
+         * Returns true if this value is a number and not a fraction.
+         */
         get: function () {
             return this.den === 1;
         },
@@ -1550,6 +1778,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "isZero", {
+        /**
+         * Returns true if this value is zero.
+         */
         get: function () {
             return Functions.isZero(this.value);
         },
@@ -1557,6 +1788,11 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "isSingular", {
+        /**
+         * Returns true if this value is singular.
+         *
+         * @see [[Functions.isSingular]]
+         */
         get: function () {
             return Functions.isSingular(this.value);
         },
@@ -1564,6 +1800,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "scaled", {
+        /**
+         * Returns the number of this value relative to the base unit.
+         */
         get: function () {
             return this.group ? this.value * this.group.baseScale : this.value;
         },
@@ -1571,13 +1810,22 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "classScaled", {
+        /**
+         * Returns the number of this value relative to the first base unit of it's
+         * class.
+         */
         get: function () {
             return this.group ? this.value * this.group.classScale : this.value;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Value.prototype, "actual", {
+    Object.defineProperty(Value.prototype, "calculated", {
+        /**
+         * Returns the number which represents the fraction in the value. There may
+         * be a difference between this value and the number when the fraction is
+         * calculated from the denominators of the group.
+         */
         get: function () {
             return this.num / this.den;
         },
@@ -1585,6 +1833,10 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "mixedWhole", {
+        /**
+         * Returns the whole number for the mixed fraction of this value. If this
+         * value is not a fraction 0 is returned.
+         */
         get: function () {
             return this.den !== 1 ? Math.floor(this.num / this.den) : 0;
         },
@@ -1592,6 +1844,10 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "mixedNum", {
+        /**
+         * Returns the numerator for the mixed fraction of this value. If this value
+         * is not a fraction then the numerator is returned.
+         */
         get: function () {
             return this.den !== 1 ? this.num % this.den : this.num;
         },
@@ -1599,6 +1855,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "floor", {
+        /**
+         * Returns the floor of the number in this value.
+         */
         get: function () {
             return Math.floor(this.value);
         },
@@ -1606,6 +1865,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "ceil", {
+        /**
+         * Returns the ceiling of the number in this value.
+         */
         get: function () {
             return Math.ceil(this.value);
         },
@@ -1613,6 +1875,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "truncate", {
+        /**
+         * Returns the truncated number in this value taking into account it's sign.
+         */
         get: function () {
             return this.value < 0 ? this.ceil : this.floor;
         },
@@ -1620,6 +1885,9 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "remainder", {
+        /**
+         * Returns the fractional part of the number in this value.
+         */
         get: function () {
             return this.value - this.floor;
         },
@@ -1627,31 +1895,68 @@ var Value_Value = (function () {
         configurable: true
     });
     Object.defineProperty(Value.prototype, "error", {
+        /**
+         * Returns the signed distance the number of this value is from the fraction
+         * numerator and denominator determined. If this value is not a fraction then
+         * this should return zero.
+         */
         get: function () {
-            return this.actual - this.value;
+            return this.calculated - this.value;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Value.prototype, "distance", {
+        /**
+         * Returns the absolute distance the number of this value is from the fraction
+         * numerator and denominator determined. If this value is not a fraction then
+         * this should return zero.
+         */
         get: function () {
             return Functions.abs(this.error);
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * Returns a version of this value with the preferred unit.
+     *
+     * @return A new value or the reference to this instance if it's groupless.
+     * @see [[Group.preferredUnit]]
+     */
     Value.prototype.preferred = function () {
         return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group) : this;
     };
+    /**
+     * Returns a copy of this value.
+     *
+     * @return A new value.
+     */
     Value.prototype.copy = function () {
         return new Value(this.value, this.num, this.den, this.unit, this.group);
     };
+    /**
+     * Returns a value equivalent to zero with the unt and group of this instance.
+     *
+     * @return A new value.
+     */
     Value.prototype.zero = function () {
         return new Value(0, 0, 1, this.unit, this.group);
     };
+    /**
+     * Returns the truncated version of this value. That's a value where the
+     * number is a whole number.
+     *
+     * @return A new value.
+     */
     Value.prototype.truncated = function () {
         return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
     };
+    /**
+     * Returns a version of this value as a fraction.
+     *
+     * @return A new value or the reference to this instance if it's a fraction.
+     */
     Value.prototype.fractioned = function () {
         if (this.isFraction) {
             return this;
@@ -1661,19 +1966,47 @@ var Value_Value = (function () {
         }
         return this;
     };
+    /**
+     * Returns a version of this value as a number.
+     *
+     * @return A new value or the reference to this instance if it's a number.
+     */
     Value.prototype.numbered = function () {
         if (this.isFraction) {
             return new Value(this.value, this.value, 1, this.unit, this.group);
         }
         return this;
     };
+    /**
+     * Converts this value to the given group and returns the result.
+     *
+     * @param to The group to convert to.
+     * @return The converted value or the number of this value if there's no group.
+     */
     Value.prototype.convertTo = function (to) {
         var group = this.group;
         return group ? group.parent.convert(this.value, group, to) : this.value;
     };
+    /**
+     * Converts this value to the given group and returns a new value. The new
+     * value will attempted to be converted to a fraction.
+     *
+     * @param group The group to convert to.
+     * @return A new value.
+     */
     Value.prototype.convertToValue = function (group) {
         return Value.fromNumberForGroup(this.convertTo(group), group);
     };
+    /**
+     *
+     *
+     * @param transform
+     * @param reverse
+     * @param callback
+     * @param callback.transformed
+     * @param callback.index
+     * @see [[Group.matches]]
+     */
     Value.prototype.conversions = function (transform, reverse, callback) {
         var _this = this;
         if (this.group) {
@@ -1682,6 +2015,14 @@ var Value_Value = (function () {
             });
         }
     };
+    /**
+     *
+     *
+     * @param transform
+     * @param forOutput
+     * @return
+     * @see [[Value.conversions]]
+     */
     Value.prototype.normalize = function (transform, forOutput) {
         var closest;
         this.conversions(transform, false, function (convert) {
@@ -1698,6 +2039,12 @@ var Value_Value = (function () {
         });
         return closest || this;
     };
+    /**
+     *
+     * @param addend
+     * @param scale
+     * @return
+     */
     Value.prototype.add = function (addend, scale) {
         if (scale === void 0) { scale = 1; }
         var num = this.num * addend.den + addend.num * this.den * scale;
@@ -1705,6 +2052,12 @@ var Value_Value = (function () {
         var result = this.value + addend.value * scale;
         return new Value(result, num, den, this.unit, this.group);
     };
+    /**
+     *
+     * @param subtrahend
+     * @param scale
+     * @return
+     */
     Value.prototype.sub = function (subtrahend, scale) {
         if (scale === void 0) { scale = 1; }
         var num = this.num * subtrahend.den - subtrahend.num * this.den * scale;
@@ -1712,6 +2065,11 @@ var Value_Value = (function () {
         var result = this.value - subtrahend.value * scale;
         return new Value(result, num, den, this.unit, this.group);
     };
+    /**
+     *
+     * @param scale
+     * @return
+     */
     Value.prototype.mul = function (scale) {
         return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
     };
@@ -1727,11 +2085,25 @@ var Value_Value = (function () {
         var output = Core_Core.globalOutput.extend(options);
         return output.value(this);
     };
+    /**
+     *
+     * @param value
+     * @param unit
+     * @param group
+     * @return
+     */
     Value.fromNumber = function (value, unit, group) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
         return new Value(value, value, 1, unit, group);
     };
+    /**
+     *
+     * @param value
+     * @param unit
+     * @param group
+     * @return
+     */
     Value.fromNumberWithRange = function (value, unit, group, minDen, maxDen) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
@@ -1788,12 +2160,16 @@ var Value_Value = (function () {
         if (group === void 0) { group = null; }
         return new Value(num / den, num, den, unit, group);
     };
+    /**
+     * A value instance which contains invalid numbers.
+     */
     Value.INVALID = new Value(Number.NaN, Number.NaN, 1, '', null);
     return Value;
 }());
 
 
 // CONCATENATED MODULE: ./src/Range.ts
+
 
 
 
@@ -1954,6 +2330,10 @@ var Range_Range = (function () {
         var max = this.max.preferred();
         return new Range(min, max);
     };
+    /**
+     * @return A range which has only positive values. If the range is entirely
+     *  negative then `null` is returned.
+     */
     Range.prototype.positive = function () {
         var minNegative = this.min.value < 0;
         var maxNegative = this.max.value < 0;
@@ -1964,6 +2344,10 @@ var Range_Range = (function () {
         var max = this.max.copy();
         return new Range(min, max);
     };
+    /**
+     * @return A range which has only negative values. If the range is entirely
+     *  positive then `null` is returned.
+     */
     Range.prototype.negative = function () {
         var minPositive = this.min.value >= 0;
         var maxPositive = this.max.value >= 0;
@@ -1974,9 +2358,13 @@ var Range_Range = (function () {
         var max = maxPositive ? this.max.zero() : this.max.copy();
         return new Range(min, max);
     };
+    /**
+     * @return A range which has a non-zero min and max. If both are equial to
+     *  zero then `null` is returned.
+     */
     Range.prototype.nonzero = function () {
-        var minZero = this.min.value === 0;
-        var maxZero = this.max.value === 0;
+        var minZero = Functions.isZero(this.min.value);
+        var maxZero = Functions.isZero(this.max.value);
         if (minZero && maxZero) {
             return null;
         }
@@ -1984,36 +2372,85 @@ var Range_Range = (function () {
         var max = this.max.copy();
         return new Range(min, max);
     };
+    /**
+     * @return A range with only the maximum value from this range.
+     */
     Range.prototype.maxd = function () {
         var fixed = this.max.copy();
         return new Range(fixed, fixed);
     };
+    /**
+     * @return A range with only the minimum value from this range.
+     */
     Range.prototype.mind = function () {
         var fixed = this.min.copy();
         return new Range(fixed, fixed);
     };
+    /**
+     * Creates a range with with units that best represent the values. This may
+     * cause the minimum and maximum values to have different units.
+     *
+     * @param transform Options to control which units and values are acceptable.
+     * @param forOutput The output options that should be used to determine which
+     *  value & unit is best.
+     * @return A new range.
+     * @see [[Value.normalize]]
+     */
     Range.prototype.normalize = function (transform, forOutput) {
         var min = this.min.normalize(transform, forOutput);
         var max = this.max.normalize(transform, forOutput);
         return new Range(min, max);
     };
+    /**
+     * Adds this range and a given range (optionally scaled by a factor) together.
+     *
+     * @param addend The range to add to this instance.
+     * @param scale The factor to multiply the addend by when added it to this
+     *  instance.
+     * @return a new range.
+     * @see [[Value.add]]
+     */
     Range.prototype.add = function (addend, scale) {
         if (scale === void 0) { scale = 1; }
         var min = this.min.add(addend.min, scale);
         var max = this.max.add(addend.max, scale);
         return new Range(min, max);
     };
+    /**
+     * Subtracts a given range (optionally scaled by a factor) from this range.
+     *
+     * @param subtrahend The range to remove from this instance.
+     * @param scale The factor to multiply the subtrahend by when subtracting it
+     *  from this instance.
+     * @return A new range.
+     * @see [[Value.sub]]
+     */
     Range.prototype.sub = function (subtrahend, scale) {
         if (scale === void 0) { scale = 1; }
         var min = this.min.sub(subtrahend.min, scale);
         var max = this.max.sub(subtrahend.max, scale);
         return new Range(min, max);
     };
+    /**
+     * Multiplies this range by a scalar factor.
+     *
+     * @param scale The amount to multiply the range by.
+     * @return A new range.
+     * @see [[Value.mul]]
+     */
     Range.prototype.mul = function (scale) {
         var min = this.min.mul(scale);
         var max = this.max.mul(scale);
         return new Range(min, max);
     };
+    /**
+     * Returns a range which is coerced into being represented by fractions if a
+     * valid fraction can be determined from the units valid denominators.
+     *
+     * @return A new range if the minimum and maximum are not fractions, otherwise
+     *  the reference to this range is returned.
+     * @see [[Value.fractioned]]
+     */
     Range.prototype.fractioned = function () {
         if (this.min.isFraction && this.max.isFraction) {
             return this;
@@ -2022,6 +2459,13 @@ var Range_Range = (function () {
         var max = this.max.fractioned();
         return new Range(min, max);
     };
+    /**
+     * Returns a range which has any fraction values converted to numbers.
+     *
+     * @return A new range if the mimimum or maximum are fractions, otherwise the
+     *  the reference to this range is returned.
+     * @see [[Value.numbered]]
+     */
     Range.prototype.numbered = function () {
         if (!this.min.isFraction && !this.max.isFraction) {
             return this;
@@ -2042,6 +2486,13 @@ var Range_Range = (function () {
         var output = Core_Core.globalOutput.extend(options);
         return output.range(this);
     };
+    /**
+     * Creates a fixed range from a given value. A fixed range behaves essentially
+     * as a value since the minimum and maximum are equivalent.
+     *
+     * @param fixed The value to be used as the min and max of the range.
+     * @return A new fixed range.
+     */
     Range.fromFixed = function (fixed) {
         return new Range(fixed, fixed);
     };
@@ -2814,6 +3265,40 @@ var Base_Base = (function () {
                 }
             }
             return true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Base.prototype, "length", {
+        /**
+         * Returns the number of ranges in this instance.
+         */
+        get: function () {
+            return this.ranges.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Base.prototype, "isFixed", {
+        /**
+         * Returns true if this instance has a single fixed value.
+         *
+         * @see [[Range.isFixed]]
+         */
+        get: function () {
+            return this.ranges.length === 1 && this.ranges[0].isFixed;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Base.prototype, "isRange", {
+        /**
+         * Returns true if this instance has a single range.
+         *
+         * @see [[Range.isRange]]
+         */
+        get: function () {
+            return this.ranges.length === 1 && this.ranges[0].isRange;
         },
         enumerable: true,
         configurable: true

@@ -1,4 +1,5 @@
 
+import { Functions as fn } from './Functions';
 import { Value } from './Value';
 import { Transform } from './Transform';
 import { Output, OutputInput } from './Output';
@@ -175,6 +176,10 @@ export class Range
     return new Range( min, max );
   }
 
+  /**
+   * @return A range which has only positive values. If the range is entirely
+   *  negative then `null` is returned.
+   */
   public positive(): Range
   {
     let minNegative: boolean = this.min.value < 0;
@@ -191,6 +196,10 @@ export class Range
     return new Range( min, max );
   }
 
+  /**
+   * @return A range which has only negative values. If the range is entirely
+   *  positive then `null` is returned.
+   */
   public negative(): Range
   {
     let minPositive: boolean = this.min.value >= 0;
@@ -207,10 +216,14 @@ export class Range
     return new Range( min, max );
   }
 
+  /**
+   * @return A range which has a non-zero min and max. If both are equial to
+   *  zero then `null` is returned.
+   */
   public nonzero(): Range
   {
-    let minZero: boolean = this.min.value === 0;
-    let maxZero: boolean = this.max.value === 0;
+    let minZero: boolean = fn.isZero( this.min.value );
+    let maxZero: boolean = fn.isZero( this.max.value );
 
     if (minZero && maxZero)
     {
@@ -223,6 +236,9 @@ export class Range
     return new Range( min, max );
   }
 
+  /**
+   * @return A range with only the maximum value from this range.
+   */
   public maxd(): Range
   {
     let fixed: Value = this.max.copy();
@@ -230,6 +246,9 @@ export class Range
     return new Range(fixed, fixed);
   }
 
+  /**
+   * @return A range with only the minimum value from this range.
+   */
   public mind(): Range
   {
     let fixed: Value = this.min.copy();
@@ -237,6 +256,16 @@ export class Range
     return new Range(fixed, fixed);
   }
 
+  /**
+   * Creates a range with with units that best represent the values. This may
+   * cause the minimum and maximum values to have different units.
+   *
+   * @param transform Options to control which units and values are acceptable.
+   * @param forOutput The output options that should be used to determine which
+   *  value & unit is best.
+   * @return A new range.
+   * @see [[Value.normalize]]
+   */
   public normalize(transform: Transform, forOutput: Output): Range
   {
     let min: Value = this.min.normalize( transform, forOutput );
@@ -245,6 +274,15 @@ export class Range
     return new Range(min, max)
   }
 
+  /**
+   * Adds this range and a given range (optionally scaled by a factor) together.
+   *
+   * @param addend The range to add to this instance.
+   * @param scale The factor to multiply the addend by when added it to this
+   *  instance.
+   * @return a new range.
+   * @see [[Value.add]]
+   */
   public add(addend: Range, scale: number = 1): Range
   {
     let min: Value = this.min.add(addend.min, scale);
@@ -253,6 +291,15 @@ export class Range
     return new Range(min, max);
   }
 
+  /**
+   * Subtracts a given range (optionally scaled by a factor) from this range.
+   *
+   * @param subtrahend The range to remove from this instance.
+   * @param scale The factor to multiply the subtrahend by when subtracting it
+   *  from this instance.
+   * @return A new range.
+   * @see [[Value.sub]]
+   */
   public sub(subtrahend: Range, scale: number = 1): Range
   {
     let min: Value = this.min.sub(subtrahend.min, scale);
@@ -261,6 +308,13 @@ export class Range
     return new Range(min, max);
   }
 
+  /**
+   * Multiplies this range by a scalar factor.
+   *
+   * @param scale The amount to multiply the range by.
+   * @return A new range.
+   * @see [[Value.mul]]
+   */
   public mul(scale: number): Range
   {
     let min: Value = this.min.mul(scale);
@@ -269,6 +323,14 @@ export class Range
     return new Range(min, max);
   }
 
+  /**
+   * Returns a range which is coerced into being represented by fractions if a
+   * valid fraction can be determined from the units valid denominators.
+   *
+   * @return A new range if the minimum and maximum are not fractions, otherwise
+   *  the reference to this range is returned.
+   * @see [[Value.fractioned]]
+   */
   public fractioned(): Range
   {
     if (this.min.isFraction && this.max.isFraction)
@@ -282,6 +344,13 @@ export class Range
     return new Range(min, max);
   }
 
+  /**
+   * Returns a range which has any fraction values converted to numbers.
+   *
+   * @return A new range if the mimimum or maximum are fractions, otherwise the
+   *  the reference to this range is returned.
+   * @see [[Value.numbered]]
+   */
   public numbered(): Range
   {
     if (!this.min.isFraction && !this.max.isFraction)
@@ -310,6 +379,13 @@ export class Range
     return output.range( this );
   }
 
+  /**
+   * Creates a fixed range from a given value. A fixed range behaves essentially
+   * as a value since the minimum and maximum are equivalent.
+   *
+   * @param fixed The value to be used as the min and max of the range.
+   * @return A new fixed range.
+   */
   public static fromFixed(fixed: Value): Range
   {
     return new Range(fixed, fixed);

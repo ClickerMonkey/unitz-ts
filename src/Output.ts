@@ -192,7 +192,7 @@ export class Output implements OutputInput
    * Creates a new instance of Output with an optional set of options to
    * override the default values.
    *
-   * @param input The options to apply to the new instance.
+   * @param input The options to apply to the this instance.
    */
   public constructor(input?: OutputInput)
   {

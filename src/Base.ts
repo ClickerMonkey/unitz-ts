@@ -940,4 +940,32 @@ export class Base
     return true;
   }
 
+  /**
+   * Returns the number of ranges in this instance.
+   */
+  public get length(): number
+  {
+    return this.ranges.length;
+  }
+
+  /**
+   * Returns true if this instance has a single fixed value.
+   *
+   * @see [[Range.isFixed]]
+   */
+  public get isFixed(): boolean
+  {
+    return this.ranges.length === 1 && this.ranges[ 0 ].isFixed;
+  }
+
+  /**
+   * Returns true if this instance has a single range.
+   *
+   * @see [[Range.isRange]]
+   */
+  public get isRange(): boolean
+  {
+    return this.ranges.length === 1 && this.ranges[ 0 ].isRange;
+  }
+
 }
