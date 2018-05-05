@@ -5,15 +5,7 @@ import { Plurality } from '../Plurality';
 
 
 /**
- * The Digital class which contains the following groups:
- *
- * - bit
- * - nibble
- * - byte
- * - kilo/mego/giga/tera/peta/exa/zetta/yotta byte
- * - kibi/mebi/gibi/tebi/pebi/exbi/zebi/yobi byte
- * - kilo/mego/giga/tera/peta/exa/zetta/yotta bit
- * - ki/mi/gi/ti/pi/ez/zi/yi bit
+ * @hidden
  */
 export let Digital = new Class('Digital')
   .addGroups([

@@ -1,4 +1,4 @@
-# Unitz
+mi# Unitz
 
 A unit parser, converter, & calculator for TypeScript and JS.
 
@@ -11,6 +11,9 @@ import { uz } from 'unitz';
 
 // Javascript
 var uz = Unitz.uz;
+
+// Add built-in units
+Unitz.Classes.addDefaults();
 
 // Parsing
 uz('2.5 cups'); // parses numbers
@@ -49,7 +52,7 @@ uz('1/2 tsp').numbers(); // = 0.5 tsp: convert to numbers
 // Sorting
 uz('1 tsp, 1 pt, 4 gal').sort(); // = 4 gal, 1 pt, 1 tsp: sort values
 
-// Dynamic
+// Dynamic unit groups
 uz('1 loaf').add('4 loaves').normalize(); // = 5 loaves
 
 // Output
@@ -119,3 +122,32 @@ Unitz.Core.isMoreNormal = function(fromValue, toValue, transform, forOutput) {
   return true;
 };
 ```
+
+### Supported Units
+
+**Angle**:
+- deg, °, degree, degrees
+- rad, radian, radians
+
+**Area**:
+- sqin, sq. in, sq in, in2, in^2, in&sup2;, inch2, inch^2, inch&sup2;, inches2, inches^2, inches&sup2;, square in, square inch, square inches
+- sqft, sq. ft, sq ft, ft2, ft^2, ft&sup2;, foot2, foot^2, foot&sup2;, feet2, feet^2, feet&sup2;, square ft, square foot, square feet
+- sqyd, sq. yd, sq yd, yd2, yd^2, yd&sup2;, yard2, yard^2, yard&sup2;, yards2, yards^2, yards&sup2;, square yd, square yard, square yards
+- acre, acres
+- sqmi, sq. mi, sq mi, mi2, mi^2, mi&sup2;, mile2, mile^2, mile&sup2;, miles2, miles^2, miles&sup2;, square mi, square mile, square miles
+- sqmm, sq. mm, sq mm, mm2, mm^2, mm&sup2;, millimeter2, millimeter^2, millimeter&sup2;, millimeters2, millimeters^2, millimeters&sup2;, square mm, square millimeter, square millimeters
+- sqcm, sq. cm, sq cm, cm2, cm^2, cm&sup2;, centimeter2, centimeter^2, centimeter&sup2;, centimeters2, centimeters^2, centimeters&sup2;, square cm, square centimeter, square centimeters
+- sqm, sq. m, sq m, m2, m^2, m&sup2;, meter2, meter^2, meter&sup2;, meters2, meters^2, meters&sup2;, square m, square meter, square meters
+- sqkm, sq. km, sq km, km2, km^2, km&sup2;, kilometer2, kilometer^2, kilometer&sup2;, kilometers2, kilometers^2, kilometers&sup2;, square km, square kilometer, square kilometers
+
+**Digital**:
+
+**Length**:
+
+**Temperature**:
+
+**Time**:
+
+**Volume**:
+
+**Weight**:

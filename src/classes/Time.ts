@@ -5,20 +5,7 @@ import { Plurality } from '../Plurality';
 
 
 /**
- * The Time class which contains the following groups.
- *
- * - nanosecond
- * - microsecond
- * - millisecond
- * - second
- * - hour
- * - day
- * - week
- * - year
- * - score
- * - decade
- * - centry
- * - millennium
+ * @hidden
  */
 export let Time = new Class('Time')
   .addGroups([

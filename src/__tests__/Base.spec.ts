@@ -3,10 +3,11 @@ import { uz } from '../Base'
 import { Transform } from '../Transform';
 import { System } from '../System';
 import { Output, OutputFormat } from '../Output';
-import { addDefaults } from '../classes/'
+import { Classes } from '../Classes'
 
 describe('Base', () => {
-  addDefaults()
+
+  Classes.addDefaults()
 
   it('parses ranges', () => {
     let u = uz('1 - 2 in^2, 23 1/4 lb')

@@ -24,4 +24,4 @@ export * from './Range';
 export * from './Base';
 
 // Classes
-export * from './classes/';
+export * from './Classes';

@@ -7,10 +7,7 @@ let RAD2DEG = 180 / Math.PI;
 let DEG2RAD = Math.PI / 180;
 
 /**
- * The Angle class which contains the following groups.
- *
- * - degree
- * - radian
+ * @hidden
  */
 export let Angle = new Class('Angle')
   .setBaseConversion('deg', 'rad', (x) => x * DEG2RAD)

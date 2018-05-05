@@ -307,13 +307,15 @@ export class Value
   }
 
   /**
+   * Determines the available conversions of this value for all groups
+   * that are valid for the given transform.
    *
-   *
-   * @param transform
-   * @param reverse
-   * @param callback
-   * @param callback.transformed
-   * @param callback.index
+   * @param transform Transform which controls the units and values acceptable.
+   * @param reverse Whether to iterate from largest units to smallest units
+   *  (`true`), or from smallest to largest (`false`).
+   * @param callback The function to invoke for each valid conversion.
+   * @param callback.transformed The conversion calculated.
+   * @param callback.index The index of the conversion during iteration.
    * @see [[Group.matches]]
    */
   public conversions(transform: Transform, reverse: boolean, callback: (transformed: Value, index: number) => void): void
@@ -328,12 +330,17 @@ export class Value
   }
 
   /**
+   * Returns a value based on this value with the unit that best represents the
+   * value. What is best is typically related to the magnitude of the value.
+   * Really small and really large values are harder for people to comprehend so
+   * the unit which results in the most normal looking value is determined.
    *
-   *
-   * @param transform
-   * @param forOutput
-   * @return
+   * @param transform Transform which controls the units and values acceptable.
+   * @param forOutput The output that may be used so the most normal looking
+   *  value can be determined.
+   * @return The most normal value found.
    * @see [[Value.conversions]]
+   * @see [[Core.isMoreNormal]]
    */
   public normalize(transform: Transform, forOutput: Output): Value
   {
@@ -363,10 +370,12 @@ export class Value
   }
 
   /**
+   * Calculates the sum of this value and the given addend scaled by some
+   * factor. This is equivalent to `result = this + (addend * scale)`.
    *
-   * @param addend
-   * @param scale
-   * @return
+   * @param addend The value to add to this.
+   * @param scale The factor to scale the addend by before adding it to this.
+   * @return A new instance.
    */
   public add(addend: Value, scale: number = 1): Value
   {
@@ -378,10 +387,12 @@ export class Value
   }
 
   /**
+   * Calculates the difference between this value and the subtrahend scaled by
+   * some factor. This is equivalent to `result = this - (subtrahend * scale)`.
    *
-   * @param subtrahend
-   * @param scale
-   * @return
+   * @param subtrahend The value to subtract from this.
+   * @param scale The factor to scale the subtrahend by before subtraction.
+   * @return A new instance.
    */
   public sub(subtrahend: Value, scale: number = 1): Value
   {
@@ -393,9 +404,11 @@ export class Value
   }
 
   /**
+   * Calculates a new value by multiplying this by a given factor. This is
+   * equivalent to `result = this * scale`.
    *
-   * @param scale
-   * @return
+   * @param scale The factor to scale this instance by.
+   * @return A new instance.
    */
   public mul(scale: number): Value
   {
@@ -403,7 +416,7 @@ export class Value
   }
 
   /**
-   * Converts this range to a string with the given output options taking into
+   * Converts this value to a string with the given output options taking into
    * account the global options.
    *
    * @param options The options to override the global output options.
@@ -418,11 +431,12 @@ export class Value
   }
 
   /**
+   * Returns a Value instance which is a number with the optional unit and group.
    *
-   * @param value
-   * @param unit
-   * @param group
-   * @return
+   * @param value The number.
+   * @param unit The unit, if any, of the number.
+   * @param group The group which matches the unit.
+   * @return A new instance.
    */
   public static fromNumber(value: number, unit: string = '', group: Group = null): Value
   {
@@ -430,11 +444,16 @@ export class Value
   }
 
   /**
+   * Returns a Value instance which tries to be a fraction given a range of
+   * denominators. If the number is already whole or a fraction close
+   * enough to the number cannot be found a value which is a number is returned.
    *
-   * @param value
-   * @param unit
-   * @param group
-   * @return
+   * @param value The number to try to find a fraction for.
+   * @param unit The unit, if any, of the number.
+   * @param group The group which matches the unit.
+   * @param minDen The starting denominator to inclusively try.
+   * @param maxDen The last denominator to inclusively try.
+   * @return A new instance.
    */
   public static fromNumberWithRange(value: number, unit: string = '', group: Group = null, minDen: number = 1, maxDen: number = 100): Value
   {
@@ -468,11 +487,32 @@ export class Value
     return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
   }
 
+  /**
+   * Returns a Value instance which tries to be a fraction based on the
+   * denominators of the group. If a valid fraction could not be found then the
+   * instance returned will be a number value. Since a unit is not passed here,
+   * the preferred unit of the group is used as the unit of the value.
+   *
+   * @param value The number to try to find a fraction for.
+   * @param group The group for the unit and also the denominators to try.
+   * @return A new instance.
+   */
   public static fromNumberForGroup(value: number, group: Group): Value
   {
     return this.fromNumberWithDenominators( value, group.denominators, group.preferredUnit, group );
   }
 
+  /**
+   * Returns a Value instance which tries to be a fraction based on the
+   * denominators of the group. If a valid fraction could not be found then the
+   * instance returned will be a number value.
+   *
+   * @param value The number to try to find a fraction for.
+   * @param denominators The array of denominators to try.
+   * @param unit The unit, if any, of the number.
+   * @param group The group which matches the unit.
+   * @return A new instance.
+   */
   public static fromNumberWithDenominators(value: number, denominators: number[], unit: string = '', group: Group = null): Value
   {
     let closestDenominator: number = 0;
@@ -505,6 +545,16 @@ export class Value
     return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
   }
 
+  /**
+   * Returns a Value instance for a given fraction specified by a numerator and
+   * denominator.
+   *
+   * @param num The numerator of the fraction.
+   * @param den The denominator of the fraction.
+   * @param unit The unit, if any, of the fraction.
+   * @param group The group which matches the unit.
+   * @return A new instance.
+   */
   public static fromFraction(num: number, den: number, unit: string = '', group: Group = null): Value
   {
     return new Value(num / den, num, den, unit, group);

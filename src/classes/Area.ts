@@ -5,17 +5,7 @@ import { Plurality } from '../Plurality';
 
 
 /**
- * The Area class which contains the following groups:
- *
- * - square inch
- * - square foot
- * - square yard
- * - acre
- * - square mile
- * - square millimeter
- * - square centimeter
- * - square meter
- * - square kilometer
+ * @hidden
  */
 export let Area = new Class('Area')
   .setBaseConversion('sqin', 'sqmm', (x) => x * 645.16)
@@ -91,6 +81,7 @@ export let Area = new Class('Area')
         'yards2': Plurality.PLURAL,
         'yards^2': Plurality.PLURAL,
         'yards\xb2': Plurality.PLURAL,
+        'square yd': Plurality.EITHER,
         'square yard': Plurality.SINGULAR,
         'square yards': Plurality.PLURAL
       }

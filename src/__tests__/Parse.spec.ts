@@ -1,11 +1,11 @@
 
 import { } from 'jest';
 import { Parse } from '../Parse';
-import { addDefaults } from '../classes/';
+import { Classes } from '../Classes';
 
 describe('Parse', () => {
 
-  addDefaults();
+  Classes.addDefaults()
 
   it('parseInput', () => {
 

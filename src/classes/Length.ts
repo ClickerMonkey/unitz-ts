@@ -5,18 +5,7 @@ import { Plurality } from '../Plurality';
 
 
 /**
- * The Length class which contains the following groups.
- *
- * - inch
- * - foot
- * - yard
- * - mile
- * - league
- * - millimeter
- * - centimeter
- * - decimeter
- * - meter
- * - kilometer
+ * @hidden
  */
 export let Length = new Class('Length')
   .setBaseConversion('in', 'mm', (x) => x * 25.4)

@@ -7,11 +7,7 @@ import { Plurality } from '../Plurality';
 let _C_: string = '\xb0C';
 
 /**
- * The Temperature class which contains the following groups.
- *
- * - celsius
- * - kelvin
- * - fahrenheit
+ * @hidden
  */
 export let Temperature = new Class('Temperature')
   .setBaseConversion('F', _C_, x => ((x - 32) * 5 / 9))

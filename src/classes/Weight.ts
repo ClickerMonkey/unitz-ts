@@ -5,14 +5,7 @@ import { Plurality } from '../Plurality';
 
 
 /**
- * The Weight clas which contains the following groups.
- *
- * - milligram
- * - gram
- * - kilogram
- * - ounce
- * - pound
- * - ton
+ * @hidden
  */
 export let Weight = new Class('Weight')
   .setBaseConversion('mg', 'oz', (x) => x * 0.000035274)

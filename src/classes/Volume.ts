@@ -5,26 +5,7 @@ import { Plurality } from '../Plurality';
 
 
 /**
- * The Volume clas which contains the following groups.
- *
- * - teaspoon
- * - tablespoon
- * - fluid ounce
- * - cup
- * - pint
- * - quart
- * - gallon
- * - milliliter
- * - centiliter
- * - decaliter
- * - kiloliter
- * - cubic millimeter
- * - cubic centimeter
- * - cubic meter
- * - cubic kilometer
- * - cubic inch
- * - cubic foot
- * - cubic yard
+ * @hidden
  */
 export let Volume = new Class('Volume')
   .setBaseConversion('tsp', 'ml', (x) => x * 4.92892)
