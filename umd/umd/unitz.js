@@ -3737,6 +3737,7 @@ var Area = new Class_Class('Area')
             'yards2': Plurality.PLURAL,
             'yards^2': Plurality.PLURAL,
             'yards\xb2': Plurality.PLURAL,
+            'square yd': Plurality.EITHER,
             'square yard': Plurality.SINGULAR,
             'square yards': Plurality.PLURAL
         }
@@ -4870,6 +4871,7 @@ var Weight = new Class_Class('Weight')
         denominators: [2, 3, 4, 10],
         units: {
             'ton': Plurality.EITHER,
+            'tonne': Plurality.SINGULAR,
             'tons': Plurality.PLURAL,
             'tonnes': Plurality.PLURAL
         }
