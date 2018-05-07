@@ -842,7 +842,7 @@ var Output_Output = (function () {
      * Creates a new instance of Output with an optional set of options to
      * override the default values.
      *
-     * @param input The options to apply to the this instance.
+     * @param input The options to apply to the new instance.
      */
     function Output(input) {
         /**
@@ -907,7 +907,7 @@ var Output_Output = (function () {
         return this;
     };
     /**
-     * Returns an output instance which matches the desired options. If no options
+     * Returns an Output instance which matches the desired options. If no options
      * are specified the reference to this instance is returned. If the options
      * are already an instance of Output its returned. If options are specified
      * a new instance is created with the options of this instance, and the given
@@ -2083,8 +2083,18 @@ var Value_Value = (function () {
      * @param scale The factor to scale this instance by.
      * @return A new instance.
      */
-    Value.prototype.mul = function (scale) {
+    Value.prototype.scale = function (scale) {
         return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
+    };
+    /**
+     * Calculates a new value by multiplying this by a given value. This is
+     * equivalent to `result = this * scale`.
+     *
+     * @param scale The value to scale this instance by.
+     * @return A new instance.
+     */
+    Value.prototype.mul = function (scale) {
+        return new Value(this.value * scale.value, this.num * scale.num, this.den * scale.den, this.unit, this.group);
     };
     /**
      * Converts this value to a string with the given output options taking into
@@ -2486,6 +2496,18 @@ var Range_Range = (function () {
      *
      * @param scale The amount to multiply the range by.
      * @return A new range.
+     * @see [[Value.scale]]
+     */
+    Range.prototype.scale = function (scale) {
+        var min = this.min.scale(scale);
+        var max = this.max.scale(scale);
+        return new Range(min, max);
+    };
+    /**
+     * Multiplies this range by a scale value.
+     *
+     * @param scale The amount to multiply the range by.
+     * @return A new range.
      * @see [[Value.mul]]
      */
     Range.prototype.mul = function (scale) {
@@ -2593,10 +2615,27 @@ var Base_Base = (function () {
      *
      * @param amount The factor to scale the ranges in this instance by.
      * @return A new instance.
-     * @see [[Range.mul]]
+     * @see [[Range.scale]]
      * @see [[Base.mutate]]
      */
     Base.prototype.scale = function (amount) {
+        return this.mutate(function (r) { return r.scale(amount); });
+    };
+    /**
+     * Scales the ranges in this instance by the given value and returns a
+     * new instance.
+     *
+     * *For example:*
+     * ```javascript
+     * uz('1c, 3/5m').scale(Value.fromFraction(2, 3)); // '2/3c, 6/15m'
+     * ```
+     *
+     * @param amount The value to scale the ranges in this instance by.
+     * @return A new instance.
+     * @see [[Range.mul]]
+     * @see [[Base.mutate]]
+     */
+    Base.prototype.mul = function (amount) {
         return this.mutate(function (r) { return r.mul(amount); });
     };
     // 1c, 3m SCALE TO 1/2c = 1/2c, 1.5m
@@ -2928,11 +2967,11 @@ var Base_Base = (function () {
      * @return A new instance.
      * @see [[Base.operate]]
      * @see [[Range.add]]
-     * @see [[Range.mul]]
+     * @see [[Range.scale]]
      */
     Base.prototype.add = function (input, scale) {
         if (scale === void 0) { scale = 1; }
-        return this.operate(input, function (a, b) { return a.add(b, scale); }, function (a) { return a.mul(scale); });
+        return this.operate(input, function (a, b) { return a.add(b, scale); }, function (a) { return a.scale(scale); });
     };
     /**
      * Subtracts the given input from the ranges of this instance. When the ranges
@@ -2950,11 +2989,11 @@ var Base_Base = (function () {
      * @return A new instance.
      * @see [[Base.operate]]
      * @see [[Range.sub]]
-     * @see [[Range.mul]]
+     * @see [[Range.scale]]
      */
     Base.prototype.sub = function (input, scale) {
         if (scale === void 0) { scale = 1; }
-        return this.operate(input, function (a, b) { return a.sub(b, scale); }, function (a) { return a.mul(-scale); });
+        return this.operate(input, function (a, b) { return a.sub(b, scale); }, function (a) { return a.scale(-scale); });
     };
     /**
      * Subtracts the given input from the ranges of this instance. When the ranges
@@ -3049,7 +3088,7 @@ var Base_Base = (function () {
      *
      * *For example:*
      * ```javascript
-     * uz('1.5pt').mutate(r => r.mul(2)); // '3pt'
+     * uz('1.5pt').mutate(r => r.scale(2)); // '3pt'
      * ```
      *
      * @param mutator The function which may return a range.
@@ -3357,7 +3396,210 @@ var Base_Base = (function () {
 }());
 
 
+// CONCATENATED MODULE: ./src/Translations.ts
+
+
+
+
+/**
+ * Creates a [[Translator]] which matches against a regular expression and when
+ * the user input matches the regular expression another handler function is
+ * called to translate the input. Optionally a constant value can be passed
+ * to this function and down to the translator.
+ *
+ * @param regex The regular expression to match against user input.
+ * @param handler The function to call if the input matched the expression.
+ * @param vars The constant value to pass to the [[RegexTranslator]].
+ * @return A [[Translator]] function.
+ */
+function newRegexTranslator(regex, handler, vars) {
+    return function (x, groups) {
+        var matches = x.match(regex);
+        if (matches) {
+            x = handler(matches, groups, vars);
+        }
+        return x;
+    };
+}
+/**
+ * The class which holds [[Translator]]s to manipulate user input into something
+ * more understandable to the [[Parse]] class.
+ */
+var Translations_Translations = (function () {
+    function Translations() {
+    }
+    /**
+     * Adds all translators in the library to be available when parsing.
+     */
+    Translations.addDefaults = function () {
+        this.addTranslator(this.Quantity);
+        this.addTranslator(this.NumberWords);
+        this.addTranslator(this.FractionOfNumber);
+        this.addTranslator(this.AndFraction);
+        this.addTranslator(this.QuantityValue);
+    };
+    /**
+     * Adds the given translator to the list of registered translators. This
+     * translator will be called last.
+     *
+     * @param translator The function which translates user input.
+  
+     */
+    Translations.addTranslator = function (translator) {
+        this.registered.push(translator);
+    };
+    /**
+     * Translates the user input based on the registered translators and returns
+     * the final string ready to be parsed.
+     *
+     * @param input The input to translate.
+     * @param groups The factory which converts units to group.
+     * @return The translated string.
+     */
+    Translations.translate = function (input, groups) {
+        var registered = this.registered;
+        for (var i = 0; i < registered.length; i++) {
+            input = registered[i](input, groups);
+        }
+        return input;
+    };
+    /**
+     * An array of translators that have been registered.
+     *
+     * @see [[Translations.addTranslator]]
+     */
+    Translations.registered = [];
+    /**
+     * A translator which takes a word which represents a number and converts it
+     * the respective number.
+     *
+     * *Examples:*
+     * - one [unit]
+     * - dozen [unit]
+     * - an eleven [unit]
+     */
+    Translations.NumberWords = newRegexTranslator(/^(an?\s+|)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety)\s+(.*)/i, 
+    // @ts-ignore
+    function (matches, groups, vars) {
+        var wordName = matches[2];
+        var remaining = matches[3];
+        return vars[wordName] + ' ' + remaining;
+    }, {
+        one: '1',
+        two: '2',
+        three: '3',
+        four: '4',
+        five: '5',
+        six: '6',
+        seven: '7',
+        eight: '8',
+        nine: '9',
+        ten: '10',
+        eleven: '11',
+        twelve: '12',
+        dozen: '12',
+        thirteen: '13',
+        fouteen: '14',
+        fifteen: '15',
+        sixteen: '16',
+        seventeen: '17',
+        eighteen: '18',
+        nineteen: '19',
+        twenty: '20',
+        thirty: '30',
+        fourty: '40',
+        fifty: '50',
+        sixty: '60',
+        seventy: '70',
+        eighty: '80',
+        ninety: '90'
+    });
+    /**
+     * A translator which takes a word which represents a fraction and multiplies
+     * it by the following value.
+     *
+     * *Examples:*
+     * - a third of an acre
+     * - half a dozen eggs
+     * - a seventh of a mile
+     */
+    Translations.FractionOfNumber = newRegexTranslator(/^(an?\s+|one|)(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s+(a\s+|an\s+|of\s+an?\s+|of\s+)(.*)/i, function (matches, groups, vars) {
+        var remaining = matches[4];
+        var parsed = Parse_Parse.valueFromString(remaining, groups);
+        var fractionName = matches[2].toLowerCase();
+        var fraction = vars[fractionName];
+        return parsed.mul(fraction).output(Core_Core.globalOutput);
+    }, {
+        half: Value_Value.fromFraction(1, 2),
+        third: Value_Value.fromFraction(1, 3),
+        fourth: Value_Value.fromFraction(1, 4),
+        fifth: Value_Value.fromFraction(1, 5),
+        sixth: Value_Value.fromFraction(1, 6),
+        seventh: Value_Value.fromFraction(1, 7),
+        eighth: Value_Value.fromFraction(1, 8),
+        nineth: Value_Value.fromFraction(1, 9),
+        tenth: Value_Value.fromFraction(1, 10)
+    });
+    /**
+     * A translator which takes a word which represents a fraction and multiplies
+     * it by the following value.
+     *
+     * *Examples:*
+     * - 23 and a half eggs
+     * - one and a half acres
+     * - 23 and a third
+     * - 12 and one fourth
+     */
+    Translations.AndFraction = newRegexTranslator(/^(.*)\s+and\s+(an?|one)\s+(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s*(.*)/i, function (matches, groups, vars) {
+        var prefix = matches[1];
+        var units = matches[4];
+        var value = Parse_Parse.valueFromString(prefix + units, groups);
+        var fractionName = matches[3].toLowerCase();
+        var fraction = vars[fractionName];
+        return value.add(fraction).output(Core_Core.globalOutput);
+    }, {
+        half: Value_Value.fromFraction(1, 2),
+        third: Value_Value.fromFraction(1, 3),
+        fourth: Value_Value.fromFraction(1, 4),
+        fifth: Value_Value.fromFraction(1, 5),
+        sixth: Value_Value.fromFraction(1, 6),
+        seventh: Value_Value.fromFraction(1, 7),
+        eighth: Value_Value.fromFraction(1, 8),
+        nineth: Value_Value.fromFraction(1, 9),
+        tenth: Value_Value.fromFraction(1, 10)
+    });
+    /**
+     * A translator which takes the amount in parenthesis and moves it out.
+     *
+     * *Examples:*
+     * - (one and a half) acre
+     * - (12) tacos
+     */
+    Translations.Quantity = newRegexTranslator(/^\((.*)\)(.*)$/, function (matches) {
+        var quantity = matches[1];
+        var unit = matches[2];
+        return quantity + unit;
+    });
+    /**
+     * A translator which takes the amount in parenthesis and moves it out.
+     *
+     * *Examples:*
+     * - 1 (6 ounce)
+     * - 5 (3 liter)
+     */
+    Translations.QuantityValue = newRegexTranslator(/^\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|))\s*\(\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*))\s*\)\s*$/i, function (matches, groups) {
+        var quantityInput = matches[1];
+        var quantity = Parse_Parse.valueFromString(quantityInput, groups);
+        var alternativeInput = matches[8];
+        var alternative = Parse_Parse.valueFromString(alternativeInput, groups);
+        return alternative.mul(quantity).output(Core_Core.globalOutput);
+    });
+    return Translations;
+}());
+
+
 // CONCATENATED MODULE: ./src/Parse.ts
+
 
 
 
@@ -3514,7 +3756,8 @@ var Parse_Parse = (function () {
      * @return The instance parsed from the input.
      */
     Parse.valueFromString = function (input, groups) {
-        var parsed = this.input(input);
+        var translated = Translations_Translations.translate(input, groups);
+        var parsed = this.input(translated);
         return parsed ? this.valueFromResult(parsed, parsed.unit, groups) : Value_Value.INVALID;
     };
     /**
@@ -5038,6 +5281,8 @@ var Classes_Classes = (function () {
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "uz", function() { return uz; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Base", function() { return Base_Base; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Classes", function() { return Classes_Classes; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "newRegexTranslator", function() { return newRegexTranslator; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Translations", function() { return Translations_Translations; });
 
 // Enums
 
@@ -5057,6 +5302,8 @@ var Classes_Classes = (function () {
 
 
 // Classes
+
+// Translations
 
 
 

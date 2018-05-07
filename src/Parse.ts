@@ -5,6 +5,7 @@ import { Group, GroupFactory } from './Group';
 import { Range, RangeList } from './Range';
 import { Value } from './Value';
 import { Base } from './Base';
+import { Translations } from './Translations';
 
 
 /**
@@ -222,7 +223,8 @@ export class Parse
    */
   public static valueFromString(input: string, groups: GroupFactory): Value
   {
-    let parsed: ParseResult = this.input( input );
+    let translated: string = Translations.translate( input, groups );
+    let parsed: ParseResult = this.input( translated );
 
     return parsed ? this.valueFromResult(parsed, parsed.unit, groups) : Value.INVALID;
   }

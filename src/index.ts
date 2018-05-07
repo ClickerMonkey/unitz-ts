@@ -25,3 +25,6 @@ export * from './Base';
 
 // Classes
 export * from './Classes';
+
+// Translations
+export * from './Translations';

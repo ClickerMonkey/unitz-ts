@@ -65,6 +65,24 @@ uz({ min: '4c', max: '8c' }); // a range with value strings
 uz({ min:{value:1}, max:{value:2, unit:'m'} }); // range with value objects
 uz([ '4c', '1-2m' ]); // range list of range/value strings
 uz([ {value: 34, unit: 'ms'}, {min:'1m', max:'2m' ]); // range list of range/value objects
+
+// Translations
+Unitz.Translations.addDefaults();
+
+uz('one pound'); // = 1 pound
+uz('dozen tacos'); // = 12 tacos
+uz('an eleven meters'); // = 11 meters
+uz('a third of an acre'); // = 1/3acre
+uz('half a dozen eggs'); // = 6eggs
+uz('a seventh of a mile'); // = 1/7mile
+uz('23 and a half eggs'); // = 23 1/2eggs
+uz('one and a half acres'); // = 1 1/2acres
+uz('23 and a third'); // = 23 1/3
+uz('12 and one fourth cups'); // = 12 1/4cups
+uz('(one and a half) acre'); // = 1 1/2acre
+uz('(12) tacos'); // = 12 tacos
+uz('1 (6 ounce)'); // = 6ounce
+uz('5 (3 liter)'); // = 15liter
 ```
 
 ### Customization

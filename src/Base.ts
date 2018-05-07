@@ -61,10 +61,29 @@ export class Base
    *
    * @param amount The factor to scale the ranges in this instance by.
    * @return A new instance.
-   * @see [[Range.mul]]
+   * @see [[Range.scale]]
    * @see [[Base.mutate]]
    */
   public scale(amount: number): Base
+  {
+    return this.mutate(r => r.scale( amount ));
+  }
+
+  /**
+   * Scales the ranges in this instance by the given value and returns a
+   * new instance.
+   *
+   * *For example:*
+   * ```javascript
+   * uz('1c, 3/5m').scale(Value.fromFraction(2, 3)); // '2/3c, 6/15m'
+   * ```
+   *
+   * @param amount The value to scale the ranges in this instance by.
+   * @return A new instance.
+   * @see [[Range.mul]]
+   * @see [[Base.mutate]]
+   */
+  public mul(amount: Value): Base
   {
     return this.mutate(r => r.mul( amount ));
   }
@@ -456,11 +475,11 @@ export class Base
    * @return A new instance.
    * @see [[Base.operate]]
    * @see [[Range.add]]
-   * @see [[Range.mul]]
+   * @see [[Range.scale]]
    */
   public add(input: BaseInput, scale: number = 1): Base
   {
-    return this.operate(input, (a, b) => a.add(b, scale), (a) => a.mul( scale ));
+    return this.operate(input, (a, b) => a.add(b, scale), (a) => a.scale( scale ));
   }
 
   /**
@@ -479,11 +498,11 @@ export class Base
    * @return A new instance.
    * @see [[Base.operate]]
    * @see [[Range.sub]]
-   * @see [[Range.mul]]
+   * @see [[Range.scale]]
    */
   public sub(input: BaseInput, scale: number = 1): Base
   {
-    return this.operate(input, (a, b) => a.sub(b, scale), (a) => a.mul( -scale ));
+    return this.operate(input, (a, b) => a.sub(b, scale), (a) => a.scale( -scale ));
   }
 
   /**
@@ -602,7 +621,7 @@ export class Base
    *
    * *For example:*
    * ```javascript
-   * uz('1.5pt').mutate(r => r.mul(2)); // '3pt'
+   * uz('1.5pt').mutate(r => r.scale(2)); // '3pt'
    * ```
    *
    * @param mutator The function which may return a range.

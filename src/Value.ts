@@ -410,9 +410,21 @@ export class Value
    * @param scale The factor to scale this instance by.
    * @return A new instance.
    */
-  public mul(scale: number): Value
+  public scale(scale: number): Value
   {
     return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
+  }
+
+  /**
+   * Calculates a new value by multiplying this by a given value. This is
+   * equivalent to `result = this * scale`.
+   *
+   * @param scale The value to scale this instance by.
+   * @return A new instance.
+   */
+  public mul(scale: Value): Value
+  {
+    return new Value(this.value * scale.value, this.num * scale.num, this.den * scale.den, this.unit, this.group);
   }
 
   /**

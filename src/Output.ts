@@ -192,7 +192,7 @@ export class Output implements OutputInput
    * Creates a new instance of Output with an optional set of options to
    * override the default values.
    *
-   * @param input The options to apply to the this instance.
+   * @param input The options to apply to the new instance.
    */
   public constructor(input?: OutputInput)
   {
@@ -224,7 +224,7 @@ export class Output implements OutputInput
   }
 
   /**
-   * Returns an output instance which matches the desired options. If no options
+   * Returns an Output instance which matches the desired options. If no options
    * are specified the reference to this instance is returned. If the options
    * are already an instance of Output its returned. If options are specified
    * a new instance is created with the options of this instance, and the given

@@ -313,9 +313,24 @@ export class Range
    *
    * @param scale The amount to multiply the range by.
    * @return A new range.
+   * @see [[Value.scale]]
+   */
+  public scale(scale: number): Range
+  {
+    let min: Value = this.min.scale(scale);
+    let max: Value = this.max.scale(scale);
+
+    return new Range(min, max);
+  }
+
+  /**
+   * Multiplies this range by a scale value.
+   *
+   * @param scale The amount to multiply the range by.
+   * @return A new range.
    * @see [[Value.mul]]
    */
-  public mul(scale: number): Range
+  public mul(scale: Value): Range
   {
     let min: Value = this.min.mul(scale);
     let max: Value = this.max.mul(scale);
