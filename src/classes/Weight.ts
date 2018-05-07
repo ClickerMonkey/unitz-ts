@@ -88,6 +88,7 @@ export let Weight = new Class('Weight')
       denominators: [2, 3, 4, 10],
       units: {
         'ton': Plurality.EITHER,
+        'tonne': Plurality.SINGULAR,
         'tons': Plurality.PLURAL,
         'tonnes': Plurality.PLURAL
       }

@@ -57,6 +57,14 @@ uz('1 loaf').add('4 loaves').normalize(); // = 5 loaves
 
 // Output
 uz('1 cup').output( options ); // the above functions return objects, to get a string you must call output which can take options to override the global output options.
+
+// Alternative Input Formats
+uz({ value: 34, unit: 'ms' }); // a single number value
+uz({ num: 4, den: 12, unit: 'c' }); // a single fraction value
+uz({ min: '4c', max: '8c' }); // a range with value strings
+uz({ min:{value:1}, max:{value:2, unit:'m'} }); // range with value objects
+uz([ '4c', '1-2m' ]); // range list of range/value strings
+uz([ {value: 34, unit: 'ms'}, {min:'1m', max:'2m' ]); // range list of range/value objects
 ```
 
 ### Customization
@@ -141,13 +149,104 @@ Unitz.Core.isMoreNormal = function(fromValue, toValue, transform, forOutput) {
 - sqkm, sq. km, sq km, km2, km^2, km&sup2;, kilometer2, kilometer^2, kilometer&sup2;, kilometers2, kilometers^2, kilometers&sup2;, square km, square kilometer, square kilometers
 
 **Digital**:
+- b, bit, bits
+- nibble, nibbles, nybble, nyble, half-byte, half byte, tetrade, semi-octent, quadbit, quartet
+- B, byte, bytes
+- kB, kilobyte, kilobytes
+- mB, megabyte, megabytes
+- gB, gigabyte, gigabytes
+- tB, terabyte, terabytes
+- pB, petabyte, petabytes
+- eB, exabyte, exabytes
+- zB, zettabyte, zettabytes
+- yB, yottabyte, yottabytes
+- KB, kibibyte, kibibytes
+- MB, mebibyte, mebibytes
+- GB, gibibyte, gibibytes
+- TB, tebibyte, tebibytes
+- PB, pebibyte, pebibytes
+- EB, exbibyte, exbibytes
+- ZB, zebibyte, zebibytes
+- YB, yobibyte, yobibytes
+- kb, kilobit, kilobits
+- mb, megabit, megabits
+- gb, gigabit, gigabits
+- tb, terabit, terabits
+- pb, petabit, petabits
+- eb, exabit, exabits
+- zb, zettabit, zettabits
+- yb, yottabit, yottabits
+- kibit, kibibit, kibibits
+- mibit, mebibit, mebibits
+- gibit, gibibit, gibibits
+- tibit, tebibit, tebibits
+- pibit, pebibit, pebibits
+- eibit, exbibit, exbibits
+- zibit, zebibit, zebibits
+- yibit, yobibit, yobibits
 
 **Length**:
+- in, inch, inches, "
+- ft, foot, feet, '
+- yd, yard, yards, yds
+- mi, mile, miles
+- league, leagues
+- mm, millimeter, millimeters
+- cm, centimeter, centimeters
+- dc, decimeter, decimeters
+- m, meter, meters
+- km, kilometer, kilometers
 
 **Temperature**:
+- F, °F, Fahrenheit
+- °C, Celsius
+- K, kelvin, kelvins
 
 **Time**:
+- ns, nano, nanos, nanosecond, nanoseconds
+- us, micro, micros, microsecond, microseconds
+- ms, milli, millis, millisecond, milliseconds
+- s, sec, secs, second, seconds
+- min, mins, minute, minutes
+- hr, hrs, hour, hours
+- day, days
+- wk, wks, week, weeks,
+- yr, yrs, year, years
+- score
+- decade, decades
+- biennium, bienniums
+- triennium, trienniums
+- quadrennium, quadrenniums
+- lustrum, lustrums
+- decade, decades
+- century, centurys, centuries
+- millennium, millenniums, millennia, millennias
 
 **Volume**:
+- ts, tsp, tsps, teaspoon, teaspoons
+- tbsp, tbsp, tablespoon, tablespoons
+- floz, fl-oz, fl oz, fluid ounce, fluid ounces, fl. oz, oz. fl, oz fl
+- c, cup, cups
+- pt, pint, pints,
+- qt, quart, quarts
+- gal gals, gallon, gallons
+- ml, millilitre, millilitres, milliliter, milliliters
+- cl, centilitre, centilitre, centiliter, centiliters
+- l, litre, litres, liter, liters
+- dl, decalitre, decalitres, decaliter, decaliters
+- kl, kilolitre, kiloletres, kiloliter, kiloliters
+- mm3, mm^3, mm&sup3;, millimeter3, millimeter^3, millimeter&sup3;, millimeters3, millimeters^3, millimeters&sup3;, cubic mm, cubic millimeter, cubic millimeters
+- cm3, cm^3, cm&sup3;, centimeter3, centimeter^3, centimeter&sup3;, centimeters3, centimeters^3, centimeters&sup3;, cubic cm, cubic centimeter, cubic centimeters
+- m3, m^3, m&sup3;, meter3, meter^3, meter&sup3;, meters3, meters^3, meters&sup3;, cubic m, cubic meter, cubic meters
+- km3, km^3, km&sup3;, kilometer3, kilometer^3, kilometer&sup3;, kilometers3, kilometers^3, kilometers&sup3;, cubic km, cubic kilometer, cubic kilometers
+- in3, in^3, in&sup3;, inch3, inch^3, inch&sup3;, inches3, inches^3, inches&sup3;, cubic in, cubic inch, cubic inches
+- ft3, ft^3, ft&sup3;, foot3, foot^3, foot&sup3;, feet3, feet^3, feet&sup3;, cubic ft, cubic foot, cubic feet
+- yd3, yd^3, yd&sup3;, yard3, yard^3, yard&sup3;, yards3, yards^3, yards&sup3;, cubic yd, cubic yard, cubic yards
 
 **Weight**:
+- mg, milligram, milligrams
+- g, gram, grams
+- kg, kilo, kilos, kilogram, kilograms
+- oz, ounce, ounces
+- lb, lbs, pound, pounds
+- ton, tons, tonne, tonnes
