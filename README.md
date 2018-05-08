@@ -4,6 +4,7 @@ A unit parser, converter, & calculator for TypeScript and JS.
 
 - [Documentation](https://clickermonkey.github.io/unitz-ts/docs/)
 - [Online Tool](https://clickermonkey.github.io/unitz-ts/tester.html)
+- Installation `npm install unitz-ts`, `bower install unitz-ts`, [download](https://github.com/ClickerMonkey/unitz-ts/tree/master/umd)
 
 ```javascript
 // TypeScript
