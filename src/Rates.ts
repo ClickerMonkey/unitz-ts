@@ -44,7 +44,7 @@ export class Rates
   public static addDefaults()
   {
     this.add('miles', 'hour', ['mph']);
-    this.add('nautical miles', 'hour', ['knot']);
+    this.add('nautical miles', 'hour', ['knot', 'knots']);
     this.add('kilometers', 'hour', ['kph', 'kmph', 'km. hr.', 'k.p.h.', 'k.m.p.h.', 'km:h']);
   }
 

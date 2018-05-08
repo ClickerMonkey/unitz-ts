@@ -23,6 +23,7 @@ uz('mile'); // implicit values (1)
 uz('4-5 seconds'); // parses ranges
 uz('4s - 3min'); // parses ranges with mixed units
 uz('2c, 4s, 23mi'); // mixed unit classes
+uz('23 m/s, 60 mph, 2 1/2 liters per second'); // rates
 
 // Transformations
 uz('1.5 pints').normalize(); // = 3 cups: convert to unit in same class which is more human friendly
@@ -83,6 +84,12 @@ uz('(one and a half) acre'); // = 1 1/2acre
 uz('(12) tacos'); // = 12 tacos
 uz('1 (6 ounce)'); // = 6ounce
 uz('5 (3 liter)'); // = 15liter
+
+// Rates (aliases)
+Unitz.Rates.addDefaults();
+
+uz('60 mph');; // 60 miles/hour
+uz('23 knots');; // 23 nautical miles/hour
 ```
 
 ### Customization
@@ -118,6 +125,9 @@ Unitz.Core.getGroup('cup').addUnits({
 
 // Remove some units from an existing group
 Unitz.Core.getGroup('c').removeUnits(['cup', 'cups']);
+
+// Add my own rate
+Unitz.Rates.add('feet', 'second', ['fps']);
 
 // Add my own class
 Unitz.Core.addClass(new Class('Loaf', [
