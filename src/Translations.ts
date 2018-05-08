@@ -2,7 +2,6 @@
 import { Core } from './Core';
 import { Parse } from './Parse';
 import { Value } from './Value';
-import { GroupFactory } from './Group';
 
 
 /**
@@ -11,10 +10,9 @@ import { GroupFactory } from './Group';
  * [[Parse]] class.
  *
  * @param x The input to parse.
- * @param groups The factory which converts units to groups.
  * @return The translated input or the original input.
  */
-export type Translator = (x: string, groups: GroupFactory) => string;
+export type Translator = (x: string) => string;
 
 /**
  * A function which provides a regular expression match, a group factory, and
@@ -22,10 +20,9 @@ export type Translator = (x: string, groups: GroupFactory) => string;
  * return the translated value.
  *
  * @param matches The regular expression group matches.
- * @param groups The factory which converts units to group.
  * @param vars The constant variable passed to [[newRegexTranslator]].
  */
-export type RegexTranslator = (matches: any[], groups: GroupFactory, vars?: any) => string;
+export type RegexTranslator = (matches: any[], vars?: any) => string;
 
 /**
  * Creates a [[Translator]] which matches against a regular expression and when
@@ -40,13 +37,13 @@ export type RegexTranslator = (matches: any[], groups: GroupFactory, vars?: any)
  */
 export function newRegexTranslator(regex: RegExp, handler: RegexTranslator, vars?: any): Translator
 {
-  return (x: string, groups: GroupFactory) =>
+  return (x: string) =>
   {
     let matches = x.match( regex );
 
     if (matches)
     {
-      x = handler( matches, groups, vars );
+      x = handler( matches, vars );
     }
 
     return x;
@@ -63,7 +60,7 @@ export class Translations
   /**
    * An array of translators that have been registered.
    *
-   * @see [[Translations.addTranslator]]
+   * @see [[Translations.add]]
    */
   public static registered: Translator[] = [];
 
@@ -72,11 +69,11 @@ export class Translations
    */
   public static addDefaults()
   {
-    this.addTranslator( this.Quantity );
-    this.addTranslator( this.NumberWords );
-    this.addTranslator( this.FractionOfNumber );
-    this.addTranslator( this.AndFraction );
-    this.addTranslator( this.QuantityValue );
+    this.add( this.Quantity );
+    this.add( this.NumberWords );
+    this.add( this.FractionOfNumber );
+    this.add( this.AndFraction );
+    this.add( this.QuantityValue );
   }
 
   /**
@@ -86,7 +83,7 @@ export class Translations
    * @param translator The function which translates user input.
 
    */
-  public static addTranslator(translator: Translator)
+  public static add(translator: Translator)
   {
     this.registered.push( translator );
   }
@@ -96,16 +93,15 @@ export class Translations
    * the final string ready to be parsed.
    *
    * @param input The input to translate.
-   * @param groups The factory which converts units to group.
    * @return The translated string.
    */
-  public static translate(input: string, groups: GroupFactory): string
+  public static translate(input: string): string
   {
     let registered = this.registered;
 
     for (let i = 0; i < registered.length; i++)
     {
-      input = registered[ i ]( input, groups );
+      input = registered[ i ]( input );
     }
 
     return input;
@@ -123,8 +119,7 @@ export class Translations
   public static NumberWords: Translator =
     newRegexTranslator(
       /^(an?\s+|)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety)\s+(.*)/i,
-      // @ts-ignore
-      (matches, groups, vars) => {
+      (matches, vars) => {
         let wordName: string = matches[ 2 ];
         let remaining: string = matches[ 3 ];
 
@@ -173,9 +168,9 @@ export class Translations
   public static FractionOfNumber: Translator =
     newRegexTranslator(
       /^(an?\s+|one|)(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s+(a\s+|an\s+|of\s+an?\s+|of\s+)(.*)/i,
-      (matches, groups, vars) => {
+      (matches, vars) => {
         let remaining: string = matches[ 4 ];
-        let parsed: Value = Parse.valueFromString( remaining, groups );
+        let parsed: Value = Parse.valueFromString( remaining );
         let fractionName: string = matches[ 2 ].toLowerCase();
         let fraction: Value = vars[ fractionName ];
 
@@ -206,10 +201,10 @@ export class Translations
   public static AndFraction: Translator =
     newRegexTranslator(
       /^(.*)\s+and\s+(an?|one)\s+(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s*(.*)/i,
-      (matches, groups, vars) => {
+      (matches, vars) => {
         let prefix: string = matches[ 1 ];
         let units: string = matches[ 4 ];
-        let value: Value = Parse.valueFromString( prefix + units, groups );
+        let value: Value = Parse.valueFromString( prefix + units );
         let fractionName: string = matches[ 3 ].toLowerCase();
         let fraction: Value = vars[ fractionName ];
 
@@ -255,11 +250,11 @@ export class Translations
   public static QuantityValue: Translator =
     newRegexTranslator(
       /^\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|))\s*\(\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*))\s*\)\s*$/i,
-      (matches, groups) => {
+      (matches) => {
         let quantityInput: string = matches[ 1 ];
-        let quantity: Value = Parse.valueFromString( quantityInput, groups );
+        let quantity: Value = Parse.valueFromString( quantityInput );
         let alternativeInput: string = matches[ 8 ];
-        let alternative: Value = Parse.valueFromString( alternativeInput, groups );
+        let alternative: Value = Parse.valueFromString( alternativeInput );
 
         return alternative.mul( quantity ).output( Core.globalOutput );
       }

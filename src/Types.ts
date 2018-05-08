@@ -120,6 +120,11 @@ export interface ParseResult
    * The unit parsed from the input.
    */
   unit: string;
+
+  /**
+   * The rate unit parsed from the input.
+   */
+  rate: string;
 }
 
 
@@ -144,6 +149,10 @@ export interface ValueDefinition
    * @see [[Value.unit]]
    */
   unit?: string;
+  /**
+   * @see [[Value.rate]]
+   */
+  rate?: string;
 }
 
 

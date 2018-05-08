@@ -15,7 +15,7 @@ export class Value
   /**
    * A value instance which contains invalid numbers.
    */
-  public static INVALID: Value = new Value(Number.NaN, Number.NaN, 1, '', null);
+  public static INVALID: Value = new Value(Number.NaN, Number.NaN, 1, '', null, '', null);
 
   /**
    * The number parsed or num / den if a fraction was parsed.
@@ -42,7 +42,17 @@ export class Value
   /**
    * The unit parsed or chosen to be output to the user.
    */
-  public unit: string;
+  public readonly unit: string;
+
+  /**
+   * The group determined based on the rate.
+   */
+  public readonly rateGroup: Group;
+
+  /**
+   * The unit parsed or chosen for rate to be output to the user.
+   */
+  public readonly rate: string;
 
 
   /**
@@ -55,7 +65,7 @@ export class Value
    * @param unit [[Value.unit]]
    * @param group [[Value.group]]
    */
-  public constructor(value: number, num: number, den: number, unit: string, group: Group)
+  public constructor(value: number, num: number, den: number, unit: string, group: Group, rate: string, rateGroup: Group)
   {
     let divisor: number = fn.gcd(num, den);
     this.value = value;
@@ -63,6 +73,8 @@ export class Value
     this.den = den / divisor;
     this.unit = unit;
     this.group = group;
+    this.rate = rate;
+    this.rateGroup = rateGroup;
   }
 
   /**
@@ -105,6 +117,14 @@ export class Value
   public get isSingular(): boolean
   {
     return fn.isSingular( this.value );
+  }
+
+  /**
+   * Returns true if this value is a rate.
+   */
+  public get isRate(): boolean
+  {
+    return !!this.rate;
   }
 
   /**
@@ -205,6 +225,43 @@ export class Value
   }
 
   /**
+   * Calculates the scale necessary to switch this value from the current rate
+   * to the provided rate.
+   *
+   * @param rate The rate group.
+   * @return The calculated scale.
+   */
+  public getRateScale(rate: Group): number
+  {
+    return rate ? rate.parent.convert( 1, rate, this.rateGroup, 1 ) : 1;
+  }
+
+  /**
+   * Determines whether the given value is compatible with this value to perform
+   * operations with.
+   *
+   * @param other The value to test against.
+   * @return True if the given value has compatible unit and rate groups.
+   */
+  public isMatch(other: Value): boolean
+  {
+    let group: Group = this.group;
+    let groupOther: Group = other.group;
+    let groupMatch: boolean = groupOther === group || ( groupOther && group && groupOther.parent === group.parent );
+
+    if (!groupMatch)
+    {
+      return false;
+    }
+
+    let rate: Group = this.rateGroup;
+    let rateOther: Group = other.rateGroup;
+    let rateMatch: boolean = rateOther === rate || ( rateOther && rate && rateOther.parent === rate.parent );
+
+    return rateMatch;
+  }
+
+  /**
    * Returns a version of this value with the preferred unit.
    *
    * @return A new value or the reference to this instance if it's groupless.
@@ -212,7 +269,7 @@ export class Value
    */
   public preferred(): Value
   {
-    return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group) : this;
+    return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group, this.rateGroup ? this.rateGroup.preferredUnit : this.rate, this.rateGroup) : this;
   }
 
   /**
@@ -222,7 +279,7 @@ export class Value
    */
   public copy(): Value
   {
-    return new Value(this.value, this.num, this.den, this.unit, this.group);
+    return new Value(this.value, this.num, this.den, this.unit, this.group, this.rate, this.rateGroup);
   }
 
   /**
@@ -232,7 +289,7 @@ export class Value
    */
   public zero(): Value
   {
-    return new Value(0, 0, 1, this.unit, this.group);
+    return new Value(0, 0, 1, this.unit, this.group, this.rate, this.rateGroup);
   }
 
   /**
@@ -243,7 +300,7 @@ export class Value
    */
   public truncated(): Value
   {
-    return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
+    return new Value(this.truncate, this.truncate, 1, this.unit, this.group, this.rate, this.rateGroup);
   }
 
   /**
@@ -260,7 +317,7 @@ export class Value
 
     if (this.group)
     {
-      return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group);
+      return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group, this.rate, this.rateGroup);
     }
 
     return this;
@@ -275,7 +332,7 @@ export class Value
   {
     if (this.isFraction)
     {
-      return new Value(this.value, this.value, 1, this.unit, this.group);
+      return new Value(this.value, this.value, 1, this.unit, this.group, this.rate, this.rateGroup);
     }
 
     return this;
@@ -285,13 +342,16 @@ export class Value
    * Converts this value to the given group and returns the result.
    *
    * @param to The group to convert to.
+   * @param rate The group for the rate.
    * @return The converted value or the number of this value if there's no group.
    */
-  public convertTo(to: Group): number
+  public convertTo(to: Group, rate: Group = null): number
   {
     let group: Group = this.group;
+    let rateScale: number = this.getRateScale( rate );
+    let value: number = this.value * rateScale;
 
-    return group ? group.parent.convert( this.value, group, to ) : this.value;
+    return group ? group.parent.convert( value, group, to ) : value;
   }
 
   /**
@@ -299,11 +359,12 @@ export class Value
    * value will attempted to be converted to a fraction.
    *
    * @param group The group to convert to.
+   * @param rate The group for the rate.
    * @return A new value.
    */
-  public convertToValue(group: Group): Value
+  public convertToValue(group: Group, rate: Group = null): Value
   {
-    return Value.fromNumberForGroup( this.convertTo( group ), group );
+    return Value.fromNumberForGroup( this.convertTo( group, rate ), group, rate || this.rateGroup );
   }
 
   /**
@@ -320,11 +381,34 @@ export class Value
    */
   public conversions(transform: Transform, reverse: boolean, callback: (transformed: Value, index: number) => void): void
   {
-    if (this.group)
+    let unitGroup: Group = this.group;
+    let rateGroup: Group = this.rateGroup;
+    let convertUnit: boolean = unitGroup && transform.convertUnit;
+    let convertRate: boolean = rateGroup && transform.convertRate;
+    let index: number = 0;
+
+    if (convertUnit && convertRate)
     {
-      this.group.matches(transform, reverse, (group, index) =>
+      rateGroup.matches(transform, reverse, (rate) =>
       {
-        callback( this.convertToValue( group ), index );
+        unitGroup.matches(transform, reverse, (group) =>
+        {
+          callback( this.convertToValue( group, rate ), index++ );
+        });
+      });
+    }
+    else if (convertUnit)
+    {
+      unitGroup.matches(transform, reverse, (group) =>
+      {
+        callback( this.convertToValue( group ), index++ );
+      });
+    }
+    else if (convertRate)
+    {
+      rateGroup.matches(transform, reverse, (rate) =>
+      {
+        callback( this.convertToValue( unitGroup, rate ), index++ );
       });
     }
   }
@@ -379,11 +463,13 @@ export class Value
    */
   public add(addend: Value, scale: number = 1): Value
   {
-    let num = this.num * addend.den + addend.num * this.den * scale;
-    let den = this.den * addend.den;
-    let result = this.value + addend.value * scale;
+    let rateScale: number = this.getRateScale( addend.rateGroup );
+    let totalScale: number = rateScale * scale;
+    let num: number = this.num * addend.den + addend.num * this.den * totalScale;
+    let den: number = this.den * addend.den;
+    let result: number = this.value + addend.value * totalScale;
 
-    return new Value(result, num, den, this.unit, this.group);
+    return new Value(result, num, den, this.unit, this.group, this.rate, this.rateGroup);
   }
 
   /**
@@ -396,11 +482,13 @@ export class Value
    */
   public sub(subtrahend: Value, scale: number = 1): Value
   {
-    let num = this.num * subtrahend.den - subtrahend.num * this.den * scale;
-    let den = this.den * subtrahend.den;
-    let result = this.value - subtrahend.value * scale;
+    let rateScale: number = this.getRateScale( subtrahend.rateGroup );
+    let totalScale: number = rateScale * scale;
+    let num: number = this.num * subtrahend.den - subtrahend.num * this.den * totalScale;
+    let den: number = this.den * subtrahend.den;
+    let result: number = this.value - subtrahend.value * totalScale;
 
-    return new Value(result, num, den, this.unit, this.group);
+    return new Value(result, num, den, this.unit, this.group, this.rate, this.rateGroup);
   }
 
   /**
@@ -412,7 +500,7 @@ export class Value
    */
   public scale(scale: number): Value
   {
-    return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
+    return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group, this.rate, this.rateGroup);
   }
 
   /**
@@ -424,7 +512,12 @@ export class Value
    */
   public mul(scale: Value): Value
   {
-    return new Value(this.value * scale.value, this.num * scale.num, this.den * scale.den, this.unit, this.group);
+    let rateScale: number = this.getRateScale( scale.rateGroup );
+    let num: number = this.num * scale.num * rateScale;
+    let den: number = this.den * scale.den;
+    let result: number = this.value * scale.value * rateScale;
+
+    return new Value(result, num, den, this.unit, this.group, this.rate, this.rateGroup);
   }
 
   /**
@@ -443,6 +536,21 @@ export class Value
   }
 
   /**
+   * Returns the units of this value as a string based on the global output
+   * options.
+   *
+   * @param options The options to override the global output options.
+   * @return The string representation of the units of this value.
+   * @see [[Output]]
+   */
+  public units(options?: OutputInput): string
+  {
+    let output: Output = Core.globalOutput.extend( options );
+
+    return output.units( this );
+  }
+
+  /**
    * Returns a Value instance which is a number with the optional unit and group.
    *
    * @param value The number.
@@ -450,9 +558,9 @@ export class Value
    * @param group The group which matches the unit.
    * @return A new instance.
    */
-  public static fromNumber(value: number, unit: string = '', group: Group = null): Value
+  public static fromNumber(value: number, unit: string = '', group: Group = null, rate: string = '', rateGroup: Group = null): Value
   {
-    return new Value(value, value, 1, unit, group);
+    return new Value(value, value, 1, unit, group, rate, rateGroup);
   }
 
   /**
@@ -467,7 +575,7 @@ export class Value
    * @param maxDen The last denominator to inclusively try.
    * @return A new instance.
    */
-  public static fromNumberWithRange(value: number, unit: string = '', group: Group = null, minDen: number = 1, maxDen: number = 100): Value
+  public static fromNumberWithRange(value: number, unit: string = '', group: Group = null, minDen: number = 1, maxDen: number = 100, rate: string = '', rateGroup: Group = null): Value
   {
     let closestDenominator: number = 0;
     let closestDistance: number = -1;
@@ -488,7 +596,7 @@ export class Value
 
     if (closestDistance > fn.EPSILON)
     {
-      return new Value(value, value, 1, unit, group);
+      return new Value(value, value, 1, unit, group, rate, rateGroup);
     }
 
     if (closestDenominator === 0)
@@ -496,7 +604,7 @@ export class Value
       closestDenominator = 1;
     }
 
-    return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
+    return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group, rate, rateGroup);
   }
 
   /**
@@ -507,11 +615,12 @@ export class Value
    *
    * @param value The number to try to find a fraction for.
    * @param group The group for the unit and also the denominators to try.
+   * @param rateGroup The group for the rate.
    * @return A new instance.
    */
-  public static fromNumberForGroup(value: number, group: Group): Value
+  public static fromNumberForGroup(value: number, group: Group, rateGroup: Group): Value
   {
-    return this.fromNumberWithDenominators( value, group.denominators, group.preferredUnit, group );
+    return this.fromNumberWithDenominators( value, group.denominators, group.preferredUnit, group, rateGroup ? rateGroup.preferredUnit : '', rateGroup );
   }
 
   /**
@@ -525,7 +634,7 @@ export class Value
    * @param group The group which matches the unit.
    * @return A new instance.
    */
-  public static fromNumberWithDenominators(value: number, denominators: number[], unit: string = '', group: Group = null): Value
+  public static fromNumberWithDenominators(value: number, denominators: number[], unit: string = '', group: Group = null, rate: string = '', rateGroup: Group = null): Value
   {
     let closestDenominator: number = 0;
     let closestDistance: number = -1;
@@ -546,7 +655,7 @@ export class Value
 
     if (closestDistance > fn.EPSILON)
     {
-      return new Value(value, value, 1, unit, group);
+      return new Value(value, value, 1, unit, group, rate, rateGroup);
     }
 
     if (closestDenominator === 0)
@@ -554,7 +663,7 @@ export class Value
       closestDenominator = 1;
     }
 
-    return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
+    return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group, rate, rateGroup);
   }
 
   /**
@@ -567,9 +676,9 @@ export class Value
    * @param group The group which matches the unit.
    * @return A new instance.
    */
-  public static fromFraction(num: number, den: number, unit: string = '', group: Group = null): Value
+  public static fromFraction(num: number, den: number, unit: string = '', group: Group = null, rate: string = '', rateGroup: Group = null): Value
   {
-    return new Value(num / den, num, den, unit, group);
+    return new Value(num / den, num, den, unit, group, rate, rateGroup);
   }
 
 }

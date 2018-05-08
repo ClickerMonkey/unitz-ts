@@ -749,9 +749,12 @@ var Class_Class = (function () {
      * @param value The number to convert.
      * @param from The group of the number to convert from.
      * @param to The group to convert to.
+     * @param invalid The value to return if a conversion between the two groups
+     *  could not be made.
      * @return The converted number or zero if a base conversion could not be found.
      */
-    Class.prototype.convert = function (value, from, to) {
+    Class.prototype.convert = function (value, from, to, invalid) {
+        if (invalid === void 0) { invalid = 0; }
         if (from === to || !from || !to) {
             return value;
         }
@@ -759,7 +762,7 @@ var Class_Class = (function () {
         if (from.baseUnit !== to.baseUnit) {
             var map = this.converters[from.baseUnit];
             if (!map || !map[to.baseUnit]) {
-                return 0;
+                return invalid;
             }
             var converter = map[to.baseUnit];
             converted = converter(converted);
@@ -875,6 +878,10 @@ var Output_Output = (function () {
          */
         this.mixedSpacer = ' ';
         /**
+         * The spacing used to separate a unit and the rate unit.
+         */
+        this.rateSpacer = '/';
+        /**
          * The delimiter used to separate ranges.
          */
         this.delimiter = ', ';
@@ -902,6 +909,7 @@ var Output_Output = (function () {
         this.rangeSpacer = Functions.coalesce(input.rangeSpacer, this.rangeSpacer);
         this.fractionSpacer = Functions.coalesce(input.fractionSpacer, this.fractionSpacer);
         this.mixedSpacer = Functions.coalesce(input.mixedSpacer, this.mixedSpacer);
+        this.rateSpacer = Functions.coalesce(input.rateSpacer, this.rateSpacer);
         this.delimiter = Functions.coalesce(input.delimiter, this.delimiter);
         this.significant = Functions.coalesce(input.significant, this.significant);
         return this;
@@ -1001,19 +1009,42 @@ var Output_Output = (function () {
             out += this.number(value.value);
         }
         if (showUnit && this.unit !== OutputUnit.NONE && value.isValid) {
-            var group = value.group;
             out += this.unitSpacer;
-            if (this.isLongUnit(value)) {
-                out += Functions.isSingular(value.value) ? group.singularLong : group.pluralLong;
-            }
-            else if (this.isShortUnit(value) || (group && group.dynamic)) {
-                out += Functions.isSingular(value.value) ? group.singularShort : group.pluralShort;
-            }
-            else {
-                out += value.unit;
-            }
+            out += this.units(value);
         }
         return out;
+    };
+    /**
+     * Generates a full unit string including the rate unit if it exists.
+     *
+     * @param value The value to generate a unit for.
+     * @return The units string representation.
+     */
+    Output.prototype.units = function (value) {
+        var out = '';
+        out += this.group(value.value, value.unit, value.group);
+        if (value.rateGroup) {
+            out += this.rateSpacer;
+            out += this.group(value.value, value.rate, value.rateGroup);
+        }
+        return out;
+    };
+    /**
+     * Generates a unit string given the value, the current unit, and its group.
+     *
+     * @param value The value to generate a unit for.
+     * @param unit The unit to potentially use.
+     * @param group The group of the unit.
+     * @return The unit determined based on the options.
+     */
+    Output.prototype.group = function (value, unit, group) {
+        if (this.isLongUnit(group)) {
+            return Functions.isSingular(value) ? group.singularLong : group.pluralLong;
+        }
+        else if (this.isShortUnit(group) || (group && group.dynamic)) {
+            return Functions.isSingular(value) ? group.singularShort : group.pluralShort;
+        }
+        return unit;
     };
     /**
      * Converts the number to a string.
@@ -1063,20 +1094,20 @@ var Output_Output = (function () {
     /**
      * Determines whether the short unit should be displayed.
      *
-     * @param value The value to look at.
+     * @param group The group of the unit.
      * @return True if the short unit should be displayed, otherwise false.
      */
-    Output.prototype.isShortUnit = function (value) {
-        return value.group && this.unit === OutputUnit.SHORT;
+    Output.prototype.isShortUnit = function (group) {
+        return group && this.unit === OutputUnit.SHORT;
     };
     /**
      * Determines whether the long unit should be displayed.
      *
-     * @param value The value to look at.
+     * @param group The group of the unit.
      * @return True if the short unit should be displayed, otherwise false.
      */
-    Output.prototype.isLongUnit = function (value) {
-        return value.group && this.unit === OutputUnit.LONG;
+    Output.prototype.isLongUnit = function (group) {
+        return group && this.unit === OutputUnit.LONG;
     };
     return Output;
 }());
@@ -1128,6 +1159,14 @@ var Transform_Transform = (function () {
          */
         this.convertWithMax = true;
         /**
+         * Whether conversions should convert the main unit.
+         */
+        this.convertUnit = true;
+        /**
+         * Whether conversions should convert the rate unit.
+         */
+        this.convertRate = false;
+        /**
          * Whether ranges without units are considered valid for the transformation.
          */
         this.groupless = true;
@@ -1148,6 +1187,8 @@ var Transform_Transform = (function () {
         this.max = Functions.coalesce(input.max, this.max);
         this.groupless = Functions.coalesce(input.groupless, this.groupless);
         this.convertWithMax = Functions.coalesce(input.convertWithMax, this.convertWithMax);
+        this.convertUnit = Functions.coalesce(input.convertUnit, this.convertUnit);
+        this.convertRate = Functions.coalesce(input.convertRate, this.convertRate);
         this.onlyUnits = Functions.coalesce(input.onlyUnits, this.onlyUnits);
         this.notUnits = Functions.coalesce(input.notUnits, this.notUnits);
         this.onlyClasses = Functions.coalesce(input.onlyClasses, this.onlyClasses);
@@ -1739,13 +1780,15 @@ var Value_Value = (function () {
      * @param unit [[Value.unit]]
      * @param group [[Value.group]]
      */
-    function Value(value, num, den, unit, group) {
+    function Value(value, num, den, unit, group, rate, rateGroup) {
         var divisor = Functions.gcd(num, den);
         this.value = value;
         this.num = num / divisor;
         this.den = den / divisor;
         this.unit = unit;
         this.group = group;
+        this.rate = rate;
+        this.rateGroup = rateGroup;
     }
     Object.defineProperty(Value.prototype, "isValid", {
         /**
@@ -1795,6 +1838,16 @@ var Value_Value = (function () {
          */
         get: function () {
             return Functions.isSingular(this.value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Value.prototype, "isRate", {
+        /**
+         * Returns true if this value is a rate.
+         */
+        get: function () {
+            return !!this.rate;
         },
         enumerable: true,
         configurable: true
@@ -1919,13 +1972,42 @@ var Value_Value = (function () {
         configurable: true
     });
     /**
+     * Calculates the scale necessary to switch this value from the current rate
+     * to the provided rate.
+     *
+     * @param rate The rate group.
+     * @return The calculated scale.
+     */
+    Value.prototype.getRateScale = function (rate) {
+        return rate ? rate.parent.convert(1, rate, this.rateGroup, 1) : 1;
+    };
+    /**
+     * Determines whether the given value is compatible with this value to perform
+     * operations with.
+     *
+     * @param other The value to test against.
+     * @return True if the given value has compatible unit and rate groups.
+     */
+    Value.prototype.isMatch = function (other) {
+        var group = this.group;
+        var groupOther = other.group;
+        var groupMatch = groupOther === group || (groupOther && group && groupOther.parent === group.parent);
+        if (!groupMatch) {
+            return false;
+        }
+        var rate = this.rateGroup;
+        var rateOther = other.rateGroup;
+        var rateMatch = rateOther === rate || (rateOther && rate && rateOther.parent === rate.parent);
+        return rateMatch;
+    };
+    /**
      * Returns a version of this value with the preferred unit.
      *
      * @return A new value or the reference to this instance if it's groupless.
      * @see [[Group.preferredUnit]]
      */
     Value.prototype.preferred = function () {
-        return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group) : this;
+        return this.group ? new Value(this.value, this.num, this.den, this.group.preferredUnit, this.group, this.rateGroup ? this.rateGroup.preferredUnit : this.rate, this.rateGroup) : this;
     };
     /**
      * Returns a copy of this value.
@@ -1933,7 +2015,7 @@ var Value_Value = (function () {
      * @return A new value.
      */
     Value.prototype.copy = function () {
-        return new Value(this.value, this.num, this.den, this.unit, this.group);
+        return new Value(this.value, this.num, this.den, this.unit, this.group, this.rate, this.rateGroup);
     };
     /**
      * Returns a value equivalent to zero with the unt and group of this instance.
@@ -1941,7 +2023,7 @@ var Value_Value = (function () {
      * @return A new value.
      */
     Value.prototype.zero = function () {
-        return new Value(0, 0, 1, this.unit, this.group);
+        return new Value(0, 0, 1, this.unit, this.group, this.rate, this.rateGroup);
     };
     /**
      * Returns the truncated version of this value. That's a value where the
@@ -1950,7 +2032,7 @@ var Value_Value = (function () {
      * @return A new value.
      */
     Value.prototype.truncated = function () {
-        return new Value(this.truncate, this.truncate, 1, this.unit, this.group);
+        return new Value(this.truncate, this.truncate, 1, this.unit, this.group, this.rate, this.rateGroup);
     };
     /**
      * Returns a version of this value as a fraction.
@@ -1962,7 +2044,7 @@ var Value_Value = (function () {
             return this;
         }
         if (this.group) {
-            return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group);
+            return Value.fromNumberWithDenominators(this.value, this.group.denominators, this.unit, this.group, this.rate, this.rateGroup);
         }
         return this;
     };
@@ -1973,7 +2055,7 @@ var Value_Value = (function () {
      */
     Value.prototype.numbered = function () {
         if (this.isFraction) {
-            return new Value(this.value, this.value, 1, this.unit, this.group);
+            return new Value(this.value, this.value, 1, this.unit, this.group, this.rate, this.rateGroup);
         }
         return this;
     };
@@ -1981,21 +2063,27 @@ var Value_Value = (function () {
      * Converts this value to the given group and returns the result.
      *
      * @param to The group to convert to.
+     * @param rate The group for the rate.
      * @return The converted value or the number of this value if there's no group.
      */
-    Value.prototype.convertTo = function (to) {
+    Value.prototype.convertTo = function (to, rate) {
+        if (rate === void 0) { rate = null; }
         var group = this.group;
-        return group ? group.parent.convert(this.value, group, to) : this.value;
+        var rateScale = this.getRateScale(rate);
+        var value = this.value * rateScale;
+        return group ? group.parent.convert(value, group, to) : value;
     };
     /**
      * Converts this value to the given group and returns a new value. The new
      * value will attempted to be converted to a fraction.
      *
      * @param group The group to convert to.
+     * @param rate The group for the rate.
      * @return A new value.
      */
-    Value.prototype.convertToValue = function (group) {
-        return Value.fromNumberForGroup(this.convertTo(group), group);
+    Value.prototype.convertToValue = function (group, rate) {
+        if (rate === void 0) { rate = null; }
+        return Value.fromNumberForGroup(this.convertTo(group, rate), group, rate || this.rateGroup);
     };
     /**
      * Determines the available conversions of this value for all groups
@@ -2011,9 +2099,26 @@ var Value_Value = (function () {
      */
     Value.prototype.conversions = function (transform, reverse, callback) {
         var _this = this;
-        if (this.group) {
-            this.group.matches(transform, reverse, function (group, index) {
-                callback(_this.convertToValue(group), index);
+        var unitGroup = this.group;
+        var rateGroup = this.rateGroup;
+        var convertUnit = unitGroup && transform.convertUnit;
+        var convertRate = rateGroup && transform.convertRate;
+        var index = 0;
+        if (convertUnit && convertRate) {
+            rateGroup.matches(transform, reverse, function (rate) {
+                unitGroup.matches(transform, reverse, function (group) {
+                    callback(_this.convertToValue(group, rate), index++);
+                });
+            });
+        }
+        else if (convertUnit) {
+            unitGroup.matches(transform, reverse, function (group) {
+                callback(_this.convertToValue(group), index++);
+            });
+        }
+        else if (convertRate) {
+            rateGroup.matches(transform, reverse, function (rate) {
+                callback(_this.convertToValue(unitGroup, rate), index++);
             });
         }
     };
@@ -2056,10 +2161,12 @@ var Value_Value = (function () {
      */
     Value.prototype.add = function (addend, scale) {
         if (scale === void 0) { scale = 1; }
-        var num = this.num * addend.den + addend.num * this.den * scale;
+        var rateScale = this.getRateScale(addend.rateGroup);
+        var totalScale = rateScale * scale;
+        var num = this.num * addend.den + addend.num * this.den * totalScale;
         var den = this.den * addend.den;
-        var result = this.value + addend.value * scale;
-        return new Value(result, num, den, this.unit, this.group);
+        var result = this.value + addend.value * totalScale;
+        return new Value(result, num, den, this.unit, this.group, this.rate, this.rateGroup);
     };
     /**
      * Calculates the difference between this value and the subtrahend scaled by
@@ -2071,10 +2178,12 @@ var Value_Value = (function () {
      */
     Value.prototype.sub = function (subtrahend, scale) {
         if (scale === void 0) { scale = 1; }
-        var num = this.num * subtrahend.den - subtrahend.num * this.den * scale;
+        var rateScale = this.getRateScale(subtrahend.rateGroup);
+        var totalScale = rateScale * scale;
+        var num = this.num * subtrahend.den - subtrahend.num * this.den * totalScale;
         var den = this.den * subtrahend.den;
-        var result = this.value - subtrahend.value * scale;
-        return new Value(result, num, den, this.unit, this.group);
+        var result = this.value - subtrahend.value * totalScale;
+        return new Value(result, num, den, this.unit, this.group, this.rate, this.rateGroup);
     };
     /**
      * Calculates a new value by multiplying this by a given factor. This is
@@ -2084,7 +2193,7 @@ var Value_Value = (function () {
      * @return A new instance.
      */
     Value.prototype.scale = function (scale) {
-        return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group);
+        return new Value(this.value * scale, this.num * scale, this.den, this.unit, this.group, this.rate, this.rateGroup);
     };
     /**
      * Calculates a new value by multiplying this by a given value. This is
@@ -2094,7 +2203,11 @@ var Value_Value = (function () {
      * @return A new instance.
      */
     Value.prototype.mul = function (scale) {
-        return new Value(this.value * scale.value, this.num * scale.num, this.den * scale.den, this.unit, this.group);
+        var rateScale = this.getRateScale(scale.rateGroup);
+        var num = this.num * scale.num * rateScale;
+        var den = this.den * scale.den;
+        var result = this.value * scale.value * rateScale;
+        return new Value(result, num, den, this.unit, this.group, this.rate, this.rateGroup);
     };
     /**
      * Converts this value to a string with the given output options taking into
@@ -2109,6 +2222,18 @@ var Value_Value = (function () {
         return output.value(this);
     };
     /**
+     * Returns the units of this value as a string based on the global output
+     * options.
+     *
+     * @param options The options to override the global output options.
+     * @return The string representation of the units of this value.
+     * @see [[Output]]
+     */
+    Value.prototype.units = function (options) {
+        var output = Core_Core.globalOutput.extend(options);
+        return output.units(this);
+    };
+    /**
      * Returns a Value instance which is a number with the optional unit and group.
      *
      * @param value The number.
@@ -2116,10 +2241,12 @@ var Value_Value = (function () {
      * @param group The group which matches the unit.
      * @return A new instance.
      */
-    Value.fromNumber = function (value, unit, group) {
+    Value.fromNumber = function (value, unit, group, rate, rateGroup) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
-        return new Value(value, value, 1, unit, group);
+        if (rate === void 0) { rate = ''; }
+        if (rateGroup === void 0) { rateGroup = null; }
+        return new Value(value, value, 1, unit, group, rate, rateGroup);
     };
     /**
      * Returns a Value instance which tries to be a fraction given a range of
@@ -2133,11 +2260,13 @@ var Value_Value = (function () {
      * @param maxDen The last denominator to inclusively try.
      * @return A new instance.
      */
-    Value.fromNumberWithRange = function (value, unit, group, minDen, maxDen) {
+    Value.fromNumberWithRange = function (value, unit, group, minDen, maxDen, rate, rateGroup) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
         if (minDen === void 0) { minDen = 1; }
         if (maxDen === void 0) { maxDen = 100; }
+        if (rate === void 0) { rate = ''; }
+        if (rateGroup === void 0) { rateGroup = null; }
         var closestDenominator = 0;
         var closestDistance = -1;
         for (var i = minDen; i <= maxDen; i++) {
@@ -2151,12 +2280,12 @@ var Value_Value = (function () {
             }
         }
         if (closestDistance > Functions.EPSILON) {
-            return new Value(value, value, 1, unit, group);
+            return new Value(value, value, 1, unit, group, rate, rateGroup);
         }
         if (closestDenominator === 0) {
             closestDenominator = 1;
         }
-        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
+        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group, rate, rateGroup);
     };
     /**
      * Returns a Value instance which tries to be a fraction based on the
@@ -2166,10 +2295,11 @@ var Value_Value = (function () {
      *
      * @param value The number to try to find a fraction for.
      * @param group The group for the unit and also the denominators to try.
+     * @param rateGroup The group for the rate.
      * @return A new instance.
      */
-    Value.fromNumberForGroup = function (value, group) {
-        return this.fromNumberWithDenominators(value, group.denominators, group.preferredUnit, group);
+    Value.fromNumberForGroup = function (value, group, rateGroup) {
+        return this.fromNumberWithDenominators(value, group.denominators, group.preferredUnit, group, rateGroup ? rateGroup.preferredUnit : '', rateGroup);
     };
     /**
      * Returns a Value instance which tries to be a fraction based on the
@@ -2182,9 +2312,11 @@ var Value_Value = (function () {
      * @param group The group which matches the unit.
      * @return A new instance.
      */
-    Value.fromNumberWithDenominators = function (value, denominators, unit, group) {
+    Value.fromNumberWithDenominators = function (value, denominators, unit, group, rate, rateGroup) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
+        if (rate === void 0) { rate = ''; }
+        if (rateGroup === void 0) { rateGroup = null; }
         var closestDenominator = 0;
         var closestDistance = -1;
         for (var i = 0; i < denominators.length; i++) {
@@ -2198,12 +2330,12 @@ var Value_Value = (function () {
             }
         }
         if (closestDistance > Functions.EPSILON) {
-            return new Value(value, value, 1, unit, group);
+            return new Value(value, value, 1, unit, group, rate, rateGroup);
         }
         if (closestDenominator === 0) {
             closestDenominator = 1;
         }
-        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group);
+        return new Value(value, Math.floor(value * closestDenominator), closestDenominator, unit, group, rate, rateGroup);
     };
     /**
      * Returns a Value instance for a given fraction specified by a numerator and
@@ -2215,15 +2347,17 @@ var Value_Value = (function () {
      * @param group The group which matches the unit.
      * @return A new instance.
      */
-    Value.fromFraction = function (num, den, unit, group) {
+    Value.fromFraction = function (num, den, unit, group, rate, rateGroup) {
         if (unit === void 0) { unit = ''; }
         if (group === void 0) { group = null; }
-        return new Value(num / den, num, den, unit, group);
+        if (rate === void 0) { rate = ''; }
+        if (rateGroup === void 0) { rateGroup = null; }
+        return new Value(num / den, num, den, unit, group, rate, rateGroup);
     };
     /**
      * A value instance which contains invalid numbers.
      */
-    Value.INVALID = new Value(Number.NaN, Number.NaN, 1, '', null);
+    Value.INVALID = new Value(Number.NaN, Number.NaN, 1, '', null, '', null);
     return Value;
 }());
 
@@ -2319,6 +2453,16 @@ var Range_Range = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Range.prototype, "isRate", {
+        /**
+         * True if one of min and max are rates.
+         */
+        get: function () {
+            return this.min.isRate && this.max.isRate;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Range.prototype, "average", {
         /**
          * The average number between the min and max.
@@ -2371,15 +2515,28 @@ var Range_Range = (function () {
         configurable: true
     });
     /**
-     * Determines if the given range matches this range enough to provide a
-     * mathematical operation between the two ranges.
+     * Determines if the given range matches this range enough to allow a
+     * simple mathematical operation between the two ranges.
      *
      * @param range The range to test.
      * @return True if the groups of the given range match this range.
      */
-    Range.prototype.isMatch = function (range) {
+    Range.prototype.isExactMatch = function (range) {
         return this.min.group === range.min.group &&
-            this.max.group === range.max.group;
+            this.max.group === range.max.group &&
+            this.min.rateGroup === range.min.rateGroup &&
+            this.max.rateGroup === range.max.rateGroup;
+    };
+    /**
+     * Determines if the given range matches this range enough to allow a
+     * complex mathematical operation between the two ranges.
+     *
+     * @param min The minimum of the range to test.
+     * @param max The maximum of the range to test.
+     * @return True if the min and max have compatible values.
+     */
+    Range.prototype.isMatch = function (min, max) {
+        return this.min.isMatch(min) && this.max.isMatch(max);
     };
     /**
      * @return A range which has the min and max converted to their preferred units.
@@ -2602,7 +2759,7 @@ var Base_Base = (function () {
      */
     function Base(input, ranges) {
         this.input = input;
-        this.ranges = ranges || Parse_Parse.ranges(input, Core_Core.getGroup);
+        this.ranges = ranges || Parse_Parse.ranges(input);
     }
     /**
      * Scales the ranges in this instance by the given factor and returns a
@@ -2834,68 +2991,29 @@ var Base_Base = (function () {
      * @see [[Core.globalTransform]]
      */
     Base.prototype.compact = function (options) {
+        var ranges = this.ranges.slice();
         var compacted = [];
         var transform = Core_Core.globalTransform.extend(options);
-        var _a = this.groupByClass(), classes = _a.classes, groupless = _a.groupless;
-        var _loop_1 = function (className) {
-            var entry = classes[className];
-            var ranges = entry.ranges;
-            var parent_1 = entry.parent;
-            var minGroupChosen = null;
-            var maxGroupChosen = null;
-            var minSum = 0;
-            var maxSum = 0;
-            // If the transformation options ignores this class, skip it.
-            if (!transform.isClassMatch(parent_1)) {
-                return "continue";
-            }
-            // Determine the smallest visible group we can use.
-            parent_1.getVisibleGroups(transform, false, null, function (group) {
-                minGroupChosen = maxGroupChosen = group;
-                return false;
-            });
-            // If we can't find one, then no groups are valid. Skip them.
-            if (!minGroupChosen) {
-                return "continue";
-            }
-            // For each range, sum up the minimums and maximums while also determining
-            // the largest min & max that should be used to represent the sums.
-            for (var i = 0; i < ranges.length; i++) {
-                var range = ranges[i];
-                var minGroup = range.min.group;
-                var maxGroup = range.max.group;
-                if (minGroup.classScale > minGroupChosen.classScale && transform.isVisibleGroup(minGroup)) {
-                    if (i !== 0) {
-                        minSum = parent_1.convert(minSum, minGroupChosen, minGroup);
-                    }
-                    minGroupChosen = minGroup;
+        // Largest ranges first
+        ranges.sort(function (a, b) {
+            return b.max.classScaled - a.max.classScaled;
+        });
+        for (var i = 0; i < ranges.length; i++) {
+            var a = ranges[i];
+            var min = a.min;
+            var max = a.max;
+            for (var k = ranges.length - 1; k > i; k--) {
+                var b = ranges[k];
+                if (a.isMatch(b.min, b.max)) {
+                    min = min.add(b.min.convertToValue(min.group, min.rateGroup));
+                    max = max.add(b.max.convertToValue(max.group, max.rateGroup));
+                    ranges.splice(k, 1);
                 }
-                if (maxGroup.classScale > maxGroupChosen.classScale && transform.isVisibleGroup(maxGroup)) {
-                    if (i !== 0) {
-                        maxSum = parent_1.convert(maxSum, maxGroupChosen, maxGroup);
-                    }
-                    maxGroupChosen = maxGroup;
-                }
-                minSum += range.min.convertTo(minGroupChosen);
-                maxSum += range.max.convertTo(maxGroupChosen);
             }
-            var min = Value_Value.fromNumberForGroup(minSum, minGroupChosen);
-            var max = Value_Value.fromNumberForGroup(maxSum, maxGroupChosen);
-            compacted.push(new Range_Range(min, max));
-        };
-        for (var className in classes) {
-            _loop_1(className);
-        }
-        // If the transform options permit groupless results and there are ranges
-        // without groups - sum them all.
-        if (transform.groupless && groupless.length) {
-            var minSum = new Value_Value(0, 0, 1, '', null);
-            var maxSum = new Value_Value(0, 0, 1, '', null);
-            for (var i = 0; i < groupless.length; i++) {
-                minSum = minSum.add(groupless[i].min);
-                maxSum = maxSum.add(groupless[i].max);
+            var sum = new Range_Range(min, max);
+            if (transform.isValidRange(sum)) {
+                compacted.push(sum);
             }
-            compacted.push(new Range_Range(minSum, maxSum));
         }
         return new Base(this.input, compacted);
     };
@@ -2921,22 +3039,23 @@ var Base_Base = (function () {
         var compacted = this.compact(transform);
         var ranges = compacted.ranges;
         var expanded = [];
-        var _loop_2 = function (i) {
+        var _loop_1 = function (i) {
             var range = ranges[i];
             var value = transform.convertWithMax ? range.max : range.min;
             var valueGroup = value.group;
             var valueSign = Functions.sign(value.value);
+            var valueRate = value.rateGroup;
             if (valueGroup) {
                 valueGroup.matches(transform, true, function (group) {
                     if (!Functions.isZero(value.value)) {
-                        var transformed = value.convertToValue(group);
+                        var transformed = value.convertToValue(group, valueRate);
                         if (group.isBase) {
                             value = value.zero();
                             expanded.push(Range_Range.fromFixed(transformed));
                         }
                         else if (Functions.abs(transformed.value) >= 1 && Functions.sign(transformed.value) === valueSign) {
                             var truncated = transformed.truncated();
-                            value = value.sub(truncated.convertToValue(valueGroup));
+                            value = value.sub(truncated.convertToValue(valueGroup, valueRate));
                             expanded.push(Range_Range.fromFixed(truncated));
                         }
                     }
@@ -2947,7 +3066,7 @@ var Base_Base = (function () {
             }
         };
         for (var i = 0; i < ranges.length; i++) {
-            _loop_2(i);
+            _loop_1(i);
         }
         return new Base(this.input, expanded);
     };
@@ -3016,7 +3135,7 @@ var Base_Base = (function () {
      *  in this instance where the range returned is added to the result.
      * @param remainder.a The remaining range to operate on.
      * @return A new instance.
-     * @see [[Range.isMatch]]
+     * @see [[Range.isExactMatch]]
      */
     Base.prototype.operate = function (input, operate, remainder) {
         var ranges = this.ranges;
@@ -3029,7 +3148,7 @@ var Base_Base = (function () {
             for (var k = 0; k < otherRanges.length; k++) {
                 if (!otherUsed[k]) {
                     var otherRange = otherRanges[k];
-                    if (range.isMatch(otherRange)) {
+                    if (range.isExactMatch(otherRange)) {
                         range = operate(range, otherRange);
                         otherUsed[k] = true;
                     }
@@ -3066,19 +3185,19 @@ var Base_Base = (function () {
         var compacted = this.compact(options);
         var ranges = compacted.ranges;
         var output = [];
-        var _loop_3 = function (i) {
+        var _loop_2 = function (i) {
             var range = ranges[i];
             var convert = transform.convertWithMax ? range.max : range.min;
             convert.conversions(transform, false, function (transformed) {
-                var min = transform.convertWithMax ? range.min.convertToValue(transformed.group) : transformed;
-                var max = transform.convertWithMax ? transformed : range.max.convertToValue(transformed.group);
+                var min = transform.convertWithMax ? range.min.convertToValue(transformed.group, transformed.rateGroup) : transformed;
+                var max = transform.convertWithMax ? transformed : range.max.convertToValue(transformed.group, transformed.rateGroup);
                 if (min.value <= transform.max && max.value >= transform.min) {
                     output.push(new Range_Range(min, max));
                 }
             });
         };
         for (var i = 0; i < ranges.length; i++) {
-            _loop_3(i);
+            _loop_2(i);
         }
         return new Base(this.input, output);
     };
@@ -3161,33 +3280,6 @@ var Base_Base = (function () {
         return new Base(this.input, ranges);
     };
     /**
-     * Returns the ranges in this instance grouped by their class. All groupless
-     * ranges are added to their own list.
-     */
-    Base.prototype.groupByClass = function () {
-        var ranges = this.ranges;
-        var classes = {};
-        var groupless = [];
-        for (var i = 0; i < ranges.length; i++) {
-            var range = ranges[i];
-            if (range.min.group) {
-                var parent_2 = range.min.group.parent;
-                var entry = classes[parent_2.name];
-                if (!entry) {
-                    entry = classes[parent_2.name] = {
-                        parent: parent_2,
-                        ranges: []
-                    };
-                }
-                entry.ranges.push(range);
-            }
-            else {
-                groupless.push(range);
-            }
-        }
-        return { classes: classes, groupless: groupless };
-    };
-    /**
      * Calculates what this instance would need to be scaled by so that the given
      * value & unit pair is equal to the sum of ranges in this instance of the
      * same class. If there are no ranges with the same class then zero is
@@ -3214,11 +3306,11 @@ var Base_Base = (function () {
      */
     Base.prototype.getScaleTo = function (unitValue, rangeDelta) {
         if (rangeDelta === void 0) { rangeDelta = 1.0; }
-        var to = Parse_Parse.value(unitValue, Core_Core.getGroup);
+        var to = Parse_Parse.value(unitValue);
         if (!to.isValid) {
             return 0;
         }
-        var converted = this.convert(to.unit);
+        var converted = this.convert(to.units());
         if (!converted || !converted.isValid) {
             return 0;
         }
@@ -3247,6 +3339,7 @@ var Base_Base = (function () {
      * *For example:*
      * ```javascript
      * uz('1in, 1m, 1ft').convert('cm'); // '133.02 cm'
+     * uz('60 mph').convert('miles per minute'); // '1 miles/minute'
      * ```
      *
      * @param unit The unit to calculate the sum of.
@@ -3256,23 +3349,29 @@ var Base_Base = (function () {
      * @see [[Range.isZero]]
      */
     Base.prototype.convert = function (unit) {
-        var group = Core_Core.getGroup(unit);
+        var unitParsed = Parse_Parse.unit(unit);
+        var group = Core_Core.getGroup(unitParsed.unit);
+        var rateGroup = Core_Core.getGroup(unitParsed.rate);
         if (!group) {
             return null;
         }
-        var parent = group.parent;
         var ranges = this.ranges;
-        var min = new Value_Value(0, 0, 1, unit, group);
-        var max = new Value_Value(0, 0, 1, unit, group);
+        var min = new Value_Value(0, 0, 1, unit, group, unitParsed.rate, rateGroup);
+        var max = new Value_Value(0, 0, 1, unit, group, unitParsed.rate, rateGroup);
         for (var i = 0; i < ranges.length; i++) {
             var range = ranges[i];
-            var rangeGroup = range.min.group;
-            if (rangeGroup && rangeGroup.parent === parent) {
-                min = min.add(range.min.convertToValue(group));
-                max = max.add(range.max.convertToValue(group));
+            if (range.isMatch(min, max)) {
+                min = min.add(range.min.convertToValue(group, rateGroup));
+                max = max.add(range.max.convertToValue(group, rateGroup));
             }
         }
         return new Range_Range(min, max);
+    };
+    /**
+     * Alias for [[Base.convert]].
+     */
+    Base.prototype.to = function (unit) {
+        return this.convert(unit);
     };
     /**
      * Iterates over each range in this instance in order or reversed and passes
@@ -3328,13 +3427,19 @@ var Base_Base = (function () {
          * @see [[Range.isRange]]
          */
         get: function () {
-            var ranges = this.ranges;
-            for (var i = 0; i < ranges.length; i++) {
-                if (ranges[i].isRange) {
-                    return true;
-                }
-            }
-            return false;
+            return this.test(false, false, function (r) { return r.isRange; });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Base.prototype, "hasRates", {
+        /**
+         * Returns whether this instance has values or ranges that are rates.
+         *
+         * @see [[Range.isRate]]
+         */
+        get: function () {
+            return this.test(false, false, function (r) { return r.isRate; });
         },
         enumerable: true,
         configurable: true
@@ -3347,17 +3452,31 @@ var Base_Base = (function () {
          * @see [[Range.isValid]]
          */
         get: function () {
-            var ranges = this.ranges;
-            for (var i = 0; i < ranges.length; i++) {
-                if (!ranges[i].isValid) {
-                    return false;
-                }
-            }
-            return true;
+            return this.test(true, true, function (r) { return r.isValid; });
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * Performs a test on the ranges in this instance and returns whether the
+     * ranges passed the test. If the `tester` function returns something
+     * different than `expected` then the function ends early with `!passed`.
+     * If all tests pass then `passed` is returned.
+     *
+     * @param expected The expected result of the tester.
+     * @param passed The value to return if all ranges pass the test.
+     * @param tester The function to test a range.
+     * @return Return `passed` if all ranges return `expected` from `tester`.
+     */
+    Base.prototype.test = function (expected, passed, tester) {
+        var ranges = this.ranges;
+        for (var i = 0; i < ranges.length; i++) {
+            if (tester(ranges[i]) != expected) {
+                return !passed;
+            }
+        }
+        return passed;
+    };
     Object.defineProperty(Base.prototype, "length", {
         /**
          * Returns the number of ranges in this instance.
@@ -3392,6 +3511,18 @@ var Base_Base = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Base.prototype, "isRate", {
+        /**
+         * Returns true if this instance has a single rate.
+         *
+         * @see [[Range.isRate]]
+         */
+        get: function () {
+            return this.ranges.length === 1 && this.ranges[0].isRate;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Base;
 }());
 
@@ -3413,10 +3544,10 @@ var Base_Base = (function () {
  * @return A [[Translator]] function.
  */
 function newRegexTranslator(regex, handler, vars) {
-    return function (x, groups) {
+    return function (x) {
         var matches = x.match(regex);
         if (matches) {
-            x = handler(matches, groups, vars);
+            x = handler(matches, vars);
         }
         return x;
     };
@@ -3432,11 +3563,11 @@ var Translations_Translations = (function () {
      * Adds all translators in the library to be available when parsing.
      */
     Translations.addDefaults = function () {
-        this.addTranslator(this.Quantity);
-        this.addTranslator(this.NumberWords);
-        this.addTranslator(this.FractionOfNumber);
-        this.addTranslator(this.AndFraction);
-        this.addTranslator(this.QuantityValue);
+        this.add(this.Quantity);
+        this.add(this.NumberWords);
+        this.add(this.FractionOfNumber);
+        this.add(this.AndFraction);
+        this.add(this.QuantityValue);
     };
     /**
      * Adds the given translator to the list of registered translators. This
@@ -3445,7 +3576,7 @@ var Translations_Translations = (function () {
      * @param translator The function which translates user input.
   
      */
-    Translations.addTranslator = function (translator) {
+    Translations.add = function (translator) {
         this.registered.push(translator);
     };
     /**
@@ -3453,20 +3584,19 @@ var Translations_Translations = (function () {
      * the final string ready to be parsed.
      *
      * @param input The input to translate.
-     * @param groups The factory which converts units to group.
      * @return The translated string.
      */
-    Translations.translate = function (input, groups) {
+    Translations.translate = function (input) {
         var registered = this.registered;
         for (var i = 0; i < registered.length; i++) {
-            input = registered[i](input, groups);
+            input = registered[i](input);
         }
         return input;
     };
     /**
      * An array of translators that have been registered.
      *
-     * @see [[Translations.addTranslator]]
+     * @see [[Translations.add]]
      */
     Translations.registered = [];
     /**
@@ -3478,9 +3608,7 @@ var Translations_Translations = (function () {
      * - dozen [unit]
      * - an eleven [unit]
      */
-    Translations.NumberWords = newRegexTranslator(/^(an?\s+|)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety)\s+(.*)/i, 
-    // @ts-ignore
-    function (matches, groups, vars) {
+    Translations.NumberWords = newRegexTranslator(/^(an?\s+|)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety)\s+(.*)/i, function (matches, vars) {
         var wordName = matches[2];
         var remaining = matches[3];
         return vars[wordName] + ' ' + remaining;
@@ -3523,9 +3651,9 @@ var Translations_Translations = (function () {
      * - half a dozen eggs
      * - a seventh of a mile
      */
-    Translations.FractionOfNumber = newRegexTranslator(/^(an?\s+|one|)(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s+(a\s+|an\s+|of\s+an?\s+|of\s+)(.*)/i, function (matches, groups, vars) {
+    Translations.FractionOfNumber = newRegexTranslator(/^(an?\s+|one|)(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s+(a\s+|an\s+|of\s+an?\s+|of\s+)(.*)/i, function (matches, vars) {
         var remaining = matches[4];
-        var parsed = Parse_Parse.valueFromString(remaining, groups);
+        var parsed = Parse_Parse.valueFromString(remaining);
         var fractionName = matches[2].toLowerCase();
         var fraction = vars[fractionName];
         return parsed.mul(fraction).output(Core_Core.globalOutput);
@@ -3550,10 +3678,10 @@ var Translations_Translations = (function () {
      * - 23 and a third
      * - 12 and one fourth
      */
-    Translations.AndFraction = newRegexTranslator(/^(.*)\s+and\s+(an?|one)\s+(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s*(.*)/i, function (matches, groups, vars) {
+    Translations.AndFraction = newRegexTranslator(/^(.*)\s+and\s+(an?|one)\s+(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s*(.*)/i, function (matches, vars) {
         var prefix = matches[1];
         var units = matches[4];
-        var value = Parse_Parse.valueFromString(prefix + units, groups);
+        var value = Parse_Parse.valueFromString(prefix + units);
         var fractionName = matches[3].toLowerCase();
         var fraction = vars[fractionName];
         return value.add(fraction).output(Core_Core.globalOutput);
@@ -3587,18 +3715,67 @@ var Translations_Translations = (function () {
      * - 1 (6 ounce)
      * - 5 (3 liter)
      */
-    Translations.QuantityValue = newRegexTranslator(/^\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|))\s*\(\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*))\s*\)\s*$/i, function (matches, groups) {
+    Translations.QuantityValue = newRegexTranslator(/^\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|))\s*\(\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*))\s*\)\s*$/i, function (matches) {
         var quantityInput = matches[1];
-        var quantity = Parse_Parse.valueFromString(quantityInput, groups);
+        var quantity = Parse_Parse.valueFromString(quantityInput);
         var alternativeInput = matches[8];
-        var alternative = Parse_Parse.valueFromString(alternativeInput, groups);
+        var alternative = Parse_Parse.valueFromString(alternativeInput);
         return alternative.mul(quantity).output(Core_Core.globalOutput);
     });
     return Translations;
 }());
 
 
+// CONCATENATED MODULE: ./src/Rates.ts
+
+/**
+ * The class which holds [[Rate]]s mapped by their abbreviations.
+ */
+var Rates = (function () {
+    function Rates() {
+    }
+    /**
+     * Adds all rates in the library to be available when parsing.
+     */
+    Rates.addDefaults = function () {
+        this.add('miles', 'hour', ['mph']);
+        this.add('nautical miles', 'hour', ['knot']);
+        this.add('kilometers', 'hour', ['kph', 'kmph', 'km. hr.', 'k.p.h.', 'k.m.p.h.', 'km:h']);
+    };
+    /**
+     * Adds one or many rates given the unit, rate, and all abbreviations.
+     *
+     * @param unit The unit.
+     * @param rate The rate unit.
+     * @param names The list of abbreviations for this rate.
+     */
+    Rates.add = function (unit, rate, names) {
+        for (var i = 0; i < names.length; i++) {
+            this.registered[names[i].toLowerCase()] = { unit: unit, rate: rate };
+        }
+    };
+    /**
+     * Gets the rate for the given input or `undefined` if none exists.
+     *
+     * @param input The input to find a rate for.
+     * @return The rate mapped by the input, otherwise `undefined`.
+     */
+    Rates.get = function (input) {
+        return this.registered[input.toLowerCase()];
+    };
+    /**
+     * An object of rates mapped by their abbreviation.
+     *
+     * @see [[Rates.add]]
+     */
+    Rates.registered = {};
+    return Rates;
+}());
+
+
 // CONCATENATED MODULE: ./src/Parse.ts
+
+
 
 
 
@@ -3627,21 +3804,20 @@ var Parse_Parse = (function () {
      * Parses user input into a an array of [[Range]]s.
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instances parsed from the input.
      */
-    Parse.ranges = function (input, groups) {
+    Parse.ranges = function (input) {
         if (Functions.isArray(input)) {
-            return this.rangesFromArray(input, groups);
+            return this.rangesFromArray(input);
         }
         else if (Functions.isString(input)) {
-            return this.rangesFromString(input, groups);
+            return this.rangesFromString(input);
         }
         else if (Functions.isRangeDefinition(input)) {
-            return this.rangesFromArray([input], groups);
+            return this.rangesFromArray([input]);
         }
         else if (Functions.isValueDefinition(input)) {
-            return this.rangesFromArray([input], groups);
+            return this.rangesFromArray([input]);
         }
         return [];
     };
@@ -3649,13 +3825,12 @@ var Parse_Parse = (function () {
      * Parses user input into a an array of [[Range]]s.
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instances parsed from the input.
      */
-    Parse.rangesFromArray = function (input, groups) {
+    Parse.rangesFromArray = function (input) {
         var ranges = [];
         for (var i = 0; i < input.length; i++) {
-            var range = this.range(input[i], groups);
+            var range = this.range(input[i]);
             ranges.push(range);
         }
         return ranges;
@@ -3664,28 +3839,26 @@ var Parse_Parse = (function () {
      * Parses user input into a an array of [[Range]]s.
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instances parsed from the input.
      */
-    Parse.rangesFromString = function (input, groups) {
+    Parse.rangesFromString = function (input) {
         var ranges = input.split(this.REGEX_LIST);
-        return this.rangesFromArray(ranges, groups);
+        return this.rangesFromArray(ranges);
     };
     /**
      * Parses user input into a [[Range]].
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instance parsed from the input.
      */
-    Parse.range = function (input, groups) {
+    Parse.range = function (input) {
         if (Functions.isString(input)) {
-            return this.rangeFromString(input, groups);
+            return this.rangeFromString(input);
         }
         else if (Functions.isRangeDefinition(input)) {
             var range = input;
-            var min = this.value(range.min, groups);
-            var max = this.value(range.max, groups);
+            var min = this.value(range.min);
+            var max = this.value(range.max);
             return new Range_Range(min, max);
         }
         return Range_Range.INVALID;
@@ -3694,13 +3867,12 @@ var Parse_Parse = (function () {
      * Parses user input into a [[Range]].
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instance parsed from the input.
      */
-    Parse.rangeFromString = function (input, groups) {
+    Parse.rangeFromString = function (input) {
         var matches = this.REGEX_RANGE.exec(input);
         if (!matches) {
-            var fixed = this.valueFromString(input, groups);
+            var fixed = this.valueFromString(input);
             return new Range_Range(fixed, fixed);
         }
         var minInput = matches[1];
@@ -3712,23 +3884,24 @@ var Parse_Parse = (function () {
         }
         var minUnit = minParsed.unit || maxParsed.unit;
         var maxUnit = maxParsed.unit || minParsed.unit;
-        var min = this.valueFromResult(minParsed, minUnit, groups);
-        var max = this.valueFromResult(maxParsed, maxUnit, groups);
+        var minRate = minParsed.rate || maxParsed.rate;
+        var maxRate = maxParsed.rate || minParsed.rate;
+        var min = this.valueFromResult(minParsed, minUnit, minRate);
+        var max = this.valueFromResult(maxParsed, maxUnit, maxRate);
         return new Range_Range(min, max);
     };
     /**
      * Parses user input into a [[Value]].
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instance parsed from the input.
      */
-    Parse.value = function (input, groups) {
+    Parse.value = function (input) {
         if (Functions.isString(input)) {
-            return this.valueFromString(input, groups);
+            return this.valueFromString(input);
         }
         else if (Functions.isValueDefinition(input)) {
-            return this.valueFromValue(input, groups);
+            return this.valueFromValue(input);
         }
         return Value_Value.INVALID;
     };
@@ -3736,52 +3909,42 @@ var Parse_Parse = (function () {
      * Parses user input into a [[Value]].
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instance parsed from the input.
      */
-    Parse.valueFromValue = function (input, groups) {
+    Parse.valueFromValue = function (input) {
         var givenValue = Functions.isDefined(input.value) ? input.value : 1;
         var num = Functions.isDefined(input.num) ? input.num : givenValue;
         var den = Functions.isDefined(input.den) ? input.den : 1;
         var parsedValue = Functions.isDefined(input.value) ? input.value : num / den;
         var unit = input.unit || '';
-        var group = groups(unit);
-        return new Value_Value(parsedValue, num, den, unit, group);
+        var rate = input.rate || '';
+        var group = Core_Core.getGroup(unit);
+        var rateGroup = Core_Core.getGroup(rate);
+        return new Value_Value(parsedValue, num, den, unit, group, rate, rateGroup);
     };
     /**
      * Parses user input into a [[Value]].
      *
      * @param input The input to parse.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instance parsed from the input.
      */
-    Parse.valueFromString = function (input, groups) {
-        var translated = Translations_Translations.translate(input, groups);
+    Parse.valueFromString = function (input) {
+        var translated = Translations_Translations.translate(input);
         var parsed = this.input(translated);
-        return parsed ? this.valueFromResult(parsed, parsed.unit, groups) : Value_Value.INVALID;
+        return parsed ? this.valueFromResult(parsed, parsed.unit, parsed.rate) : Value_Value.INVALID;
     };
     /**
      * Parses user input into a [[Value]].
      *
      * @param result The already parsed input.
      * @param unit The unit parsed from the input.
-     * @param groups A function which converts a unit to a [[Group]] instance.
      * @return The instance parsed from the input.
      */
-    Parse.valueFromResult = function (result, unit, groups) {
-        var group = groups(unit);
-        return new Value_Value(result.value, result.valueNum, result.valueDen, unit, group);
+    Parse.valueFromResult = function (result, unit, rateUnit) {
+        var group = Core_Core.getGroup(unit);
+        var rateGroup = Core_Core.getGroup(rateUnit);
+        return new Value_Value(result.value, result.valueNum, result.valueDen, unit, group, rateUnit, rateGroup);
     };
-    /**
-     * Possible Values:
-     * 1tsp
-     * 1 tsp
-     * 1/2 tsp
-     * 1 1/2 tsp
-     * 1 - 2 tsp
-     * 1 tsp, 1 cup
-     * 2/3 - 1 c, 1 lb, 2.45 cats
-     */
     /**
      * Parses user input into a [[ParseResult]]. If the input is not valid null
      * is returned.
@@ -3806,7 +3969,7 @@ var Parse_Parse = (function () {
         var den = parseInt(matches[5]);
         var decimal = matches[6];
         var hasDecimal = isFinite(parseFloat(decimal));
-        var unit = Functions.trim(matches[7]).replace(/\.$/, '');
+        var _a = this.unit(Functions.trim(matches[7])), unit = _a.unit, rate = _a.rate;
         if (!hasWhole && hasDecimal) {
             whole = 0;
             hasWhole = true;
@@ -3838,7 +4001,29 @@ var Parse_Parse = (function () {
             }
             valueNum *= sign;
         }
-        return { value: value, valueNum: valueNum, valueDen: valueDen, num: num, den: den, unit: unit };
+        return { value: value, valueNum: valueNum, valueDen: valueDen, num: num, den: den, unit: unit, rate: rate };
+    };
+    /**
+     * Parses unit input into a [[Rate]].
+     *
+     * *Examples:*
+     * - m/s
+     * - miles per hour
+     * - mph
+     *
+     * @param input The string to parse a unit from.
+     * @return The result of the parsing.
+     */
+    Parse.unit = function (input) {
+        var rate = Rates.get(input);
+        if (!rate) {
+            var units = input.split(this.REGEX_UNIT);
+            rate = {
+                unit: units[0] ? Functions.trim(units[0]).replace(/\.$/, '') : '',
+                rate: units[2] ? Functions.trim(units[2]).replace(/\.$/, '') : ''
+            };
+        }
+        return rate;
     };
     /**
      * The regular expression used to split up a string into multiple ranges.
@@ -3854,6 +4039,10 @@ var Parse_Parse = (function () {
      * possible unit from a string.
      */
     Parse.REGEX_PARSE = /^\s*(-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*)\s*$/i;
+    /**
+     * The regular expression used to split up a unit from a rateUnit.
+     */
+    Parse.REGEX_UNIT = /\s*(\/|\s+per\s+)\s*/i;
     return Parse;
 }());
 
@@ -4328,7 +4517,9 @@ var Length = new Class_Class('Length')
         units: {
             'mm': Plurality.EITHER,
             'millimeter': Plurality.SINGULAR,
-            'millimeters': Plurality.PLURAL
+            'millimeters': Plurality.PLURAL,
+            'millimetre': Plurality.SINGULAR,
+            'millimetres': Plurality.PLURAL
         }
     },
     {
@@ -4341,7 +4532,9 @@ var Length = new Class_Class('Length')
         units: {
             'cm': Plurality.EITHER,
             'centimeter': Plurality.SINGULAR,
-            'centimeters': Plurality.PLURAL
+            'centimeters': Plurality.PLURAL,
+            'centimetre': Plurality.SINGULAR,
+            'centimetres': Plurality.PLURAL
         }
     },
     {
@@ -4353,7 +4546,9 @@ var Length = new Class_Class('Length')
         units: {
             'dc': Plurality.EITHER,
             'decimeter': Plurality.SINGULAR,
-            'decimeters': Plurality.PLURAL
+            'decimeters': Plurality.PLURAL,
+            'decimetre': Plurality.SINGULAR,
+            'decimetres': Plurality.PLURAL
         }
     },
     {
@@ -4366,7 +4561,9 @@ var Length = new Class_Class('Length')
         units: {
             'm': Plurality.EITHER,
             'meter': Plurality.SINGULAR,
-            'meters': Plurality.PLURAL
+            'meters': Plurality.PLURAL,
+            'metre': Plurality.SINGULAR,
+            'metres': Plurality.PLURAL
         }
     },
     {
@@ -4378,8 +4575,25 @@ var Length = new Class_Class('Length')
         denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],
         units: {
             'km': Plurality.EITHER,
+            'kms': Plurality.PLURAL,
             'kilometer': Plurality.SINGULAR,
-            'kilometers': Plurality.PLURAL
+            'kilometers': Plurality.PLURAL,
+            'kilometre': Plurality.SINGULAR,
+            'kilometres': Plurality.PLURAL
+        }
+    },
+    {
+        system: System.METRIC,
+        unit: 'nm',
+        relativeUnit: 'm',
+        relativeScale: 1852,
+        denominators: [2, 3, 4, 5, 10],
+        units: {
+            'nm': Plurality.EITHER,
+            'nmi': Plurality.EITHER,
+            'nautical mi': Plurality.EITHER,
+            'nautical mile': Plurality.SINGULAR,
+            'nautical miles': Plurality.PLURAL
         }
     }
 ])
@@ -4583,18 +4797,6 @@ var Time = new Class_Class('Time')
         denominators: [20],
         units: {
             'score': Plurality.EITHER
-        }
-    },
-    {
-        system: System.ANY,
-        common: true,
-        unit: 'decade',
-        relativeUnit: 'yr',
-        relativeScale: 10,
-        denominators: [10],
-        units: {
-            'decade': Plurality.EITHER,
-            'decades': Plurality.PLURAL
         }
     },
     {
@@ -5214,7 +5416,6 @@ var Classes_Classes = (function () {
      * - week
      * - year
      * - score
-     * - decade
      * - biennium
      * - triennium
      * - quadrennium
@@ -5283,6 +5484,7 @@ var Classes_Classes = (function () {
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Classes", function() { return Classes_Classes; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "newRegexTranslator", function() { return newRegexTranslator; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Translations", function() { return Translations_Translations; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "Rates", function() { return Rates; });
 
 // Enums
 
@@ -5304,6 +5506,8 @@ var Classes_Classes = (function () {
 // Classes
 
 // Translations
+
+// Rates
 
 
 

@@ -209,11 +209,12 @@ Unitz.Core.isMoreNormal = function(fromValue, toValue, transform, forOutput) {
 - yd, yard, yards, yds
 - mi, mile, miles
 - league, leagues
-- mm, millimeter, millimeters
-- cm, centimeter, centimeters
-- dc, decimeter, decimeters
-- m, meter, meters
-- km, kilometer, kilometers
+- mm, millimeter, millimeters, millimetre, millimetres
+- cm, centimeter, centimeters, centimetre, centimetres
+- dc, decimeter, decimeters, decimetre, decimetres
+- m, meter, meters, metre, metres
+- km, kms, kilometer, kilometers, kilometre, kilometres
+- nm, nmi, nautical mi, nautical mile, nautical miles
 
 **Temperature**:
 - F, °F, Fahrenheit

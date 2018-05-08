@@ -147,18 +147,6 @@ export let Time = new Class('Time')
     },
     {
       system: System.ANY,
-      common: true,
-      unit: 'decade',
-      relativeUnit: 'yr',
-      relativeScale: 10,
-      denominators: [10],
-      units: {
-        'decade': Plurality.EITHER,
-        'decades': Plurality.PLURAL
-      }
-    },
-    {
-      system: System.ANY,
       unit: 'biennium',
       relativeUnit: 'yr',
       relativeScale: 2,

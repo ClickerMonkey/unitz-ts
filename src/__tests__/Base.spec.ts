@@ -4,10 +4,12 @@ import { Transform } from '../Transform';
 import { System } from '../System';
 import { Output, OutputFormat } from '../Output';
 import { Classes } from '../Classes'
+import { Rates } from '../Rates'
 
 describe('Base', () => {
 
   Classes.addDefaults()
+  Rates.addDefaults();
 
   it('parses ranges', () => {
     let u = uz('1 - 2 in^2, 23 1/4 lb')
@@ -176,6 +178,7 @@ describe('Base', () => {
     expect(uz('1.5 lb').convert('oz').value).toBe(24);
     expect(uz('1 - 2lb').convert('oz').maximum).toBe(32);
     expect(uz('1 - 2lb').convert('oz').minimum).toBe(16);
+    expect(uz('60 mph').to('mi/min').value).toBe(1);
   })
 
   it('normalize / transform', () => {

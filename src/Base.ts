@@ -2,6 +2,7 @@
 import { Functions as fn } from './Functions';
 import { Core } from './Core';
 import { Parse } from './Parse';
+import { Rate } from './Rates';
 import { RangesInput, BaseInput } from './Types';
 import { Range, RangeList, RangeMutator } from './Range';
 import { Group } from './Group';
@@ -9,7 +10,7 @@ import { Transform, TransformInput } from './Transform';
 import { Output, OutputInput } from './Output';
 import { Sort, SortInput } from './Sort';
 import { Value } from './Value';
-import { Class, ClassGrouping } from './Class';
+import { Class } from './Class';
 
 
 /**
@@ -47,7 +48,7 @@ export class Base
   public constructor(input: RangesInput, ranges?: RangeList )
   {
     this.input = input;
-    this.ranges = ranges || Parse.ranges( input, Core.getGroup );
+    this.ranges = ranges || Parse.ranges( input );
   }
 
   /**
@@ -306,89 +307,41 @@ export class Base
    */
   public compact(options?: TransformInput): Base
   {
+    let ranges: RangeList = this.ranges.slice();
     let compacted: RangeList = [];
     let transform: Transform = Core.globalTransform.extend( options );
-    let { classes, groupless } = this.groupByClass();
 
-    for (let className in classes)
+    // Largest ranges first
+    ranges.sort((a, b) =>
     {
-      let entry = classes[ className ];
-      let ranges: RangeList = entry.ranges;
-      let parent: Class = entry.parent;
-      let minGroupChosen: Group = <Group>null;
-      let maxGroupChosen: Group = <Group>null;
-      let minSum: number = 0;
-      let maxSum: number = 0;
+      return b.max.classScaled - a.max.classScaled;
+    });
 
-      // If the transformation options ignores this class, skip it.
-      if (!transform.isClassMatch( parent ))
-      {
-        continue;
-      }
-
-      // Determine the smallest visible group we can use.
-      parent.getVisibleGroups( transform, false, null, (group) =>
-      {
-        minGroupChosen = maxGroupChosen = group;
-        return false;
-      });
-
-      // If we can't find one, then no groups are valid. Skip them.
-      if (!minGroupChosen)
-      {
-        continue;
-      }
-
-      // For each range, sum up the minimums and maximums while also determining
-      // the largest min & max that should be used to represent the sums.
-      for (let i = 0; i < ranges.length; i++)
-      {
-        let range: Range = ranges[ i ];
-        let minGroup: Group = range.min.group;
-        let maxGroup: Group = range.max.group;
-
-        if (minGroup.classScale > minGroupChosen.classScale && transform.isVisibleGroup( minGroup ))
-        {
-          if (i !== 0)
-          {
-            minSum = parent.convert( minSum, minGroupChosen, minGroup );
-          }
-          minGroupChosen = minGroup;
-        }
-
-        if (maxGroup.classScale > maxGroupChosen.classScale && transform.isVisibleGroup( maxGroup ))
-        {
-          if (i !== 0)
-          {
-            maxSum = parent.convert( maxSum, maxGroupChosen, maxGroup );
-          }
-          maxGroupChosen = maxGroup;
-        }
-
-        minSum += range.min.convertTo( minGroupChosen );
-        maxSum += range.max.convertTo( maxGroupChosen );
-      }
-
-      let min: Value = Value.fromNumberForGroup( minSum, minGroupChosen );
-      let max: Value = Value.fromNumberForGroup( maxSum, maxGroupChosen );
-
-      compacted.push( new Range( min, max ) );
-    }
-
-    // If the transform options permit groupless results and there are ranges
-    // without groups - sum them all.
-    if (transform.groupless && groupless.length)
+    for (let i = 0; i < ranges.length; i++)
     {
-      let minSum: Value = new Value(0, 0, 1, '', <Group>null);
-      let maxSum: Value = new Value(0, 0, 1, '', <Group>null);
+      let a: Range = ranges[ i ];
+      let min: Value = a.min;
+      let max: Value = a.max;
 
-      for (let i = 0; i < groupless.length; i++)
+      for (let k = ranges.length - 1; k > i; k--)
       {
-        minSum = minSum.add( groupless[ i ].min );
-        maxSum = maxSum.add( groupless[ i ].max );
+        let b: Range = ranges[ k ];
+
+        if (a.isMatch( b.min, b.max ))
+        {
+          min = min.add( b.min.convertToValue( min.group, min.rateGroup ) );
+          max = max.add( b.max.convertToValue( max.group, max.rateGroup ) );
+
+          ranges.splice( k, 1 );
+        }
       }
 
-      compacted.push( new Range( minSum, maxSum ) );
+      let sum: Range = new Range( min, max );
+
+      if (transform.isValidRange( sum ))
+      {
+        compacted.push( sum );
+      }
     }
 
     return new Base( this.input, compacted );
@@ -424,6 +377,7 @@ export class Base
       let value: Value = transform.convertWithMax ? range.max : range.min;
       let valueGroup: Group = value.group;
       let valueSign: number = fn.sign( value.value );
+      let valueRate: Group = value.rateGroup;
 
       if (valueGroup)
       {
@@ -431,7 +385,7 @@ export class Base
         {
           if (!fn.isZero( value.value ))
           {
-            let transformed = value.convertToValue(group);
+            let transformed = value.convertToValue(group, valueRate);
 
             if (group.isBase)
             {
@@ -443,7 +397,7 @@ export class Base
             {
               let truncated: Value = transformed.truncated();
 
-              value = value.sub( truncated.convertToValue( valueGroup ) );
+              value = value.sub( truncated.convertToValue( valueGroup, valueRate ) );
 
               expanded.push( Range.fromFixed( truncated ) );
             }
@@ -526,7 +480,7 @@ export class Base
    *  in this instance where the range returned is added to the result.
    * @param remainder.a The remaining range to operate on.
    * @return A new instance.
-   * @see [[Range.isMatch]]
+   * @see [[Range.isExactMatch]]
    */
   public operate(input: BaseInput,
     operate: (a: Range, b: Range) => Range,
@@ -549,7 +503,7 @@ export class Base
         {
           let otherRange: Range = otherRanges[ k ];
 
-          if (range.isMatch( otherRange ))
+          if (range.isExactMatch( otherRange ))
           {
             range = operate( range, otherRange );
             otherUsed[ k ] = true;
@@ -602,8 +556,8 @@ export class Base
 
       convert.conversions(transform, false, (transformed) =>
       {
-        let min: Value = transform.convertWithMax ? range.min.convertToValue( transformed.group ) : transformed;
-        let max: Value = transform.convertWithMax ? transformed : range.max.convertToValue( transformed.group );
+        let min: Value = transform.convertWithMax ? range.min.convertToValue( transformed.group, transformed.rateGroup ) : transformed;
+        let max: Value = transform.convertWithMax ? transformed : range.max.convertToValue( transformed.group, transformed.rateGroup );
 
         if (min.value <= transform.max && max.value >= transform.min)
         {
@@ -712,44 +666,6 @@ export class Base
   }
 
   /**
-   * Returns the ranges in this instance grouped by their class. All groupless
-   * ranges are added to their own list.
-   */
-  public groupByClass(): ClassGrouping
-  {
-    let ranges: RangeList = this.ranges;
-    let classes = {};
-    let groupless = [];
-
-    for (let i = 0; i < ranges.length; i++)
-    {
-      let range: Range = ranges[ i ];
-
-      if (range.min.group)
-      {
-        let parent: Class = range.min.group.parent;
-        let entry = classes[ parent.name ];
-
-        if (!entry)
-        {
-          entry = classes[ parent.name ] = {
-            parent: parent,
-            ranges: []
-          };
-        }
-
-        entry.ranges.push( range );
-      }
-      else
-      {
-        groupless.push( range );
-      }
-    }
-
-    return { classes, groupless };
-  }
-
-  /**
    * Calculates what this instance would need to be scaled by so that the given
    * value & unit pair is equal to the sum of ranges in this instance of the
    * same class. If there are no ranges with the same class then zero is
@@ -776,14 +692,14 @@ export class Base
    */
   public getScaleTo(unitValue: string, rangeDelta: number = 1.0): number
   {
-    let to: Value = Parse.value( unitValue, Core.getGroup );
+    let to: Value = Parse.value( unitValue );
 
     if (!to.isValid)
     {
       return 0;
     }
 
-    let converted: Range = this.convert( to.unit );
+    let converted: Range = this.convert( to.units() );
 
     if (!converted || !converted.isValid)
     {
@@ -820,6 +736,7 @@ export class Base
    * *For example:*
    * ```javascript
    * uz('1in, 1m, 1ft').convert('cm'); // '133.02 cm'
+   * uz('60 mph').convert('miles per minute'); // '1 miles/minute'
    * ```
    *
    * @param unit The unit to calculate the sum of.
@@ -830,31 +747,39 @@ export class Base
    */
   public convert(unit: string): Range
   {
-    let group: Group = Core.getGroup( unit );
+    let unitParsed: Rate = Parse.unit( unit );
+    let group: Group = Core.getGroup( unitParsed.unit );
+    let rateGroup: Group = Core.getGroup( unitParsed.rate );
 
     if (!group)
     {
       return null;
     }
 
-    let parent: Class = group.parent;
     let ranges: RangeList = this.ranges;
-    let min: Value = new Value(0, 0, 1, unit, group);
-    let max: Value = new Value(0, 0, 1, unit, group);
+    let min: Value = new Value(0, 0, 1, unit, group, unitParsed.rate, rateGroup);
+    let max: Value = new Value(0, 0, 1, unit, group, unitParsed.rate, rateGroup);
 
     for (let i = 0; i < ranges.length; i++)
     {
       let range: Range = ranges[ i ];
-      let rangeGroup: Group = range.min.group;
 
-      if (rangeGroup && rangeGroup.parent === parent)
+      if (range.isMatch( min, max ))
       {
-        min = min.add( range.min.convertToValue( group ) );
-        max = max.add( range.max.convertToValue( group ) );
+        min = min.add( range.min.convertToValue( group, rateGroup ) );
+        max = max.add( range.max.convertToValue( group, rateGroup ) );
       }
     }
 
     return new Range( min, max );
+  }
+
+  /**
+   * Alias for [[Base.convert]].
+   */
+  public to(unit: string): Range
+  {
+    return this.convert( unit );
   }
 
   /**
@@ -925,17 +850,17 @@ export class Base
    */
   public get hasRanges(): boolean
   {
-    let ranges: RangeList = this.ranges;
+    return this.test(false, false, (r) => r.isRange);
+  }
 
-    for (let i = 0; i < ranges.length; i++)
-    {
-      if (ranges[ i ].isRange)
-      {
-        return true;
-      }
-    }
-
-    return false;
+  /**
+   * Returns whether this instance has values or ranges that are rates.
+   *
+   * @see [[Range.isRate]]
+   */
+  public get hasRates(): boolean
+  {
+    return this.test(false, false, (r) => r.isRate);
   }
 
   /**
@@ -946,17 +871,33 @@ export class Base
    */
   public get isValid(): boolean
   {
+    return this.test(true, true, (r) => r.isValid);
+  }
+
+  /**
+   * Performs a test on the ranges in this instance and returns whether the
+   * ranges passed the test. If the `tester` function returns something
+   * different than `expected` then the function ends early with `!passed`.
+   * If all tests pass then `passed` is returned.
+   *
+   * @param expected The expected result of the tester.
+   * @param passed The value to return if all ranges pass the test.
+   * @param tester The function to test a range.
+   * @return Return `passed` if all ranges return `expected` from `tester`.
+   */
+  public test(expected: boolean, passed: boolean, tester: (range: Range) => boolean): boolean
+  {
     let ranges: RangeList = this.ranges;
 
     for (let i = 0; i < ranges.length; i++)
     {
-      if (!ranges[ i ].isValid)
+      if (tester( ranges[ i ] ) != expected)
       {
-        return false;
+        return !passed;
       }
     }
 
-    return true;
+    return passed;
   }
 
   /**
@@ -985,6 +926,16 @@ export class Base
   public get isRange(): boolean
   {
     return this.ranges.length === 1 && this.ranges[ 0 ].isRange;
+  }
+
+  /**
+   * Returns true if this instance has a single rate.
+   *
+   * @see [[Range.isRate]]
+   */
+  public get isRate(): boolean
+  {
+    return this.ranges.length === 1 && this.ranges[ 0 ].isRate;
   }
 
 }

@@ -1,5 +1,6 @@
 
 import { Value } from './Value';
+import { Group } from './Group';
 import { Range, RangeList } from './Range';
 import { Functions as fn } from './Functions';
 
@@ -122,6 +123,11 @@ export interface OutputInput
   mixedSpacer?: string;
 
   /**
+   * @see [[Output.rateSpacer]]
+   */
+  rateSpacer?: string;
+
+  /**
    * @see [[Output.delimiter]]
    */
   delimiter?: string;
@@ -176,6 +182,11 @@ export class Output implements OutputInput
   public mixedSpacer: string = ' ';
 
   /**
+   * The spacing used to separate a unit and the rate unit.
+   */
+  public rateSpacer: string = '/';
+
+  /**
    * The delimiter used to separate ranges.
    */
   public delimiter: string = ', ';
@@ -217,6 +228,7 @@ export class Output implements OutputInput
     this.rangeSpacer = fn.coalesce( input.rangeSpacer, this.rangeSpacer );
     this.fractionSpacer = fn.coalesce( input.fractionSpacer, this.fractionSpacer );
     this.mixedSpacer = fn.coalesce( input.mixedSpacer, this.mixedSpacer );
+    this.rateSpacer = fn.coalesce( input.rateSpacer, this.rateSpacer );
     this.delimiter = fn.coalesce( input.delimiter, this.delimiter );
     this.significant = fn.coalesce( input.significant, this.significant );
 
@@ -351,25 +363,54 @@ export class Output implements OutputInput
 
     if (showUnit && this.unit !== OutputUnit.NONE && value.isValid)
     {
-      let group = value.group;
-
       out += this.unitSpacer;
-
-      if (this.isLongUnit( value ))
-      {
-        out += fn.isSingular( value.value ) ? group.singularLong : group.pluralLong;
-      }
-      else if (this.isShortUnit( value ) || (group && group.dynamic))
-      {
-        out += fn.isSingular( value.value ) ? group.singularShort : group.pluralShort;
-      }
-      else
-      {
-        out += value.unit;
-      }
+      out += this.units( value );
     }
 
     return out;
+  }
+
+  /**
+   * Generates a full unit string including the rate unit if it exists.
+   *
+   * @param value The value to generate a unit for.
+   * @return The units string representation.
+   */
+  public units(value: Value): string
+  {
+    let out: string = '';
+
+    out += this.group( value.value, value.unit, value.group );
+
+    if (value.rateGroup)
+    {
+      out += this.rateSpacer;
+      out += this.group( value.value, value.rate, value.rateGroup );
+    }
+
+    return out;
+  }
+
+  /**
+   * Generates a unit string given the value, the current unit, and its group.
+   *
+   * @param value The value to generate a unit for.
+   * @param unit The unit to potentially use.
+   * @param group The group of the unit.
+   * @return The unit determined based on the options.
+   */
+  public group(value: number, unit: string, group: Group): string
+  {
+    if (this.isLongUnit( group ))
+    {
+      return fn.isSingular( value ) ? group.singularLong : group.pluralLong;
+    }
+    else if (this.isShortUnit( group ) || (group && group.dynamic))
+    {
+      return fn.isSingular( value ) ? group.singularShort : group.pluralShort;
+    }
+
+    return unit;
   }
 
   /**
@@ -432,23 +473,23 @@ export class Output implements OutputInput
   /**
    * Determines whether the short unit should be displayed.
    *
-   * @param value The value to look at.
+   * @param group The group of the unit.
    * @return True if the short unit should be displayed, otherwise false.
    */
-  public isShortUnit(value: Value)
+  public isShortUnit(group: Group)
   {
-    return value.group && this.unit === OutputUnit.SHORT;
+    return group && this.unit === OutputUnit.SHORT;
   }
 
   /**
    * Determines whether the long unit should be displayed.
    *
-   * @param value The value to look at.
+   * @param group The group of the unit.
    * @return True if the short unit should be displayed, otherwise false.
    */
-  public isLongUnit(value: Value)
+  public isLongUnit(group: Group)
   {
-    return value.group && this.unit === OutputUnit.LONG;
+    return group && this.unit === OutputUnit.LONG;
   }
 
 }

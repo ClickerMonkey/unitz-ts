@@ -1,5 +1,4 @@
 // import { describe, it, expect } from 'jest';
-import { Core } from '../Core';
 import { Translations } from '../Translations';
 import { Classes } from '../Classes';
 
@@ -10,7 +9,7 @@ describe('Translations', () =>
   Classes.addDefaults();
 
   let trans = (x: string) => {
-    return Translations.translate( x, Core.getGroup );
+    return Translations.translate( x );
   };
 
   it('NumberWords', () =>

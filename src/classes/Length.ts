@@ -86,7 +86,9 @@ export let Length = new Class('Length')
       units: {
         'mm': Plurality.EITHER,
         'millimeter': Plurality.SINGULAR,
-        'millimeters': Plurality.PLURAL
+        'millimeters': Plurality.PLURAL,
+        'millimetre': Plurality.SINGULAR,
+        'millimetres': Plurality.PLURAL
       }
     },
     {
@@ -99,7 +101,9 @@ export let Length = new Class('Length')
       units: {
         'cm': Plurality.EITHER,
         'centimeter': Plurality.SINGULAR,
-        'centimeters': Plurality.PLURAL
+        'centimeters': Plurality.PLURAL,
+        'centimetre': Plurality.SINGULAR,
+        'centimetres': Plurality.PLURAL
       }
     },
     {
@@ -111,7 +115,9 @@ export let Length = new Class('Length')
       units: {
         'dc': Plurality.EITHER,
         'decimeter': Plurality.SINGULAR,
-        'decimeters': Plurality.PLURAL
+        'decimeters': Plurality.PLURAL,
+        'decimetre': Plurality.SINGULAR,
+        'decimetres': Plurality.PLURAL
       }
     },
     {
@@ -124,7 +130,9 @@ export let Length = new Class('Length')
       units: {
         'm': Plurality.EITHER,
         'meter': Plurality.SINGULAR,
-        'meters': Plurality.PLURAL
+        'meters': Plurality.PLURAL,
+        'metre': Plurality.SINGULAR,
+        'metres': Plurality.PLURAL
       }
     },
     {
@@ -136,8 +144,25 @@ export let Length = new Class('Length')
       denominators: [2, 3, 4, 5, 6, 7, 8, 9, 10],
       units: {
         'km': Plurality.EITHER,
+        'kms': Plurality.PLURAL,
         'kilometer': Plurality.SINGULAR,
-        'kilometers': Plurality.PLURAL
+        'kilometers': Plurality.PLURAL,
+        'kilometre': Plurality.SINGULAR,
+        'kilometres': Plurality.PLURAL
+      }
+    },
+    {
+      system: System.METRIC,
+      unit: 'nm',
+      relativeUnit: 'm',
+      relativeScale: 1852,
+      denominators: [2, 3, 4, 5, 10],
+      units: {
+        'nm': Plurality.EITHER,
+        'nmi': Plurality.EITHER,
+        'nautical mi': Plurality.EITHER,
+        'nautical mile': Plurality.SINGULAR,
+        'nautical miles': Plurality.PLURAL
       }
     }
   ])

@@ -58,6 +58,14 @@ export interface TransformInput
    * @see [[Transform.notClasses]]
    */
   notClasses?: string[];
+  /**
+   * @see [[Transform.convertUnit]]
+   */
+  convertUnit?: boolean;
+  /**
+   * @see [[Transform.convertRate]]
+   */
+  convertRate?: boolean;
 }
 
 
@@ -101,6 +109,16 @@ export class Transform implements TransformInput
    * conversions.
    */
   public convertWithMax: boolean = true;
+
+  /**
+   * Whether conversions should convert the main unit.
+   */
+  public convertUnit: boolean = true;
+
+  /**
+   * Whether conversions should convert the rate unit.
+   */
+  public convertRate: boolean = false;
 
   /**
    * Whether ranges without units are considered valid for the transformation.
@@ -156,6 +174,8 @@ export class Transform implements TransformInput
     this.max = fn.coalesce( input.max, this.max );
     this.groupless = fn.coalesce( input.groupless, this.groupless );
     this.convertWithMax = fn.coalesce( input.convertWithMax, this.convertWithMax );
+    this.convertUnit = fn.coalesce( input.convertUnit, this.convertUnit );
+    this.convertRate = fn.coalesce( input.convertRate, this.convertRate );
     this.onlyUnits = fn.coalesce( input.onlyUnits, this.onlyUnits );
     this.notUnits = fn.coalesce( input.notUnits, this.notUnits );
     this.onlyClasses = fn.coalesce( input.onlyClasses, this.onlyClasses );

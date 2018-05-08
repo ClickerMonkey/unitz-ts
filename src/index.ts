@@ -28,3 +28,6 @@ export * from './Classes';
 
 // Translations
 export * from './Translations';
+
+// Rates
+export * from './Rates';

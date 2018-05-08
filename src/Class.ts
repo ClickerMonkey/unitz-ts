@@ -2,30 +2,12 @@
 import { GroupDefinition, Converter, ConverterMap, ConverterDoubleMap } from './Types';
 import { Group, GroupMap, GroupList } from './Group';
 import { Transform } from './Transform';
-import { RangeList } from './Range';
+
 
 /**
  * A map of classes is an object where the key is a unit and the value is a class.
  */
 export type ClassMap = { [unit: string]: Class };
-
-/**
- * A group of ranges by class name and a list of ranges without classes.
- */
-export type ClassGrouping = {
-  /** The list of groups which don't have classes **/
-  groupless: RangeList,
-  /** The object of entries keyed by class name. **/
-  classes: {
-    /** An entry keyed by the class naem **/
-    [className: string]: {
-      /** The class of the entry **/
-      parent: Class,
-      /** The list of ranges in the entry with the same class **/
-      ranges: RangeList
-    }
-  }
-}
 
 /**
  * A collection of groups and their units with the logic on how to convert
@@ -311,9 +293,11 @@ export class Class
    * @param value The number to convert.
    * @param from The group of the number to convert from.
    * @param to The group to convert to.
+   * @param invalid The value to return if a conversion between the two groups
+   *  could not be made.
    * @return The converted number or zero if a base conversion could not be found.
    */
-  public convert(value: number, from: Group, to: Group): number
+  public convert(value: number, from: Group, to: Group, invalid: number = 0): number
   {
     if (from === to || !from || !to)
     {
@@ -328,7 +312,7 @@ export class Class
 
       if (!map || !map[ to.baseUnit ])
       {
-        return 0;
+        return invalid;
       }
 
       let converter: Converter = map[ to.baseUnit ];

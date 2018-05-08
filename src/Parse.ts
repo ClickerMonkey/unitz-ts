@@ -1,11 +1,13 @@
 
 import { Functions as fn } from './Functions';
 import { BaseInput, RangeInput, RangesInput, RangeDefinition, ValueInput, ValueDefinition, ParseResult } from './Types';
-import { Group, GroupFactory } from './Group';
+import { Group } from './Group';
+import { Core } from './Core';
 import { Range, RangeList } from './Range';
 import { Value } from './Value';
 import { Base } from './Base';
 import { Translations } from './Translations';
+import { Rate, Rates } from './Rates';
 
 
 /**
@@ -32,6 +34,11 @@ export class Parse
   public static REGEX_PARSE: RegExp = /^\s*(-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*)\s*$/i;
 
   /**
+   * The regular expression used to split up a unit from a rateUnit.
+   */
+  public static REGEX_UNIT: RegExp = /\s*(\/|\s+per\s+)\s*/i;
+
+  /**
    * Parses user input into a [[Base]] instance.
    *
    * @param input The input to parse into a Base.
@@ -51,26 +58,25 @@ export class Parse
    * Parses user input into a an array of [[Range]]s.
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instances parsed from the input.
    */
-  public static ranges(input: RangesInput, groups: GroupFactory): RangeList
+  public static ranges(input: RangesInput): RangeList
   {
     if (fn.isArray(input))
     {
-      return this.rangesFromArray( <RangeInput[]>input, groups );
+      return this.rangesFromArray( <RangeInput[]>input );
     }
     else if (fn.isString(input))
     {
-      return this.rangesFromString( <string>input, groups );
+      return this.rangesFromString( <string>input );
     }
     else if (fn.isRangeDefinition(input))
     {
-      return this.rangesFromArray( [ <RangeDefinition>input ], groups );
+      return this.rangesFromArray( [ <RangeDefinition>input ] );
     }
     else if (fn.isValueDefinition(input))
     {
-      return this.rangesFromArray( [ <ValueDefinition>input ], groups );
+      return this.rangesFromArray( [ <ValueDefinition>input ] );
     }
 
     return [];
@@ -80,16 +86,15 @@ export class Parse
    * Parses user input into a an array of [[Range]]s.
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instances parsed from the input.
    */
-  public static rangesFromArray(input: RangeInput[], groups: GroupFactory): RangeList
+  public static rangesFromArray(input: RangeInput[]): RangeList
   {
     let ranges = [];
 
     for (let i = 0; i < input.length; i++)
     {
-      let range: Range = this.range( input[ i ], groups );
+      let range: Range = this.range( input[ i ] );
 
       ranges.push( range );
     }
@@ -101,34 +106,32 @@ export class Parse
    * Parses user input into a an array of [[Range]]s.
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instances parsed from the input.
    */
-  public static rangesFromString(input: string, groups: GroupFactory): RangeList
+  public static rangesFromString(input: string): RangeList
   {
     let ranges: string[] = input.split( this.REGEX_LIST );
 
-    return this.rangesFromArray( ranges, groups );
+    return this.rangesFromArray( ranges );
   }
 
   /**
    * Parses user input into a [[Range]].
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instance parsed from the input.
    */
-  public static range(input: RangeInput, groups: GroupFactory): Range
+  public static range(input: RangeInput): Range
   {
     if (fn.isString(input))
     {
-      return this.rangeFromString( <string>input, groups );
+      return this.rangeFromString( <string>input );
     }
     else if (fn.isRangeDefinition(input))
     {
       let range: RangeDefinition = <RangeDefinition>input;
-      let min: Value = this.value( range.min, groups );
-      let max: Value = this.value( range.max, groups );
+      let min: Value = this.value( range.min );
+      let max: Value = this.value( range.max );
 
       return new Range( min, max );
     }
@@ -140,16 +143,15 @@ export class Parse
    * Parses user input into a [[Range]].
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instance parsed from the input.
    */
-  public static rangeFromString(input: string, groups: GroupFactory): Range
+  public static rangeFromString(input: string): Range
   {
     let matches: string[] = this.REGEX_RANGE.exec( input );
 
     if (!matches)
     {
-      let fixed: Value = this.valueFromString(input, groups);
+      let fixed: Value = this.valueFromString(input);
 
       return new Range(fixed, fixed);
     }
@@ -168,8 +170,11 @@ export class Parse
     let minUnit: string = minParsed.unit || maxParsed.unit;
     let maxUnit: string = maxParsed.unit || minParsed.unit;
 
-    let min: Value = this.valueFromResult(minParsed, minUnit, groups);
-    let max: Value = this.valueFromResult(maxParsed, maxUnit, groups);
+    let minRate: string = minParsed.rate || maxParsed.rate;
+    let maxRate: string = maxParsed.rate || minParsed.rate;
+
+    let min: Value = this.valueFromResult(minParsed, minUnit, minRate);
+    let max: Value = this.valueFromResult(maxParsed, maxUnit, maxRate);
 
     return new Range( min, max );
   }
@@ -178,18 +183,17 @@ export class Parse
    * Parses user input into a [[Value]].
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instance parsed from the input.
    */
-  public static value(input: ValueInput, groups: GroupFactory): Value
+  public static value(input: ValueInput): Value
   {
     if (fn.isString(input))
     {
-      return this.valueFromString( <string>input, groups );
+      return this.valueFromString( <string>input );
     }
     else if (fn.isValueDefinition(input))
     {
-      return this.valueFromValue( <ValueDefinition>input, groups );
+      return this.valueFromValue( <ValueDefinition>input );
     }
 
     return Value.INVALID;
@@ -199,34 +203,34 @@ export class Parse
    * Parses user input into a [[Value]].
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instance parsed from the input.
    */
-  public static valueFromValue(input: ValueDefinition, groups: GroupFactory): Value
+  public static valueFromValue(input: ValueDefinition): Value
   {
     let givenValue: number = fn.isDefined( input.value ) ? input.value : 1;
     let num: number = fn.isDefined( input.num ) ? input.num : givenValue;
     let den: number = fn.isDefined( input.den ) ? input.den : 1;
     let parsedValue: number = fn.isDefined( input.value ) ? input.value : num / den;
     let unit: string = input.unit || '';
-    let group: Group = groups( unit );
+    let rate: string = input.rate || '';
+    let group: Group = Core.getGroup( unit );
+    let rateGroup: Group = Core.getGroup( rate );
 
-    return new Value( parsedValue, num, den, unit, group );
+    return new Value( parsedValue, num, den, unit, group, rate, rateGroup );
   }
 
   /**
    * Parses user input into a [[Value]].
    *
    * @param input The input to parse.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instance parsed from the input.
    */
-  public static valueFromString(input: string, groups: GroupFactory): Value
+  public static valueFromString(input: string): Value
   {
-    let translated: string = Translations.translate( input, groups );
+    let translated: string = Translations.translate( input );
     let parsed: ParseResult = this.input( translated );
 
-    return parsed ? this.valueFromResult(parsed, parsed.unit, groups) : Value.INVALID;
+    return parsed ? this.valueFromResult(parsed, parsed.unit, parsed.rate) : Value.INVALID;
   }
 
   /**
@@ -234,26 +238,16 @@ export class Parse
    *
    * @param result The already parsed input.
    * @param unit The unit parsed from the input.
-   * @param groups A function which converts a unit to a [[Group]] instance.
    * @return The instance parsed from the input.
    */
-  public static valueFromResult(result: ParseResult, unit: string, groups: GroupFactory): Value
+  public static valueFromResult(result: ParseResult, unit: string, rateUnit: string): Value
   {
-    let group: Group = groups( unit );
+    let group: Group = Core.getGroup( unit );
+    let rateGroup: Group = Core.getGroup( rateUnit );
 
-    return new Value(result.value, result.valueNum, result.valueDen, unit, group);
+    return new Value(result.value, result.valueNum, result.valueDen, unit, group, rateUnit, rateGroup);
   }
 
-  /**
-   * Possible Values:
-   * 1tsp
-   * 1 tsp
-   * 1/2 tsp
-   * 1 1/2 tsp
-   * 1 - 2 tsp
-   * 1 tsp, 1 cup
-   * 2/3 - 1 c, 1 lb, 2.45 cats
-   */
 
 
   /**
@@ -281,7 +275,7 @@ export class Parse
     let den: number = parseInt( matches[5] );
     let decimal: string = matches[6];
     let hasDecimal: boolean = isFinite( parseFloat( decimal ) );
-    let unit: string = fn.trim( matches[7] ).replace( /\.$/, '' );
+    let { unit, rate } = this.unit( fn.trim( matches[7] ) );
 
     if ( !hasWhole && hasDecimal )
     {
@@ -329,8 +323,35 @@ export class Parse
       valueNum *= sign;
     }
 
-    return { value, valueNum, valueDen, num, den, unit };
+    return { value, valueNum, valueDen, num, den, unit, rate };
   }
 
+  /**
+   * Parses unit input into a [[Rate]].
+   *
+   * *Examples:*
+   * - m/s
+   * - miles per hour
+   * - mph
+   *
+   * @param input The string to parse a unit from.
+   * @return The result of the parsing.
+   */
+  public static unit(input: string): Rate
+  {
+    let rate: Rate = Rates.get( input );
+
+    if (!rate)
+    {
+      let units: string[] = input.split( this.REGEX_UNIT );
+
+      rate = {
+        unit: units[0] ? fn.trim( units[0] ).replace( /\.$/, '' ) : '',
+        rate: units[2] ? fn.trim( units[2] ).replace( /\.$/, '' ) : ''
+      };
+    }
+
+    return rate;
+  }
 
 }

@@ -111,6 +111,14 @@ export class Range
   }
 
   /**
+   * True if one of min and max are rates.
+   */
+  public get isRate(): boolean
+  {
+    return this.min.isRate && this.max.isRate;
+  }
+
+  /**
    * The average number between the min and max.
    */
   public get average(): number
@@ -152,16 +160,31 @@ export class Range
   }
 
   /**
-   * Determines if the given range matches this range enough to provide a
-   * mathematical operation between the two ranges.
+   * Determines if the given range matches this range enough to allow a
+   * simple mathematical operation between the two ranges.
    *
    * @param range The range to test.
    * @return True if the groups of the given range match this range.
    */
-  public isMatch(range: Range): boolean
+  public isExactMatch(range: Range): boolean
   {
     return this.min.group === range.min.group &&
-      this.max.group === range.max.group;
+      this.max.group === range.max.group &&
+      this.min.rateGroup === range.min.rateGroup &&
+      this.max.rateGroup === range.max.rateGroup;
+  }
+
+  /**
+   * Determines if the given range matches this range enough to allow a
+   * complex mathematical operation between the two ranges.
+   *
+   * @param min The minimum of the range to test.
+   * @param max The maximum of the range to test.
+   * @return True if the min and max have compatible values.
+   */
+  public isMatch(min: Value, max: Value): boolean
+  {
+    return this.min.isMatch( min ) && this.max.isMatch( max );
   }
 
   /**

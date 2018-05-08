@@ -92,7 +92,6 @@ export class Classes
    * - week
    * - year
    * - score
-   * - decade
    * - biennium
    * - triennium
    * - quadrennium

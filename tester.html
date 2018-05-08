@@ -202,6 +202,18 @@
                     </div>
                   </div>
 
+                  <div class="ui orange label" v-if="range.min.rateGroup">
+                    Rate
+                    <div class="detail">
+                      <span v-if="range.min.rateGroup.unit !== range.max.rateGroup.unit">
+                        {{ range.min.rateGroup.singularLong }} - {{ range.max.rateGroup.singularLong }}
+                      </span>
+                      <span v-else>
+                        {{ range.min.rateGroup.singularLong }}
+                      </span>
+                    </div>
+                  </div>
+
                   <div class="ui gray label">
                     Range
                     <div class="detail">
@@ -541,7 +553,7 @@
 
             <br>
 
-            <select class="ui fluid selection dropdown" v-model="convertUnit">
+            <select class="ui selection dropdown" v-model="convertUnit">
               <optgroup v-for="parent in classes" :key="parent.name" v-bind:label="parent.name">
                 <option v-for="group in parent.groups" :key="group.unit" :value="group.unit">
                   {{ group.singularLong }}
@@ -549,7 +561,16 @@
               </optgroup>
             </select>
 
-            <br>
+            <select class="ui selection dropdown" v-if="hasRates" v-model="convertRate">
+              <option value>No Rate</option>
+              <optgroup v-for="parent in classes" :key="parent.name" v-bind:label="parent.name">
+                <option v-for="group in parent.groups" :key="group.unit" :value="group.unit">
+                  {{ group.singularLong }}
+                </option>
+              </optgroup>
+            </select>
+
+            <br><br>
 
             <div class="ui fluid labeled input">
               <div class="ui label">Output</div>
@@ -617,6 +638,7 @@ var outputOptions = {
   rangeSpacer: <input type="text" v-model="output.rangeSpacer">,
   fractionSpacer: <input type="text" v-model="output.fractionSpacer">,
   mixedSpacer: <input type="text" v-model="output.mixedSpacer">,
+  rateSpacer: <input type="text" v-model="output.rateSpacer">,
   delimiter: <input type="text" v-model="output.delimiter">,
   significant: <input type="number" v-model.number="output.significant">
 
@@ -645,6 +667,14 @@ var transformOptions = {
     <option :value="true">true</option>
     <option :value="false">false</option>
   </select>, // when doing conversions, do we use the min or max of a range?
+  convertUnit: <select class="ui selection dropdown" v-model="transform.convertUnit">
+    <option :value="true">true</option>
+    <option :value="false">false</option>
+  </select>, // when doing conversions, do we convert based on the main unit?
+  convertRate: <select class="ui selection dropdown" v-model="transform.convertRate">
+    <option :value="true">true</option>
+    <option :value="false">false</option>
+  </select>, // when doing conversions, do we convert based on the main unit?
   groupless: <select class="ui selection dropdown" v-model="transform.groupless">
     <option :value="true">true</option>
     <option :value="false">false</option>
@@ -736,6 +766,7 @@ var sortOptions = {
           rangeDelta: Store.Load('rangeDelta', 0.5),
           optionsOpen: Store.Load('optionsOpen', false),
           convertUnit: Store.Load('convertUnit', ''),
+          convertRate: Store.Load('convertRate', ''),
           active: Store.Load('active', 'about'),
           activeClass: Store.Load('activeClass', null),
           output: Store.Load('output', new Unitz.Output({unitSpacer: ' '}), function(x) {return new Unitz.Output(x)}),
@@ -766,6 +797,7 @@ var sortOptions = {
           rangeDelta: Store.Watcher('rangeDelta'),
           optionsOpen: Store.Watcher('optionsOpen'),
           convertUnit: Store.Watcher('convertUnit'),
+          convertRate: Store.Watcher('convertRate'),
           active: Store.Watcher('active'),
           activeClass: Store.Watcher('activeClass'),
           output: Store.Watcher('output', true),
@@ -825,8 +857,12 @@ var sortOptions = {
             return this.parsed.scaleTo(this.scaleTo, this.rangeDelta).output(this.output);
           },
           converted: function() {
-            var result = this.parsed.convert(this.convertUnit);
+            var units = this.convertUnit + (this.convertRate ? '/' + this.convertRate : '');
+            var result = this.parsed.convert(units);
             return result ? this.output.range(result) : '';
+          },
+          hasRates: function() {
+            return this.parsed.hasRates;
           },
           conversionsByClass: function() {
             var conversions = this.parsed.conversions(this.transform);
@@ -835,9 +871,11 @@ var sortOptions = {
             for (var i = 0; i < ranges.length; i++) {
               var range = ranges[ i ];
               var className = range.min.group ? range.min.group.parent.name : 'Classless';
-              var classRanges = byClass[ className ];
+              var rateName = range.min.rateGroup ? '/' + range.min.rateGroup.parent.name : '';
+              var classKey = className + rateName;
+              var classRanges = byClass[ classKey ];
               if (!classRanges) {
-                classRanges = byClass[ className ] = [];
+                classRanges = byClass[ classKey ] = [];
               }
               classRanges.push( this.output.range( range ) );
             }
@@ -847,9 +885,12 @@ var sortOptions = {
         created: function() {
           Unitz.Classes.addDefaults();
           Unitz.Translations.addDefaults();
+          Unitz.Rates.addDefaults();
         },
         mounted: function() {
           this.parse();
+
+          window.app = this;
         },
         methods: {
           parse: function() {
