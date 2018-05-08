@@ -921,6 +921,9 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a href="parse.html#regex_range" class="tsd-kind-icon">REGEX_<wbr>RANGE</a>
 				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a href="parse.html#regex_unit" class="tsd-kind-icon">REGEX_<wbr>UNIT</a>
+				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a href="parse.html#base" class="tsd-kind-icon">base</a>
 				</li>
@@ -941,6 +944,9 @@ img { max-width: 100%; }
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a href="parse.html#rangesfromstring" class="tsd-kind-icon">ranges<wbr>From<wbr>String</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a href="parse.html#unit" class="tsd-kind-icon">unit</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a href="parse.html#value" class="tsd-kind-icon">value</a>
@@ -985,6 +991,7 @@ img { max-width: 100%; }
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="parse.html#regex_list" class="tsd-kind-icon">REGEX_<wbr>LIST</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="parse.html#regex_parse" class="tsd-kind-icon">REGEX_<wbr>PARSE</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="parse.html#regex_range" class="tsd-kind-icon">REGEX_<wbr>RANGE</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="parse.html#regex_unit" class="tsd-kind-icon">REGEX_<wbr>UNIT</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
@@ -997,6 +1004,7 @@ img { max-width: 100%; }
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="parse.html#ranges" class="tsd-kind-icon">ranges</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="parse.html#rangesfromarray" class="tsd-kind-icon">ranges<wbr>From<wbr>Array</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="parse.html#rangesfromstring" class="tsd-kind-icon">ranges<wbr>From<wbr>String</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="parse.html#unit" class="tsd-kind-icon">unit</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="parse.html#value" class="tsd-kind-icon">value</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="parse.html#valuefromresult" class="tsd-kind-icon">value<wbr>From<wbr>Result</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="parse.html#valuefromstring" class="tsd-kind-icon">value<wbr>From<wbr>String</a></li>
@@ -1014,7 +1022,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">REGEX_<wbr>LIST<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> =&nbsp;/\s*,\s*/</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L20">Parse.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L22">Parse.ts:22</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1029,7 +1037,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">REGEX_<wbr>PARSE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> =&nbsp;/^\s*(-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*)\s*$/i</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L32">Parse.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L34">Parse.ts:34</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1045,13 +1053,28 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">REGEX_<wbr>RANGE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> =&nbsp;/\s*(-?[^-]+)-(.+)/</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L26">Parse.ts:26</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L28">Parse.ts:28</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
 						<p>The regular expression used to split up a range string to determine the min
 						and maximum values.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+				<a name="regex_unit" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> REGEX_<wbr>UNIT</h3>
+				<div class="tsd-signature tsd-kind-icon">REGEX_<wbr>UNIT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> =&nbsp;/\s*(\/|\s+per\s+)\s*/i</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L39">Parse.ts:39</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The regular expression used to split up a unit from a rateUnit.</p>
 					</div>
 				</div>
 			</section>
@@ -1068,7 +1091,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L40">Parse.ts:40</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L47">Parse.ts:47</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1100,7 +1123,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L274">Parse.ts:274</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L268">Parse.ts:268</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1136,13 +1159,13 @@ img { max-width: 100%; }
 				<a name="range" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> range</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#rangeinput" class="tsd-signature-type">RangeInput</a>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="range.html" class="tsd-signature-type">Range</a></li>
+					<li class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#rangeinput" class="tsd-signature-type">RangeInput</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="range.html" class="tsd-signature-type">Range</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L121">Parse.ts:121</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L124">Parse.ts:124</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1158,12 +1181,6 @@ img { max-width: 100%; }
 									<p>The input to parse.</p>
 								</div>
 							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
-							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="range.html" class="tsd-signature-type">Range</a></h4>
 						<p>The instance parsed from the input.</p>
@@ -1174,13 +1191,13 @@ img { max-width: 100%; }
 				<a name="rangefromstring" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> range<wbr>From<wbr>String</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">range<wbr>From<wbr>String<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="range.html" class="tsd-signature-type">Range</a></li>
+					<li class="tsd-signature tsd-kind-icon">range<wbr>From<wbr>String<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="range.html" class="tsd-signature-type">Range</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L146">Parse.ts:146</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L148">Parse.ts:148</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1196,12 +1213,6 @@ img { max-width: 100%; }
 									<p>The input to parse.</p>
 								</div>
 							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
-							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="range.html" class="tsd-signature-type">Range</a></h4>
 						<p>The instance parsed from the input.</p>
@@ -1212,13 +1223,13 @@ img { max-width: 100%; }
 				<a name="ranges" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> ranges</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">ranges<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#rangesinput" class="tsd-signature-type">RangesInput</a>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></li>
+					<li class="tsd-signature tsd-kind-icon">ranges<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#rangesinput" class="tsd-signature-type">RangesInput</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L57">Parse.ts:57</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L63">Parse.ts:63</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1234,12 +1245,6 @@ img { max-width: 100%; }
 									<p>The input to parse.</p>
 								</div>
 							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
-							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></h4>
 						<p>The instances parsed from the input.</p>
@@ -1250,13 +1255,13 @@ img { max-width: 100%; }
 				<a name="rangesfromarray" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> ranges<wbr>From<wbr>Array</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">ranges<wbr>From<wbr>Array<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#rangeinput" class="tsd-signature-type">RangeInput</a><span class="tsd-signature-symbol">[]</span>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></li>
+					<li class="tsd-signature tsd-kind-icon">ranges<wbr>From<wbr>Array<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#rangeinput" class="tsd-signature-type">RangeInput</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L86">Parse.ts:86</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L91">Parse.ts:91</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1272,12 +1277,6 @@ img { max-width: 100%; }
 									<p>The input to parse.</p>
 								</div>
 							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
-							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></h4>
 						<p>The instances parsed from the input.</p>
@@ -1288,13 +1287,13 @@ img { max-width: 100%; }
 				<a name="rangesfromstring" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> ranges<wbr>From<wbr>String</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">ranges<wbr>From<wbr>String<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></li>
+					<li class="tsd-signature tsd-kind-icon">ranges<wbr>From<wbr>String<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L107">Parse.ts:107</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L111">Parse.ts:111</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1310,12 +1309,6 @@ img { max-width: 100%; }
 									<p>The input to parse.</p>
 								</div>
 							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
-							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../globals.html#rangelist" class="tsd-signature-type">RangeList</a></h4>
 						<p>The instances parsed from the input.</p>
@@ -1323,16 +1316,54 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-				<a name="value" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagStatic">Static</span> value</h3>
+				<a name="unit" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> unit</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#valueinput" class="tsd-signature-type">ValueInput</a>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
+					<li class="tsd-signature tsd-kind-icon">unit<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/rate.html" class="tsd-signature-type">Rate</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L184">Parse.ts:184</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L340">Parse.ts:340</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Parses unit input into a <a href="../interfaces/rate.html">Rate</a>.</p>
+							</div>
+							<p><em>Examples:</em></p>
+							<ul>
+								<li>m/s</li>
+								<li>miles per hour</li>
+								<li>mph</li>
+							</ul>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>input: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The string to parse a unit from.</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/rate.html" class="tsd-signature-type">Rate</a></h4>
+						<p>The result of the parsing.</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<a name="value" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> value</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../globals.html#valueinput" class="tsd-signature-type">ValueInput</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L188">Parse.ts:188</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1348,12 +1379,6 @@ img { max-width: 100%; }
 									<p>The input to parse.</p>
 								</div>
 							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
-							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
 						<p>The instance parsed from the input.</p>
@@ -1364,13 +1389,13 @@ img { max-width: 100%; }
 				<a name="valuefromresult" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> value<wbr>From<wbr>Result</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">value<wbr>From<wbr>Result<span class="tsd-signature-symbol">(</span>result<span class="tsd-signature-symbol">: </span><a href="../interfaces/parseresult.html" class="tsd-signature-type">ParseResult</a>, unit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
+					<li class="tsd-signature tsd-kind-icon">value<wbr>From<wbr>Result<span class="tsd-signature-symbol">(</span>result<span class="tsd-signature-symbol">: </span><a href="../interfaces/parseresult.html" class="tsd-signature-type">ParseResult</a>, unit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, rateUnit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L240">Parse.ts:240</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L243">Parse.ts:243</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1393,10 +1418,7 @@ img { max-width: 100%; }
 								</div>
 							</li>
 							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
+								<h5>rateUnit: <span class="tsd-signature-type">string</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
@@ -1408,13 +1430,13 @@ img { max-width: 100%; }
 				<a name="valuefromstring" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> value<wbr>From<wbr>String</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">value<wbr>From<wbr>String<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
+					<li class="tsd-signature tsd-kind-icon">value<wbr>From<wbr>String<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L224">Parse.ts:224</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L228">Parse.ts:228</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1430,12 +1452,6 @@ img { max-width: 100%; }
 									<p>The input to parse.</p>
 								</div>
 							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
-								</div>
-							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="value.html" class="tsd-signature-type">Value</a></h4>
 						<p>The instance parsed from the input.</p>
@@ -1446,13 +1462,13 @@ img { max-width: 100%; }
 				<a name="valuefromvalue" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> value<wbr>From<wbr>Value</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">value<wbr>From<wbr>Value<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../interfaces/valuedefinition.html" class="tsd-signature-type">ValueDefinition</a>, groups<span class="tsd-signature-symbol">: </span><a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
+					<li class="tsd-signature tsd-kind-icon">value<wbr>From<wbr>Value<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="../interfaces/valuedefinition.html" class="tsd-signature-type">ValueDefinition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="value.html" class="tsd-signature-type">Value</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/b62e45b/src/Parse.ts#L205">Parse.ts:205</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Parse.ts#L208">Parse.ts:208</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1466,12 +1482,6 @@ img { max-width: 100%; }
 								<h5>input: <a href="../interfaces/valuedefinition.html" class="tsd-signature-type">ValueDefinition</a></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>The input to parse.</p>
-								</div>
-							</li>
-							<li>
-								<h5>groups: <a href="../globals.html#groupfactory" class="tsd-signature-type">GroupFactory</a></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>A function which converts a unit to a <a href="group.html">Group</a> instance.</p>
 								</div>
 							</li>
 						</ul>
