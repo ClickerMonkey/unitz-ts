@@ -995,7 +995,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">And<wbr>Fraction<span class="tsd-signature-symbol">:</span> <a href="../globals.html#translator" class="tsd-signature-type">Translator</a><span class="tsd-signature-symbol"> =&nbsp;newRegexTranslator(/^(.*)\s+and\s+(an?|one)\s+(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s*(.*)/i,(matches, vars) &#x3D;&gt; {let prefix: string &#x3D; matches[ 1 ];let units: string &#x3D; matches[ 4 ];let value: Value &#x3D; Parse.valueFromString( prefix + units );let fractionName: string &#x3D; matches[ 3 ].toLowerCase();let fraction: Value &#x3D; vars[ fractionName ];return value.add( fraction ).output( Core.globalOutput );}, {half: Value.fromFraction(1, 2),third: Value.fromFraction(1, 3),fourth: Value.fromFraction(1, 4),fifth: Value.fromFraction(1, 5),sixth: Value.fromFraction(1, 6),seventh: Value.fromFraction(1, 7),eighth: Value.fromFraction(1, 8),nineth: Value.fromFraction(1, 9),tenth: Value.fromFraction(1, 10)})</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L201">Translations.ts:201</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L201">Translations.ts:201</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1018,7 +1018,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Fraction<wbr>OfNumber<span class="tsd-signature-symbol">:</span> <a href="../globals.html#translator" class="tsd-signature-type">Translator</a><span class="tsd-signature-symbol"> =&nbsp;newRegexTranslator(/^(an?\s+|one|)(half|third|fourth|fifth|sixth|seventh|eighth|nineth|tenth)\s+(a\s+|an\s+|of\s+an?\s+|of\s+)(.*)/i,(matches, vars) &#x3D;&gt; {let remaining: string &#x3D; matches[ 4 ];let parsed: Value &#x3D; Parse.valueFromString( remaining );let fractionName: string &#x3D; matches[ 2 ].toLowerCase();let fraction: Value &#x3D; vars[ fractionName ];return parsed.mul( fraction ).output( Core.globalOutput );}, {half: Value.fromFraction(1, 2),third: Value.fromFraction(1, 3),fourth: Value.fromFraction(1, 4),fifth: Value.fromFraction(1, 5),sixth: Value.fromFraction(1, 6),seventh: Value.fromFraction(1, 7),eighth: Value.fromFraction(1, 8),nineth: Value.fromFraction(1, 9),tenth: Value.fromFraction(1, 10)})</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L168">Translations.ts:168</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L168">Translations.ts:168</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1040,7 +1040,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Number<wbr>Words<span class="tsd-signature-symbol">:</span> <a href="../globals.html#translator" class="tsd-signature-type">Translator</a><span class="tsd-signature-symbol"> =&nbsp;newRegexTranslator(/^(an?\s+|)(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety)\s+(.*)/i,(matches, vars) &#x3D;&gt; {let wordName: string &#x3D; matches[ 2 ];let remaining: string &#x3D; matches[ 3 ];return vars[ wordName ] + &#x27; &#x27; + remaining;}, {one: &#x27;1&#x27;,two: &#x27;2&#x27;,three: &#x27;3&#x27;,four: &#x27;4&#x27;,five: &#x27;5&#x27;,six: &#x27;6&#x27;,seven: &#x27;7&#x27;,eight: &#x27;8&#x27;,nine: &#x27;9&#x27;,ten: &#x27;10&#x27;,eleven: &#x27;11&#x27;,twelve: &#x27;12&#x27;,dozen: &#x27;12&#x27;,thirteen: &#x27;13&#x27;,fouteen: &#x27;14&#x27;,fifteen: &#x27;15&#x27;,sixteen: &#x27;16&#x27;,seventeen: &#x27;17&#x27;,eighteen: &#x27;18&#x27;,nineteen: &#x27;19&#x27;,twenty: &#x27;20&#x27;,thirty: &#x27;30&#x27;,fourty: &#x27;40&#x27;,fifty: &#x27;50&#x27;,sixty: &#x27;60&#x27;,seventy: &#x27;70&#x27;,eighty: &#x27;80&#x27;,ninety: &#x27;90&#x27;})</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L119">Translations.ts:119</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L119">Translations.ts:119</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1062,7 +1062,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Quantity<span class="tsd-signature-symbol">:</span> <a href="../globals.html#translator" class="tsd-signature-type">Translator</a><span class="tsd-signature-symbol"> =&nbsp;newRegexTranslator(/^\((.*)\)(.*)$/,(matches) &#x3D;&gt; {let quantity: string &#x3D; matches[ 1 ];let unit: string &#x3D; matches[ 2 ];return quantity + unit;})</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L232">Translations.ts:232</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L232">Translations.ts:232</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1082,7 +1082,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">Quantity<wbr>Value<span class="tsd-signature-symbol">:</span> <a href="../globals.html#translator" class="tsd-signature-type">Translator</a><span class="tsd-signature-symbol"> =&nbsp;newRegexTranslator(/^\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|))\s*\(\s*((-?\d*)(\s+(\d+))?(\s*\/\s*(\d+)|\.(\d+)|)\s*(.*))\s*\)\s*$/i,(matches) &#x3D;&gt; {let quantityInput: string &#x3D; matches[ 1 ];let quantity: Value &#x3D; Parse.valueFromString( quantityInput );let alternativeInput: string &#x3D; matches[ 8 ];let alternative: Value &#x3D; Parse.valueFromString( alternativeInput );return alternative.mul( quantity ).output( Core.globalOutput );})</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L250">Translations.ts:250</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L250">Translations.ts:250</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1102,7 +1102,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">registered<span class="tsd-signature-symbol">:</span> <a href="../globals.html#translator" class="tsd-signature-type">Translator</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L65">Translations.ts:65</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L65">Translations.ts:65</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1129,7 +1129,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L86">Translations.ts:86</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L86">Translations.ts:86</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1161,7 +1161,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L70">Translations.ts:70</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L70">Translations.ts:70</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1183,7 +1183,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L98">Translations.ts:98</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L98">Translations.ts:98</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">

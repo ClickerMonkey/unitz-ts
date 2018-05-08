@@ -1084,6 +1084,7 @@ uz(<span class="hljs-string">'mile'</span>); <span class="hljs-comment">// impli
 uz(<span class="hljs-string">'4-5 seconds'</span>); <span class="hljs-comment">// parses ranges</span>
 uz(<span class="hljs-string">'4s - 3min'</span>); <span class="hljs-comment">// parses ranges with mixed units</span>
 uz(<span class="hljs-string">'2c, 4s, 23mi'</span>); <span class="hljs-comment">// mixed unit classes</span>
+uz(<span class="hljs-string">'23 m/s, 60 mph, 2 1/2 liters per second'</span>); <span class="hljs-comment">// rates</span>
 
 <span class="hljs-comment">// Transformations</span>
 uz(<span class="hljs-string">'1.5 pints'</span>).normalize(); <span class="hljs-comment">// = 3 cups: convert to unit in same class which is more human friendly</span>
@@ -1144,6 +1145,12 @@ uz(<span class="hljs-string">'(one and a half) acre'</span>); <span class="hljs-
 uz(<span class="hljs-string">'(12) tacos'</span>); <span class="hljs-comment">// = 12 tacos</span>
 uz(<span class="hljs-string">'1 (6 ounce)'</span>); <span class="hljs-comment">// = 6ounce</span>
 uz(<span class="hljs-string">'5 (3 liter)'</span>); <span class="hljs-comment">// = 15liter</span>
+
+<span class="hljs-comment">// Rates (aliases)</span>
+Unitz.Rates.addDefaults();
+
+uz(<span class="hljs-string">'60 mph'</span>);; <span class="hljs-comment">// 60 miles/hour</span>
+uz(<span class="hljs-string">'23 knots'</span>);; <span class="hljs-comment">// 23 nautical miles/hour</span>
 </code></pre>
 			<h3 id="customization">Customization</h3>
 			<p>You can customize exactly how Unitz behaves.</p>
@@ -1175,6 +1182,9 @@ Unitz.Core.getGroup(<span class="hljs-string">'cup'</span>).addUnits({
 
 <span class="hljs-comment">// Remove some units from an existing group</span>
 Unitz.Core.getGroup(<span class="hljs-string">'c'</span>).removeUnits([<span class="hljs-string">'cup'</span>, <span class="hljs-string">'cups'</span>]);
+
+<span class="hljs-comment">// Add my own rate</span>
+Unitz.Rates.add(<span class="hljs-string">'feet'</span>, <span class="hljs-string">'second'</span>, [<span class="hljs-string">'fps'</span>]);
 
 <span class="hljs-comment">// Add my own class</span>
 Unitz.Core.addClass(<span class="hljs-keyword">new</span> Class(<span class="hljs-string">'Loaf'</span>, [
@@ -1423,7 +1433,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Base<wbr>Input<span class="tsd-signature-symbol">:</span> <a href="classes/base.html" class="tsd-signature-type">Base</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#rangesinput" class="tsd-signature-type">RangesInput</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L196">Types.ts:196</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L196">Types.ts:196</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1438,7 +1448,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Class<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Class.ts#L10">Class.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Class.ts#L10">Class.ts:10</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1461,7 +1471,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Converter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L16">Types.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L16">Types.ts:16</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1497,7 +1507,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Converter<wbr>Double<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L29">Types.ts:29</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L29">Types.ts:29</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1521,7 +1531,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Converter<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L22">Types.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L22">Types.ts:22</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1544,7 +1554,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Group<wbr>Factory<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Group.ts#L23">Group.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Group.ts#L23">Group.ts:23</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1580,7 +1590,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Group<wbr>List<span class="tsd-signature-symbol">:</span> <a href="classes/group.html" class="tsd-signature-type">Group</a><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Group.ts#L13">Group.ts:13</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Group.ts#L13">Group.ts:13</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1595,7 +1605,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Group<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Group.ts#L18">Group.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Group.ts#L18">Group.ts:18</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1618,7 +1628,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Numbers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L10">Types.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L10">Types.ts:10</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1633,7 +1643,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Range<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/rangedefinition.html" class="tsd-signature-type">RangeDefinition</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/valuedefinition.html" class="tsd-signature-type">ValueDefinition</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L184">Types.ts:184</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L184">Types.ts:184</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1648,7 +1658,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Range<wbr>List<span class="tsd-signature-symbol">:</span> <a href="classes/range.html" class="tsd-signature-type">Range</a><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Range.ts#L12">Range.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Range.ts#L12">Range.ts:12</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1663,7 +1673,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Range<wbr>Mutator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Range.ts#L17">Range.ts:17</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Range.ts#L17">Range.ts:17</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1699,7 +1709,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Ranges<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#rangeinput" class="tsd-signature-type">RangeInput</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#rangeinput" class="tsd-signature-type">RangeInput</a><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L190">Types.ts:190</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L190">Types.ts:190</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1714,7 +1724,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Rate<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Rates.ts:25</li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Rates.ts#L25">Rates.ts:25</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1737,7 +1747,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Regex<wbr>Translator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L25">Translations.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L25">Translations.ts:25</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1786,7 +1796,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Sort<wbr>Class<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Sort.ts#L56">Sort.ts:56</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Sort.ts#L56">Sort.ts:56</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1814,7 +1824,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Sorter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Sort.ts#L75">Sort.ts:75</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Sort.ts#L75">Sort.ts:75</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1867,7 +1877,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Translator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L15">Translations.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L15">Translations.ts:15</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1913,7 +1923,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Unit<wbr>Definition<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L36">Types.ts:36</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L36">Types.ts:36</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1937,7 +1947,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 				<div class="tsd-signature tsd-kind-icon">Value<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/valuedefinition.html" class="tsd-signature-type">ValueDefinition</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Types.ts#L162">Types.ts:162</a></li>
+						<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Types.ts#L162">Types.ts:162</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1959,7 +1969,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Translations.ts#L38">Translations.ts:38</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Translations.ts#L38">Translations.ts:38</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2006,7 +2016,7 @@ Unitz.Core.isMoreNormal = <span class="hljs-function"><span class="hljs-keyword"
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/5a11ef5/src/Base.ts#L19">Base.ts:19</a></li>
+								<li>Defined in <a href="https://github.com/ClickerMonkey/unitz-ts/blob/aa4e0a8/src/Base.ts#L19">Base.ts:19</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
