@@ -1,4 +1,6 @@
 
+import { GroupDefinition, RangeDefinition, ValueDefinition } from './Types';
+
 
 /**
  * The class which contains commonly used functions by the library. These
@@ -167,7 +169,7 @@ export class Functions
    * @param input The variable to inspect.
    * @return True if the variable appears to be a [[GroupDefinition]].
    */
-  public static isGroupDefinition(input: any): boolean
+  public static isGroupDefinition(input: any): input is GroupDefinition
   {
     return !!(input && input.system && input.unit && input.denominators && input.units);
   }
@@ -178,7 +180,7 @@ export class Functions
    * @param input The variable to inspect.
    * @return True if the variable appears to be a [[ValueDefinition]].
    */
-  public static isValueDefinition(input: any): boolean
+  public static isValueDefinition(input: any): input is ValueDefinition
   {
     return !!(input && (input.value || input.unit || input.num || input.den));
   }
@@ -189,7 +191,7 @@ export class Functions
    * @param input The variable to inspect.
    * @return True if the variable appears to be a [[RangeDefinition]].
    */
-  public static isRangeDefinition(input: any): boolean
+  public static isRangeDefinition(input: any): input is RangeDefinition
   {
     return !!(input && input.min && input.max);
   }
@@ -200,7 +202,7 @@ export class Functions
    * @param input The variable to test.
    * @return True if the variable is an array, otherwise false.
    */
-  public static isArray(input: any): boolean
+  public static isArray<T>(input: any): input is Array<T>
   {
     return input instanceof Array;
   }
@@ -211,7 +213,7 @@ export class Functions
    * @param input The variable to test.
    * @return True if the variable is a string, otherwise false.
    */
-  public static isString(input: any): boolean
+  public static isString(input: any): input is string
   {
     return typeof(input) === 'string';
   }

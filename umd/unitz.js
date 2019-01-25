@@ -3739,7 +3739,7 @@ var Rates = (function () {
      */
     Rates.addDefaults = function () {
         this.add('miles', 'hour', ['mph']);
-        this.add('nautical miles', 'hour', ['knot']);
+        this.add('nautical miles', 'hour', ['knot', 'knots']);
         this.add('kilometers', 'hour', ['kph', 'kmph', 'km. hr.', 'k.p.h.', 'k.m.p.h.', 'km:h']);
     };
     /**
@@ -3856,10 +3856,13 @@ var Parse_Parse = (function () {
             return this.rangeFromString(input);
         }
         else if (Functions.isRangeDefinition(input)) {
-            var range = input;
-            var min = this.value(range.min);
-            var max = this.value(range.max);
+            var min = this.value(input.min);
+            var max = this.value(input.max);
             return new Range_Range(min, max);
+        }
+        else if (Functions.isValueDefinition(input)) {
+            var value = this.valueFromValue(input);
+            return new Range_Range(value, value);
         }
         return Range_Range.INVALID;
     };

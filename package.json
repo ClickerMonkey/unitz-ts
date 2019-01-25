@@ -1,6 +1,6 @@
 {
   "name": "unitz-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A unit parser, converter, & calculator for TypeScript and JS",
   "main": "umd/unitz.js",
   "module": "lib/index.js",

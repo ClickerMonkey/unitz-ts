@@ -1,6 +1,6 @@
 
 import { Functions as fn } from './Functions';
-import { BaseInput, RangeInput, RangesInput, RangeDefinition, ValueInput, ValueDefinition, ParseResult } from './Types';
+import { BaseInput, RangeInput, RangesInput, ValueInput, ValueDefinition, ParseResult } from './Types';
 import { Group } from './Group';
 import { Core } from './Core';
 import { Range, RangeList } from './Range';
@@ -62,21 +62,21 @@ export class Parse
    */
   public static ranges(input: RangesInput): RangeList
   {
-    if (fn.isArray(input))
+    if (fn.isArray<RangeInput>(input))
     {
-      return this.rangesFromArray( <RangeInput[]>input );
+      return this.rangesFromArray( input );
     }
     else if (fn.isString(input))
     {
-      return this.rangesFromString( <string>input );
+      return this.rangesFromString( input );
     }
     else if (fn.isRangeDefinition(input))
     {
-      return this.rangesFromArray( [ <RangeDefinition>input ] );
+      return this.rangesFromArray( [ input ] );
     }
     else if (fn.isValueDefinition(input))
     {
-      return this.rangesFromArray( [ <ValueDefinition>input ] );
+      return this.rangesFromArray( [ input ] );
     }
 
     return [];
@@ -125,15 +125,20 @@ export class Parse
   {
     if (fn.isString(input))
     {
-      return this.rangeFromString( <string>input );
+      return this.rangeFromString( input );
     }
     else if (fn.isRangeDefinition(input))
     {
-      let range: RangeDefinition = <RangeDefinition>input;
-      let min: Value = this.value( range.min );
-      let max: Value = this.value( range.max );
+      let min: Value = this.value( input.min );
+      let max: Value = this.value( input.max );
 
       return new Range( min, max );
+    }
+    else if (fn.isValueDefinition(input))
+    {
+      let value = this.valueFromValue( input );
+
+      return new Range( value, value );
     }
 
     return Range.INVALID;
@@ -189,11 +194,11 @@ export class Parse
   {
     if (fn.isString(input))
     {
-      return this.valueFromString( <string>input );
+      return this.valueFromString( input );
     }
     else if (fn.isValueDefinition(input))
     {
-      return this.valueFromValue( <ValueDefinition>input );
+      return this.valueFromValue( input );
     }
 
     return Value.INVALID;
