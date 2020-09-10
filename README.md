@@ -9,10 +9,13 @@ A unit parser, converter, & calculator for TypeScript and JS.
 ```javascript
 // TypeScript
 import { uz, Classes } from 'unitz-ts';
-Classes.addDefaults(); // Add built-in units
+
+// Add built-in units
+Classes.addDefaults(); 
 
 // Javascript
 var uz = Unitz.uz;
+
 Unitz.Classes.addDefaults(); // Add built-in units
 
 // Parsing
