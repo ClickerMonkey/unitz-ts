@@ -8,13 +8,15 @@ A unit parser, converter, & calculator for TypeScript and JS.
 
 ```javascript
 // TypeScript
-import { uz } from 'unitz';
+import { uz, Classes } from 'unitz-ts';
+
+// Add built-in units
+Classes.addDefaults(); 
 
 // Javascript
 var uz = Unitz.uz;
 
-// Add built-in units
-Unitz.Classes.addDefaults();
+Unitz.Classes.addDefaults(); // Add built-in units
 
 // Parsing
 uz('2.5 cups'); // parses numbers
